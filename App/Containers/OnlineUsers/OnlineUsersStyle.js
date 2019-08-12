@@ -22,6 +22,7 @@ export default StyleSheet.create({
   },
   infoContainer: {
     ...Helpers.colMain,
+    flex: 1,
   },
   profileImage: { aspectRatio: 1 },
   nameText: {

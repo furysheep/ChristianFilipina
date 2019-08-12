@@ -112,6 +112,7 @@ class SearchFilter extends React.Component {
 
   loadSavedSearch = (searchName) => {
     this.props.setSavedSearch(searchName)
+    this.props.navigation.goBack()
   }
 
   render() {

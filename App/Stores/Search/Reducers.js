@@ -81,12 +81,20 @@ export const setCustomSearch = (state, { isCustomSearch }) => {
     loadMoreUrl: null,
     isCustomSearch,
     totalRecords: null,
+    searchName: null, // reset search name
   }
 }
 
 export const getSavedSearchesSuccess = (state, { savedSearches }) => ({ ...state, savedSearches })
 
-export const setSavedSearch = (state, { searchName }) => ({ ...state, searchName })
+export const savedSearch = (state, { searchName }) => ({
+  ...state,
+  users: [], // reset search list
+  loadMoreUrl: null,
+  isCustomSearch: true,
+  totalRecords: null,
+  searchName,
+})
 
 /**
  * @see https://github.com/infinitered/reduxsauce#createreducer
@@ -101,5 +109,5 @@ export const reducer = createReducer(INITIAL_STATE, {
   [SearchTypes.SEARCH_BASIC_UPDATE]: searchBasicUpdate,
   [SearchTypes.CUSTOM_SEARCH]: setCustomSearch,
   [SearchTypes.GET_SAVED_SEARCHES_SUCCESS]: getSavedSearchesSuccess,
-  [SearchTypes.SET_SAVED_SEARCH]: setSavedSearch,
+  [SearchTypes.SAVED_SEARCH]: savedSearch,
 })

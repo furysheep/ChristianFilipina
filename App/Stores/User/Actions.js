@@ -27,6 +27,8 @@ const { Types, Creators } = createActions({
   loginUserSuccess: ['user'],
   // An error occurred
   loginUserFailure: ['errorMessage'],
+
+  logout: null,
 })
 
 export const UserTypes = Types

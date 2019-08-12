@@ -10,10 +10,84 @@ export default axios.create({
   timeout: 30000,
 })
 
+class User {
+  //1,5,7,8 level user has ability to start text/video chat
+
+  canUserStartChat = () => {
+    const { userLevel } = this
+    switch (userLevel) {
+      case User.GOLD:
+      case User.UNLIMITED_LIFETIME:
+      case User.DIAMOND:
+      case User.PLATINUM:
+      case User.FEATURED_SILVER:
+      case User.FEATURED_PLATINUM:
+      case User.FEATURED_UNLIMITED:
+      case User.FEATURED_GOLD:
+        return true
+
+      default:
+        return false
+    }
+  }
+}
+
+User.FREE = '4'
+User.SILVER = '2'
+User.GOLD = '1'
+User.PLATINUM = '8'
+User.UNLIMITED_LIFETIME = '5'
+User.BRONZE = '6'
+User.DIAMOND = '7'
+User.FEATURED_SILVER = '9'
+User.FEATURED_PLATINUM = '10'
+User.FEATURED_UNLIMITED = '11'
+User.FEATURED_GOLD = '16'
+
 export function buildUserObject(obj) {
-  const user = {}
-  user.id = parseInt(obj.id[0], 10)
+  const user = new User()
+  // userdata api
+  user.about = obj.about ? obj.about[0].replace(/<\s*\/?br\s*[\/]?>/gi, '\n') : null
+  user.addressLine1 = obj.address_line1 ? obj.address_line1[0] : null
+  user.addressLine2 = obj.address_line2 ? obj.address_line2[0] : null
+
+  user.isBlocked = obj.is_blocked ? obj.is_blocked[0] : null
+  user.isOnline = obj.is_online ? obj.is_online[0] === '1' : null
+  user.lastLoggedIn = obj.last_logged_in ? obj.last_logged_in[0] : null
+  user.membersince = obj.membersince ? obj.membersince[0] : null
+
+  user.birthDate = obj.birth_date ? obj.birth_date[0] : null
+
+  // pref
+  user.agePrefStrict = obj.age_pref_strict ? obj.age_pref_strict[0] : null
+  user.lookageend = obj.lookageend ? obj.lookageend[0] : null
+  user.lookagestart = obj.lookagestart ? obj.lookagestart[0] : null
+  user.profileDataArray = obj.profile_data_array
+    ? obj.profile_data_array[0].profile_data_item.map((item) => {
+        const result = {}
+        Object.keys(item).forEach((key) => {
+          result[key] = item[key][0]
+        })
+        return result
+      })
+    : null
+  user.recentActivityArray = obj.recent_activity_array
+    ? obj.recent_activity_array[0].recent_activity_item.map((item) => {
+        const result = {}
+        Object.keys(item).forEach((key) => {
+          result[key] = item[key][0]
+        })
+        return result
+      })
+    : null
+
+  user.sendMessageUrl = obj.send_message_url ? obj.send_message_url[0] : null
+  user.timezone = obj.timezone ? obj.timezone[0] : null
+  user.zip = obj.zip ? obj.zip[0] : null
+
+  user.id = obj.id ? parseInt(obj.id[0], 10) : null
   user.firstName = obj.firstname ? obj.firstname[0] : null
+  user.lastName = obj.lastname ? obj.lastname[0] : null
 
   user.city = obj.city ? obj.city[0] : null
 

@@ -30,6 +30,7 @@ import Message from 'App/Containers/Message/Message'
 import Profile from 'App/Containers/Profile/Profile'
 import OnlineUsers from 'App/Containers/OnlineUsers/OnlineUsers'
 import SearchFilter from 'App/Containers/SearchFilter/SearchFilter'
+import VideoChat from 'App/Containers/VideoChat/VideoChat'
 
 // class HomeScreen extends React.Component {
 //   render() {
@@ -192,7 +193,6 @@ const DrawerContainer = createDrawerNavigator(
         OnlineUsers: {
           screen: OnlineUsers,
           navigationOptions: ({ navigation }) => ({
-            title: 'Online Users', // Title to appear in status bar
             headerLeft: drawerHeaderLeft(navigation),
             headerBackTitle: ' ',
           }),
@@ -202,6 +202,15 @@ const DrawerContainer = createDrawerNavigator(
           navigationOptions: ({ navigation }) => ({
             title: 'Search Christian Filipina', // Title to appear in status bar
           }),
+        },
+        Profile: {
+          screen: Profile,
+          navigationOptions: ({ navigation }) => ({
+            headerBackTitle: ' ',
+          }),
+        },
+        VideoChat: {
+          screen: VideoChat,
         },
       },
       {

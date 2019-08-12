@@ -14,13 +14,13 @@ export default StyleSheet.create({
     fontWeight: 'bold',
     ...Fonts.style.medium,
   },
-  profileImageCard: { width: 200, alignSelf: 'center' },
+  profileImageCard: { width: 300, alignSelf: 'center' },
   profileImageCardInner: {
     ...Helpers.noPadding,
   },
   profileImage: {
-    width: 200,
-    height: 200,
+    width: 300,
+    height: 300,
   },
   buttons: {
     position: 'absolute',
@@ -42,6 +42,14 @@ export default StyleSheet.create({
   },
   description: {
     padding: Metrics.smallMargin,
+    ...Helpers.row,
+  },
+  activityText: {
+    ...Helpers.fill,
+    marginRight: Metrics.baseMargin,
+  },
+  activityTime: {
+    color: Colors.primary,
   },
   specifiedSection: {
     marginVertical: Metrics.baseMargin,
@@ -57,5 +65,12 @@ export default StyleSheet.create({
   },
   footer: {
     padding: Metrics.baseMargin,
+  },
+  photosView: {
+    height: 80,
+  },
+  photo: {
+    width: 80,
+    height: 80,
   },
 })

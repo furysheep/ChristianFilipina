@@ -1,4 +1,5 @@
 import { put, call } from 'redux-saga/effects'
+import * as Keychain from 'react-native-keychain'
 import UserActions from 'App/Stores/User/Actions'
 import { userService } from 'App/Services/UserService'
 
@@ -15,6 +16,17 @@ export function* loginUser({ email, password }) {
       )
     }
   } catch (e) {
-    yield put(UserActions.loginUserFailure(e))
+    yield put(UserActions.loginUserFailure(e.message))
+  }
+}
+
+export function* logout() {
+  try {
+    yield put(UserActions.userLoading())
+    yield Keychain.resetGenericPassword()
+    yield call(userService.logout)
+    yield put(UserActions.loginUserSuccess(null))
+  } catch (e) {
+    console.log(e)
   }
 }

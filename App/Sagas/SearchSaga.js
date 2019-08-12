@@ -24,6 +24,7 @@ export function* searchUser({ firstLoad }) {
       isBasic,
       questionValues,
       questions,
+      searchName,
     } = yield select(getSearchState)
     const searchUrl =
       loadMore || (isCustomSearch ? Config.ADVANCED_SEARCH_URL : Config.LOAD_USERS_URL)
@@ -31,22 +32,28 @@ export function* searchUser({ firstLoad }) {
     const params = {}
 
     if (isCustomSearch) {
-      params.advsearch = 'Search'
-      params.return_format = 'xml'
-      const questionNames = questions
-        .filter(
-          (question) => (isBasic && question.question_basic_advanced[0] === 'basic') || !isBasic
-        )
-        .map((q) => q.question_name_for_search[0])
-      Object.keys(questionValues).forEach((key) => {
-        if (questionNames.indexOf(key) !== -1) {
-          params[key] = questionValues[key]
-        }
-      })
+      if (searchName) {
+        params.get_saved_search = 1
+        params.search_name = searchName
+        params.return_format = 'xml'
+      } else {
+        params.advsearch = 'Search'
+        params.return_format = 'xml'
+        const questionNames = questions
+          .filter(
+            (question) => (isBasic && question.question_basic_advanced[0] === 'basic') || !isBasic
+          )
+          .map((q) => q.question_name_for_search[0])
+        Object.keys(questionValues).forEach((key) => {
+          if (questionNames.indexOf(key) !== -1) {
+            params[key] = questionValues[key]
+          }
+        })
+      }
     }
 
     const { users, loadMoreUrl, totalRecords } = isCustomSearch
-      ? yield call(searchService.searchUserCustom, searchUrl, params)
+      ? yield call(searchService.searchUserCustom, searchUrl, loadMore ? {} : params) // params on only first load
       : yield call(searchService.searchUser, searchUrl)
     if (users) {
       yield put(SearchActions.searchUserSuccess(users, loadMoreUrl, totalRecords))
@@ -113,4 +120,10 @@ export function* getSavedSearches() {
   } catch (e) {
     console.log(e)
   }
+}
+
+export function* setSavedSearch({ searchName }) {
+  yield put(SearchActions.savedSearch(searchName))
+
+  yield call(searchUser, true)
 }

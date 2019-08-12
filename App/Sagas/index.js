@@ -1,7 +1,7 @@
 import { takeLatest, all } from 'redux-saga/effects'
 import { UserTypes } from 'App/Stores/User/Actions'
 import { StartupTypes } from 'App/Stores/Startup/Actions'
-import { loginUser } from './UserSaga'
+import { loginUser, logout } from './UserSaga'
 import { startup } from './StartupSaga'
 import { SearchTypes } from 'App/Stores/Search/Actions'
 import {
@@ -22,11 +22,13 @@ export default function* root() {
     takeLatest(StartupTypes.STARTUP, startup),
 
     takeLatest(UserTypes.LOGIN_USER, loginUser),
+    takeLatest(UserTypes.LOGOUT, logout),
 
     takeLatest(SearchTypes.SEARCH_USER, searchUser),
     takeLatest(SearchTypes.SET_CUSTOM_SEARCH, setCustomSearch),
     takeLatest(SearchTypes.SEARCH_QUESTIONS, searchQuestions),
     takeLatest(SearchTypes.SAVE_SEARCH, saveSearch),
     takeLatest(SearchTypes.GET_SAVED_SEARCHES, getSavedSearches),
+    takeLatest(SearchTypes.SET_SAVED_SEARCH, setSavedSearch),
   ])
 }

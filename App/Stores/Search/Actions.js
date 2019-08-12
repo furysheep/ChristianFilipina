@@ -39,6 +39,7 @@ const { Types, Creators } = createActions({
   getSavedSearches: null,
   getSavedSearchesSuccess: ['savedSearches'],
   setSavedSearch: ['searchName'],
+  savedSearch: ['searchName'],
 })
 
 export const SearchTypes = Types

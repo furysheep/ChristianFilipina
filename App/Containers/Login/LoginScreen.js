@@ -12,8 +12,9 @@ import { Input, CheckBox, Button, Overlay, Text, Icon } from 'react-native-eleme
 import Spinner from 'react-native-loading-spinner-overlay'
 import { connect } from 'react-redux'
 import { PropTypes } from 'prop-types'
+import * as Keychain from 'react-native-keychain'
+
 import UserActions from 'App/Stores/User/Actions'
-import { liveInEurope } from 'App/Stores/User/Selectors'
 import Style from './LoginScreenStyle'
 import OverlayPopup from 'App/Components/OverlayPopup'
 import { Images, Colors } from 'App/Theme'
@@ -25,23 +26,54 @@ class LoginScreen extends React.Component {
   }
 
   state = {
-    checked: false,
+    rememberPassword: false,
     isForgotVisible: false,
-    email: 'cf_fm08090@yahoo.com',
-    password: 'Cf12345678',
+    email: '',
+    password: '',
+    user: null,
+    userIsLoading: false,
   }
-  componentDidMount() {}
+  async componentDidMount() {
+    try {
+      // Retrieve the credentials
+      const credentials = await Keychain.getGenericPassword()
+      if (credentials) {
+        this.setState({
+          email: credentials.username,
+          password: credentials.password,
+          rememberPassword: true,
+        })
+        this.login()
+      } else {
+        console.log('No credentials stored')
+      }
+    } catch (error) {
+      console.log("Keychain couldn't be accessed!", error)
+    }
+  }
 
   signUp = () => {
     NavigationService.navigate('SignupScreen')
   }
 
   static getDerivedStateFromProps(nextProps, prevState) {
-    if (nextProps.user !== null) {
-      NavigationService.navigate('DrawerContainer')
-      return null
+    const update = {}
+    if (nextProps.user !== prevState.user) {
+      update.user = nextProps.user
     }
-    return null // Triggers no change in the state
+
+    if (nextProps.userIsLoading !== prevState.userIsLoading) {
+      update.userIsLoading = nextProps.userIsLoading
+    }
+
+    if (!nextProps.userIsLoading && nextProps.user) {
+      if (prevState.rememberPassword) {
+        Keychain.setGenericPassword(prevState.email, prevState.password)
+      }
+      NavigationService.navigateAndReset('DrawerContainer')
+    }
+
+    return Object.keys(update).length ? update : null
   }
 
   login = () => {
@@ -58,8 +90,8 @@ class LoginScreen extends React.Component {
   }
 
   render() {
-    const { email, password } = this.state
-    const { userIsLoading, userErrorMessage } = this.props
+    const { email, password, userIsLoading } = this.state
+    const { userErrorMessage } = this.props
 
     return (
       <ImageBackground source={Images.background} style={Style.container}>
@@ -126,10 +158,10 @@ class LoginScreen extends React.Component {
           <View style={{ flexDirection: 'row' }}>
             <CheckBox
               title="Remember me"
-              checked={this.state.checked}
+              checked={this.state.rememberPassword}
               textStyle={{ color: 'white' }}
               checkedColor="white"
-              onPress={() => this.setState({ checked: !this.state.checked })}
+              onPress={() => this.setState({ rememberPassword: !this.state.rememberPassword })}
             />
           </View>
           <View style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>

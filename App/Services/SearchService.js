@@ -50,6 +50,7 @@ function searchUserCustom(searchUrl, params) {
             if (err) {
               reject(err)
             } else {
+              console.log(result)
               const { user, load_more, total_records } = result[Object.keys(result)[0]]
               if (user) {
                 const users = user.map((user) => buildUserObject(user))

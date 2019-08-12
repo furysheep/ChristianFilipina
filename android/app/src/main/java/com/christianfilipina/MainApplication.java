@@ -3,6 +3,8 @@ package com.christianfilipina;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import com.azendoo.reactnativesnackbar.SnackbarPackage;
+import com.oblador.keychain.KeychainPackage;
 import com.beefe.picker.PickerViewPackage;
 import com.reactnativecommunity.webview.RNCWebViewPackage;
 import com.oblador.vectoricons.VectorIconsPackage;
@@ -27,6 +29,8 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+            new SnackbarPackage(),
+            new KeychainPackage(),
             new PickerViewPackage(),
             new RNCWebViewPackage(),
             new VectorIconsPackage(),

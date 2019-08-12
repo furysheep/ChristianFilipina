@@ -8,9 +8,15 @@ import Dialog from 'react-native-dialog'
 import styles from './OnlineUsersStyle'
 import { Images, Helpers } from 'App/Theme'
 import SearchActions from 'App/Stores/Search/Actions'
+import NavigationService from 'App/Services/NavigationService'
 
 class OnlineUsers extends React.Component {
   static navigationOptions = ({ navigation, screenProps }) => ({
+    title: `${
+      navigation.state.params && navigation.state.params.title
+        ? navigation.state.params.title
+        : 'Online Users'
+    }`,
     headerRight: (
       <>
         <TouchableOpacity onPress={() => navigation.navigate('SearchFilter')}>
@@ -30,6 +36,7 @@ class OnlineUsers extends React.Component {
       loadingMore: false,
       refreshing: false,
       totalRecords: null,
+      searchName: null,
       isCustomSearch: props.isCustomSearch,
       dialogCurrentValue: '',
     }
@@ -60,9 +67,10 @@ class OnlineUsers extends React.Component {
       update.isCustomSearch = nextProps.isCustomSearch
     }
 
-    console.log('-------')
-    console.log(prevState.loadingMore, prevState.refreshing, nextProps.loading)
-    console.log(update.refreshing)
+    if (nextProps.searchName !== prevState.searchName) {
+      update.searchName = nextProps.searchName
+      nextProps.navigation.setParams({ title: nextProps.searchName })
+    }
 
     return Object.keys(update).length ? update : null
   }
@@ -88,6 +96,10 @@ class OnlineUsers extends React.Component {
     this.props.searchUser(refresh)
   }
 
+  goToProfile = (info) => {
+    NavigationService.navigate('Profile', { item: info.item })
+  }
+
   renderItem(info) {
     const {
       item: { imageUrl, firstName, age, city, countryCode },
@@ -96,7 +108,7 @@ class OnlineUsers extends React.Component {
       <TouchableOpacity
         style={styles.profileContainer}
         activeOpacity={0.9}
-        onPress={() => Alert.alert('Go to profile')}
+        onPress={this.goToProfile.bind(this, info)}
       >
         <View style={Helpers.row}>
           <Image source={{ uri: imageUrl }} style={styles.profileSmallImage} />
@@ -124,13 +136,6 @@ class OnlineUsers extends React.Component {
         </View>
       </TouchableOpacity>
     )
-  }
-
-  async fetchProfiles(page, perPage = 20) {
-    const posts = await fetch(
-      `http://jsonplaceholder.typicode.com/photos?_page=${page}&_limit=${perPage}`
-    ).then((response) => response.json())
-    return posts
   }
 
   onEndReached = (info) => {
@@ -161,7 +166,7 @@ class OnlineUsers extends React.Component {
   }
 
   render() {
-    const { users, isCustomSearch, dialogCurrentValue, dialogVisible } = this.state
+    const { users, isCustomSearch, dialogCurrentValue, dialogVisible, searchName } = this.state
     return (
       <View style={styles.container}>
         <Dialog.Container visible={dialogVisible}>
@@ -174,7 +179,7 @@ class OnlineUsers extends React.Component {
           <Dialog.Button label="Save" onPress={this.confirmDialog} />
           <Dialog.Button label="Cancel" onPress={this.hideDialog} />
         </Dialog.Container>
-        {isCustomSearch && (
+        {isCustomSearch && !searchName && (
           <Button
             title="Save Named Search"
             buttonStyle={styles.saveSearch}
@@ -208,6 +213,8 @@ OnlineUsers.propTypes = {
   totalRecords: PropTypes.string,
   isCustomSearch: PropTypes.bool,
   saveSearch: PropTypes.func,
+  searchName: PropTypes.string,
+  navigation: PropTypes.object,
 }
 
 const mapStateToProps = (state) => ({
@@ -217,6 +224,7 @@ const mapStateToProps = (state) => ({
   loadMoreUrl: state.search.loadMoreUrl,
   totalRecords: state.search.totalRecords,
   isCustomSearch: state.search.isCustomSearch,
+  searchName: state.search.searchName,
 })
 
 const mapDispatchToProps = (dispatch) => ({

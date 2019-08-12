@@ -9,6 +9,7 @@ export default {
   transparent: 'rgba(0,0,0,0)',
   text: '#0d1517',
   altText: '#425866', // messages
+  defaultBlue: '#007aff',
   primary: 'rgba(34, 167, 240, 1)',
   success: '#28a745',
   error: '#dc3545',
