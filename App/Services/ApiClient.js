@@ -51,7 +51,7 @@ export function buildUserObject(obj) {
   user.addressLine1 = obj.address_line1 ? obj.address_line1[0] : null
   user.addressLine2 = obj.address_line2 ? obj.address_line2[0] : null
 
-  user.isBlocked = obj.is_blocked ? obj.is_blocked[0] : null
+  user.isBlocked = obj.is_blocked ? obj.is_blocked[0] === '1' : null
   user.isOnline = obj.is_online ? obj.is_online[0] === '1' : null
   user.lastLoggedIn = obj.last_logged_in ? obj.last_logged_in[0] : null
   user.membersince = obj.membersince ? obj.membersince[0] : null

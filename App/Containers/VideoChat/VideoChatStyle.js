@@ -6,10 +6,18 @@ export default StyleSheet.create({
   container: {
     flex: 1,
   },
+  titleContainer: {
+    ...Helpers.colCenter,
+  },
+  profileName: {
+    fontWeight: 'bold',
+    ...Fonts.style.medium,
+  },
   listViewContainer: {
     height: 150,
   },
   remoteView: {
+    backgroundColor: '#424242',
     position: 'absolute',
     top: 0,
     right: 0,
@@ -45,6 +53,14 @@ export default StyleSheet.create({
     borderRadius: 5,
     justifyContent: 'center',
   },
+  reverseCamButton: {
+    marginLeft: Metrics.baseMargin,
+    width: 40,
+    height: 40,
+    backgroundColor: Colors.primary,
+    borderRadius: 5,
+    justifyContent: 'center',
+  },
   disabled: {
     opacity: 0.3,
   },
@@ -61,7 +77,7 @@ export default StyleSheet.create({
   },
   modalText: {
     fontSize: 17,
-    marginBottom: 20,
+    marginBottom: Metrics.largeMargin,
   },
   buttonTitleStyle: {
     paddingHorizontal: 10,
@@ -69,5 +85,13 @@ export default StyleSheet.create({
   buttons: {
     alignSelf: 'center',
     flexDirection: 'row',
+  },
+  bottomButtons: {
+    position: 'absolute',
+    bottom: Metrics.largeMargin,
+    left: 0,
+    right: 0,
+    flexDirection: 'row',
+    justifyContent: 'center',
   },
 })

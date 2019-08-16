@@ -9,6 +9,7 @@ import styles from './OnlineUsersStyle'
 import { Images, Helpers } from 'App/Theme'
 import SearchActions from 'App/Stores/Search/Actions'
 import NavigationService from 'App/Services/NavigationService'
+import { ChatService } from 'App/Services/ChatService'
 
 class OnlineUsers extends React.Component {
   static navigationOptions = ({ navigation, screenProps }) => ({
@@ -100,9 +101,23 @@ class OnlineUsers extends React.Component {
     NavigationService.navigate('Profile', { item: info.item })
   }
 
+  startVideoChat = async (id, firstName) => {
+    if (!this.props.user.canUserStartChat()) {
+      const result = await ChatService.sendVideoChatRequest(id)
+
+      if (result === 'success') {
+        NavigationService.navigate('VideoChat', { id, firstName })
+      } else {
+      }
+    } else {
+      // Go to subscription
+      console.log('the user is free plan')
+    }
+  }
+
   renderItem(info) {
     const {
-      item: { imageUrl, firstName, age, city, countryCode },
+      item: { id, imageUrl, firstName, age, city, countryCode },
     } = info
     return (
       <TouchableOpacity
@@ -126,7 +141,7 @@ class OnlineUsers extends React.Component {
               placeholderStyle={styles.transparent}
             />
           </TouchableOpacity>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={this.startVideoChat.bind(this, id, firstName)}>
             <Image
               source={Images.videoCallIcon}
               style={styles.buttonImage}
@@ -215,9 +230,11 @@ OnlineUsers.propTypes = {
   saveSearch: PropTypes.func,
   searchName: PropTypes.string,
   navigation: PropTypes.object,
+  user: PropTypes.object,
 }
 
 const mapStateToProps = (state) => ({
+  user: state.user.user,
   users: state.search.users,
   loading: state.search.loading,
   searchErrorMessage: state.search.searchErrorMessage,

@@ -77,8 +77,83 @@ function sendVideoChatRequest(id, type = 'V') {
   })
 }
 
+function sendWink(id) {
+  return new Promise((resolve, reject) => {
+    ApiClient.post(Config.SHOW_PROFILE_URL, null, {
+      params: { operation: 'sendwink', ref_id: id },
+    })
+      .then((response) => {
+        if (in200s(response.status)) {
+          parseString(response.data, (err, result) => {
+            if (err) {
+              reject(err)
+            } else {
+              console.log(result)
+            }
+          })
+        } else {
+          reject(new Error('Unknown reason'))
+        }
+      })
+      .catch((e) => {
+        reject(e)
+      })
+  })
+}
+
+function blockUser(id) {
+  return new Promise((resolve, reject) => {
+    ApiClient.post(Config.SHOW_PROFILE_URL, null, {
+      params: { operation: 'banbuddy', ref_id: id },
+    })
+      .then((response) => {
+        if (in200s(response.status)) {
+          parseString(response.data, (err, result) => {
+            if (err) {
+              reject(err)
+            } else {
+              console.log(result)
+            }
+          })
+        } else {
+          reject(new Error('Unknown reason'))
+        }
+      })
+      .catch((e) => {
+        reject(e)
+      })
+  })
+}
+
+function unblockUser(id) {
+  return new Promise((resolve, reject) => {
+    ApiClient.get(Config.VARIOUS_OPS_URL, {
+      params: { operation: 'unblock_user', ref_userid: id },
+    })
+      .then((response) => {
+        if (in200s(response.status)) {
+          parseString(response.data, (err, result) => {
+            if (err) {
+              reject(err)
+            } else {
+              console.log(result)
+            }
+          })
+        } else {
+          reject(new Error('Unknown reason'))
+        }
+      })
+      .catch((e) => {
+        reject(e)
+      })
+  })
+}
+
 export const ChatService = {
   sendVideoChatRequest,
   getTurnCredentials,
   getChat,
+  sendWink,
+  blockUser,
+  unblockUser,
 }

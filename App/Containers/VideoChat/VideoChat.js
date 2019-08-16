@@ -1,5 +1,7 @@
 import React, { Component } from 'react'
 import { StyleSheet, Text, TouchableOpacity, View, TextInput, ListView } from 'react-native'
+import { NavigationEvents } from 'react-navigation'
+
 import { Button, Icon } from 'react-native-elements'
 import {
   RTCPeerConnection,
@@ -25,39 +27,6 @@ const configuration = {}
 //   iceServers:
 // };
 
-function getLocalStream(isFront, callback) {
-  mediaDevices.enumerateDevices().then((sourceInfos) => {
-    console.log(sourceInfos)
-    let videoSourceId
-    for (let i = 0; i < sourceInfos.length; i++) {
-      const sourceInfo = sourceInfos[i]
-      if (sourceInfo.kind == 'videoinput' && sourceInfo.facing == (isFront ? 'front' : 'back')) {
-        videoSourceId = sourceInfo.deviceId
-      }
-    }
-    mediaDevices
-      .getUserMedia({
-        audio: true,
-        video: {
-          mandatory: {
-            minWidth: 500, // Provide your own width, height and frame rate here
-            minHeight: 300,
-            minFrameRate: 30,
-          },
-          facingMode: isFront ? 'user' : 'environment',
-          optional: videoSourceId ? [{ sourceId: videoSourceId }] : [],
-        },
-      })
-      .then((stream) => {
-        // Got stream!
-        callback(stream)
-      })
-      .catch((error) => {
-        console.log(error)
-      })
-  })
-}
-
 function randomString(length) {
   var rand = Math.random()
     .toString(36)
@@ -69,7 +38,7 @@ function randomString(length) {
 
 class VideoChat extends Component {
   static navigationOptions = ({ navigation }) => {
-    const headerRight = !navigation.state.params.terminateEnabled ? (
+    const headerRight = (
       <View style={{ flexDirection: 'row', marginRight: 10 }}>
         <TouchableOpacity onPress={navigation.state.params.handleAudio} style={{ marginRight: 20 }}>
           <Icon size={30} type="antdesign" name="phone" color={Colors.defaultBlue} />
@@ -78,10 +47,28 @@ class VideoChat extends Component {
           <Icon size={30} type="antdesign" name="videocamera" color={Colors.defaultBlue} />
         </TouchableOpacity>
       </View>
-    ) : null
+    )
 
     return {
+      gesturesEnabled: !navigation.state.params.terminateEnabled,
       headerRight,
+      ...(navigation.state.params.terminateEnabled ? { header: null } : {}),
+      headerTitle: (
+        <View style={styles.titleContainer}>
+          <Text style={styles.profileName}>
+            {navigation.state.params && navigation.state.params.title
+              ? navigation.state.params.title
+              : ''}
+          </Text>
+          <Text>
+            {navigation.state.params.title
+              ? navigation.state.params.remoteStatusOnline
+                ? 'Online'
+                : 'Offline'
+              : ''}
+          </Text>
+        </View>
+      ),
     }
   }
 
@@ -169,6 +156,7 @@ class VideoChat extends Component {
             break
 
           case 'startCall':
+            this.disableCallBtns() // this is moved from
             this.startCall(false) // to start call when callee gives the go ahead (i.e. answers call)
 
             clearTimeout(this.awaitingResponse)
@@ -214,6 +202,9 @@ class VideoChat extends Component {
 
           case 'newSub':
             this.setState({ remoteStatusOnline: true })
+            this.props.navigation.setParams({
+              remoteStatusOnline: true,
+            })
 
             // once the other user joined and current user has been notified, current user should also send a signal
             // that he is online
@@ -230,10 +221,16 @@ class VideoChat extends Component {
 
           case 'imOnline':
             this.setState({ remoteStatusOnline: true })
+            this.props.navigation.setParams({
+              remoteStatusOnline: true,
+            })
             break
 
           case 'imOffline':
             this.setState({ remoteStatusOnline: false })
+            this.props.navigation.setParams({
+              remoteStatusOnline: false,
+            })
 
             this.showSnackBar(`${this.state.remoteUsername} left room`, false)
             this.enableCallBtns()
@@ -275,7 +272,7 @@ class VideoChat extends Component {
       }
       const messages = data.reduce(
         (acc, { message_id, message_body, message_from, message_time }) => {
-          if (message_body.startsWith('<font ')) return acc
+          // if (message_body.startsWith('<font ')) return acc
           acc.push({
             _id: message_id,
             text: message_body,
@@ -304,7 +301,10 @@ class VideoChat extends Component {
       handleAudio: this.initCall.bind(this, false),
       handleVideo: this.initCall.bind(this, true),
       terminateEnabled: false,
+      title: this.state.remoteUsername,
+      remoteStatusOnline: this.state.remoteStatusOnline,
     })
+
     this.loadMessages()
   }
 
@@ -361,7 +361,7 @@ class VideoChat extends Component {
     this.setState({ endCallEnabled: true })
 
     // disable call buttons
-    this.disableCallBtns()
+    // this.disableCallBtns()
 
     // wait for response for 30secs
     this.awaitingResponse = setTimeout(() => {
@@ -452,7 +452,7 @@ class VideoChat extends Component {
     }
 
     // set local media
-    this.setLocalMedia(this.streamConstraints, isCaller)
+    this.setLocalMedia(isCaller)
   }
 
   description = (desc) => {
@@ -468,8 +468,45 @@ class VideoChat extends Component {
     )
   }
 
-  setLocalMedia = (streamConstraints, isCaller) => {
-    getLocalStream(true, (stream) => {
+  getLocalStream = (callback) => {
+    mediaDevices.enumerateDevices().then((sourceInfos) => {
+      console.log(sourceInfos)
+      // let videoSourceId
+      // for (let i = 0; i < sourceInfos.length; i++) {
+      //   const sourceInfo = sourceInfos[i]
+      //   if (sourceInfo.kind == 'videoinput' && sourceInfo.facing == (isFront ? 'front' : 'back')) {
+      //     videoSourceId = sourceInfo.deviceId
+      //   }
+      // }
+
+      // if (this.streamConstraints.video) {
+      //   this.streamConstraints = {
+      //     ...this.streamConstraints,
+      //     video: {
+      //       mandatory: {
+      //         minWidth: 500, // Provide your own width, height and frame rate here
+      //         minHeight: 300,
+      //         minFrameRate: 30,
+      //       },
+      //       ...this.streamConstraints.video,
+      //       optional: videoSourceId ? [{ sourceId: videoSourceId }] : [],
+      //     },
+      //   }
+      // }
+      mediaDevices
+        .getUserMedia(this.streamConstraints)
+        .then((stream) => {
+          // Got stream!
+          callback(stream)
+        })
+        .catch((error) => {
+          console.log(error)
+        })
+    })
+  }
+
+  setLocalMedia = (isCaller) => {
+    this.getLocalStream((stream) => {
       this.setState({ selfViewSrc: stream.toURL() })
 
       this.myPC.addStream(stream) // add my stream to RTCPeerConnection
@@ -585,18 +622,29 @@ class VideoChat extends Component {
   }
 
   _switchVideoType = () => {
-    const isFront = !this.state.isFront
-    this.setState({ isFront })
-    getLocalStream(isFront, (stream) => {
-      if (this.myMediaStream) {
-        if (this.myPC) this.myPC.removeStream(this.myMediaStream)
-        this.myMediaStream.release()
-      }
-      this.myMediaStream = stream
-      this.setState({ selfViewSrc: stream.toURL() })
+    if (this.streamConstraints.video) {
+      const isFront = !this.state.isFront
+      this.setState({ isFront })
 
-      if (this.myPC) this.myPC.addStream(this.myMediaStream)
-    })
+      this.streamConstraints = {
+        ...this.streamConstraints,
+        video: {
+          ...this.streamConstraints.video,
+          facingMode: this.streamConstraints.video.facingMode === 'user' ? 'environment' : 'user',
+        },
+      }
+
+      this.getLocalStream((stream) => {
+        if (this.myMediaStream) {
+          if (this.myPC) this.myPC.removeStream(this.myMediaStream)
+          this.myMediaStream.release()
+        }
+        this.myMediaStream = stream
+        this.setState({ selfViewSrc: stream.toURL() })
+
+        if (this.myPC) this.myPC.addStream(this.myMediaStream)
+      })
+    }
   }
 
   toggleCallerModal = () => {
@@ -697,15 +745,31 @@ class VideoChat extends Component {
     return contentSize.height - layoutMeasurement.height - paddingToTop <= contentOffset.y
   }
 
+  componentWillUnmount() {
+    if (this.state.terminateEnabled) this.terminateCall()
+    socket.close()
+  }
+
   render() {
     const {
       user: { firstName, id },
     } = this.props
-    const { modalText, typingInfo, callerModal, calleeModal, endCallEnabled } = this.state
+    const {
+      modalText,
+      typingInfo,
+      callerModal,
+      calleeModal,
+      endCallEnabled,
+      terminateEnabled,
+    } = this.state
     return (
       <View style={styles.container}>
-        <RTCView streamURL={this.state.selfViewSrc} style={styles.selfView} />
-        <RTCView streamURL={this.state.remoteSrc} style={styles.remoteView} />
+        <NavigationEvents
+          onWillBlur={(event) => {
+            // add your code here :)
+            console.log('going back?', event.action.type === 'Navigation/BACK')
+          }}
+        />
         <Modal isVisible={callerModal}>
           <View style={styles.modalContent}>
             <Text style={styles.modalText}>{modalText}</Text>
@@ -757,73 +821,83 @@ class VideoChat extends Component {
           </View>
         </Modal>
 
-        <GiftedChat
-          messages={this.state.messages}
-          onSend={(messages) => this.onSend(messages)}
-          user={{
-            _id: id,
-            name: firstName,
-          }}
-          alwaysShowSend={true}
-          renderBubble={(props) => {
-            return (
-              <Bubble
+        {terminateEnabled ? (
+          <>
+            <RTCView objectFit="cover" streamURL={this.state.remoteSrc} style={styles.remoteView} />
+            <RTCView streamURL={this.state.selfViewSrc} style={styles.selfView} />
+            <View style={styles.bottomButtons}>
+              <Button
+                buttonStyle={styles.hangupButton}
+                onPress={this.terminateCall}
+                disabled={!terminateEnabled}
+                icon={<Icon name="call-end" color="white" />}
+              />
+              {this.streamConstraints && this.streamConstraints.video && (
+                <Button
+                  buttonStyle={styles.reverseCamButton}
+                  onPress={this._switchVideoType}
+                  icon={<Icon type="ionicon" name="ios-reverse-camera" color="white" />}
+                  disabled={!terminateEnabled}
+                />
+              )}
+            </View>
+          </>
+        ) : (
+          <GiftedChat
+            messages={this.state.messages}
+            onSend={(messages) => this.onSend(messages)}
+            user={{
+              _id: id,
+              name: firstName,
+            }}
+            alwaysShowSend={true}
+            renderBubble={(props) => {
+              return (
+                <Bubble
+                  {...props}
+                  textStyle={{
+                    right: {
+                      color: 'white',
+                    },
+                  }}
+                  wrapperStyle={{
+                    left: {
+                      backgroundColor: '#fa5891', // #ff78d7 // #f4b2b6
+                    },
+                  }}
+                />
+              )
+            }}
+            renderTime={(props) => (
+              <Time
                 {...props}
                 textStyle={{
-                  right: {
-                    color: 'white',
-                  },
-                }}
-                wrapperStyle={{
                   left: {
-                    backgroundColor: '#fa5891', // #ff78d7 // #f4b2b6
+                    color: 'black',
                   },
                 }}
               />
-            )
-          }}
-          renderTime={(props) => (
-            <Time
-              {...props}
-              textStyle={{
-                left: {
-                  color: 'black',
-                },
-              }}
-            />
-          )}
-          renderChatFooter={this.renderFooter}
-          extraData={{ typingInfo }}
-          onInputTextChanged={this.onInputTextChanged}
-          listViewProps={{
-            scrollEventThrottle: 400,
-            onScroll: ({ nativeEvent }) => {
-              if (
-                !this.state.loadingMore &&
-                !this.noMoreMessages &&
-                this.isCloseToTop(nativeEvent)
-              ) {
-                this.setState({ loadingMore: true })
-                this.loadMessages()
-              }
-            },
-          }}
-        />
+            )}
+            renderChatFooter={this.renderFooter}
+            extraData={{ typingInfo }}
+            onInputTextChanged={this.onInputTextChanged}
+            listViewProps={{
+              scrollEventThrottle: 400,
+              onScroll: ({ nativeEvent }) => {
+                if (
+                  !this.state.loadingMore &&
+                  !this.noMoreMessages &&
+                  this.isCloseToTop(nativeEvent)
+                ) {
+                  this.setState({ loadingMore: true })
+                  this.loadMessages()
+                }
+              },
+            }}
+          />
+        )}
 
-        {/* <View style={styles.buttons}>
-          <Button
-            buttonStyle={styles.hangupButton}
-            onPress={this.terminateCall}
-            disabled={!terminateEnabled}
-            icon={<Icon name="call-end" color="white" />}
-          />
-          <Button
-            buttonStyle={styles.hangupButton}
-            onPress={this._switchVideoType}
-            icon={<Icon type="ionicon" name="ios-reverse-camera" color="white" />}
-            disabled={!terminateEnabled}
-          />
-        </View>
+        {/* 
         <View style={{ flexDirection: 'row' }}>
           <Text>{remoteStatusOnline ? 'Online' : 'Offline'}</Text>
 

@@ -60,6 +60,23 @@ class Profile extends React.Component {
         url: `${photo}&width=600&height=600`,
       })),
     })
+
+    if (data.isBlocked) {
+      Alert.alert(
+        'You have blocked this user',
+        null,
+        [
+          { text: 'Unblock', onPress: this.unblockUser },
+          {
+            text: 'Dismiss',
+            onPress: () => {
+              this.props.navigation.goBack()
+            },
+          },
+        ],
+        { cancellable: false }
+      )
+    }
   }
 
   getIcon = (type) => {
@@ -100,6 +117,27 @@ class Profile extends React.Component {
 
   hideImageViewer = () => {
     this.setState({ showImageViewer: false })
+  }
+
+  wink = async () => {
+    const {
+      item: { id },
+    } = this.state
+    const result = await ChatService.sendWink(id)
+  }
+
+  blockUser = async () => {
+    const {
+      item: { id },
+    } = this.state
+    const result = await ChatService.blockUser(id)
+  }
+
+  unblockUser = async () => {
+    const {
+      item: { id },
+    } = this.state
+    const result = await ChatService.unblockUser(id)
   }
 
   startVideoChat = async () => {
@@ -155,7 +193,7 @@ class Profile extends React.Component {
                 <TouchableOpacity>
                   <Image source={Images.messageIcon} />
                 </TouchableOpacity>
-                <TouchableOpacity>
+                <TouchableOpacity onPress={this.wink}>
                   <Image source={Images.winkIcon} />
                 </TouchableOpacity>
                 {data.isOnline && (
@@ -164,7 +202,7 @@ class Profile extends React.Component {
                   </TouchableOpacity>
                 )}
 
-                <TouchableOpacity>
+                <TouchableOpacity onPress={this.blockUser}>
                   <Image source={Images.blockIcon} />
                 </TouchableOpacity>
               </View>
@@ -225,7 +263,9 @@ class Profile extends React.Component {
                         </View>
                         <Text style={styles.specifiedText}>{profileData.value}</Text>
                       </View>
-                    ) : null
+                    ) : (
+                      <View key={index} />
+                    )
                   )}
                 </Card>
                 <View style={styles.footer}>

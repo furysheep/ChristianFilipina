@@ -451,6 +451,7 @@ const DrawerContainer = createDrawerNavigator(
     ),
   },
   {
+    drawerLockMode: 'locked-closed',
     initialRouteName: 'Meet',
     contentComponent: DrawerMenu,
     contentOptions: {
