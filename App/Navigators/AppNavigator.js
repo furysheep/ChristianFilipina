@@ -121,14 +121,25 @@ const MeetScreen = createBottomTabNavigator(
         },
         Profile: {
           screen: Profile,
+          navigationOptions: ({ navigation }) => ({
+            headerBackTitle: ' ',
+          }),
         },
       },
       {
-        navigationOptions: {
-          tabBarLabel: 'Who Picked Me',
-          tabBarIcon: ({ tintColor }) => (
-            <Image source={Images.bottomLineWhoPickedMe} style={{ tintColor }} />
-          ),
+        navigationOptions: ({ navigation }) => {
+          let tabBarVisible = true
+          if (navigation.state.index > 0) {
+            tabBarVisible = false
+          }
+
+          return {
+            tabBarVisible,
+            tabBarLabel: 'Who Picked Me',
+            tabBarIcon: ({ tintColor }) => (
+              <Image source={Images.bottomLineWhoPickedMe} style={{ tintColor }} />
+            ),
+          }
         },
         defaultNavigationOptions: defaultStackNavigationOptions,
       }
@@ -140,14 +151,26 @@ const MeetScreen = createBottomTabNavigator(
           navigationOptions: ({ navigation }) => ({
             title: 'Messages', // Title to appear in status bar
             headerLeft: drawerHeaderLeft(navigation),
+            headerBackTitle: ' ',
           }),
+        },
+        Message: {
+          screen: Message,
         },
       },
       {
-        navigationOptions: {
-          tabBarIcon: ({ tintColor }) => (
-            <Image source={Images.messageMenuIcon} style={{ tintColor }} />
-          ),
+        navigationOptions: ({ navigation }) => {
+          let tabBarVisible = true
+          if (navigation.state.index > 0) {
+            tabBarVisible = false
+          }
+
+          return {
+            tabBarVisible,
+            tabBarIcon: ({ tintColor }) => (
+              <Image source={Images.messageMenuIcon} style={{ tintColor }} />
+            ),
+          }
         },
         defaultNavigationOptions: defaultStackNavigationOptions,
       }
@@ -159,15 +182,33 @@ const MeetScreen = createBottomTabNavigator(
           navigationOptions: ({ navigation }) => ({
             title: 'My Picks', // Title to appear in status bar
             headerLeft: drawerHeaderLeft(navigation),
+            headerBackTitle: ' ',
           }),
+        },
+        Profile: {
+          screen: Profile,
+          navigationOptions: ({ navigation }) => ({
+            headerBackTitle: ' ',
+          }),
+        },
+        VideoChat: {
+          screen: VideoChat,
         },
       },
       {
-        navigationOptions: {
-          tabBarLabel: 'My Picks',
-          tabBarIcon: ({ tintColor }) => (
-            <Image source={Images.speedDatingGameMyPicksMenuIcon} style={{ tintColor }} />
-          ),
+        navigationOptions: ({ navigation }) => {
+          let tabBarVisible = true
+          if (navigation.state.index > 0) {
+            tabBarVisible = false
+          }
+
+          return {
+            tabBarVisible,
+            tabBarLabel: 'My Picks',
+            tabBarIcon: ({ tintColor }) => (
+              <Image source={Images.speedDatingGameMyPicksMenuIcon} style={{ tintColor }} />
+            ),
+          }
         },
         defaultNavigationOptions: defaultStackNavigationOptions,
       }
@@ -270,6 +311,13 @@ const DrawerContainer = createDrawerNavigator(
           navigationOptions: ({ navigation }) => ({
             title: 'Viewed profiles', // Title to appear in status bar
             headerLeft: drawerHeaderLeft(navigation),
+            headerBackTitle: ' ',
+          }),
+        },
+        Profile: {
+          screen: Profile,
+          navigationOptions: ({ navigation }) => ({
+            headerBackTitle: ' ',
           }),
         },
       },
@@ -285,11 +333,18 @@ const DrawerContainer = createDrawerNavigator(
     ),
     ViewedMe: createStackNavigator(
       {
-        MyPicks: {
+        ViewedMe: {
           screen: ViewedMe,
           navigationOptions: ({ navigation }) => ({
             title: 'Who viewed me', // Title to appear in status bar
             headerLeft: drawerHeaderLeft(navigation),
+            headerBackTitle: ' ',
+          }),
+        },
+        Profile: {
+          screen: Profile,
+          navigationOptions: ({ navigation }) => ({
+            headerBackTitle: ' ',
           }),
         },
       },
@@ -310,6 +365,13 @@ const DrawerContainer = createDrawerNavigator(
           navigationOptions: ({ navigation }) => ({
             title: 'Winks', // Title to appear in status bar
             headerLeft: drawerHeaderLeft(navigation),
+            headerBackTitle: ' ',
+          }),
+        },
+        Profile: {
+          screen: Profile,
+          navigationOptions: ({ navigation }) => ({
+            headerBackTitle: ' ',
           }),
         },
       },

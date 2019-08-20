@@ -6,77 +6,96 @@ import { PropTypes } from 'prop-types'
 import Grid from 'react-native-infinite-scroll-grid'
 import styles from './MyPicksStyle'
 import { Images, Helpers } from 'App/Theme'
+import { userService } from 'App/Services/UserService'
+import NavigationService from 'App/Services/NavigationService'
+import { ChatService } from 'App/Services/ChatService'
 
 class MyPicks extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
       profiles: [],
-      loadingMore: false,
       refreshing: false,
-      nextPage: 1,
     }
   }
 
   componentDidMount() {
-    this.loadData(true)
+    this.loadData()
   }
 
   onRefresh() {
-    this.setState({ nextPage: 1, profiles: [] }, () => this.loadData(true))
+    this.setState({ profiles: [] }, () => this.loadData())
   }
 
-  async loadData(refresh) {
+  async loadData() {
     if (this.isLoading) return
-    console.log('loadData ' + this.isLoading + ',' + this.state.nextPage)
-    if (refresh) {
-      this.setState({ refreshing: true })
-    } else {
-      this.setState({ loadingMore: true })
-    }
+
+    this.setState({ refreshing: true })
 
     try {
       this.isLoading = true
-      const profiles = await this.fetchProfiles(this.state.nextPage)
-      this.setState((previousState) => {
-        return {
-          loadingMore: false,
-          profiles: refresh ? profiles : previousState.profiles.concat(profiles),
-          nextPage: previousState.nextPage + 1,
-        }
-      })
+      const profiles = await userService.getMyPicks()
+      this.setState({ profiles })
     } catch (error) {
       console.error(error)
     } finally {
       this.isLoading = false
-      this.setState({ loadingMore: false, refreshing: false })
+      this.setState({ refreshing: false })
+    }
+  }
+
+  navigateProfile = (info) => {
+    NavigationService.navigate('Profile', { id: info.item.id })
+  }
+
+  onMessage = (id, firstName) => {
+    NavigationService.navigate('Message', { id, firstName })
+  }
+
+  startVideoChat = async (id, firstName) => {
+    if (this.props.user.canUserStartChat()) {
+      const result = await ChatService.sendVideoChatRequest(id)
+
+      if (result === 'success') {
+        NavigationService.navigate('VideoChat', { id, firstName })
+      } else {
+      }
+    } else {
+      // Go to subscription
+      console.log('the user is free plan')
     }
   }
 
   renderItem(info) {
+    const {
+      item: { id, imageUrl, firstName, age, city, countryCode },
+    } = info
     return (
       <TouchableOpacity
         style={styles.profileContainer}
         activeOpacity={0.9}
-        onPress={() => Alert.alert('Go to profile')}
+        onPress={this.navigateProfile.bind(this, info)}
       >
         <View style={Helpers.row}>
-          <Image source={{ uri: info.item.thumbnailUrl }} style={styles.profileSmallImage} />
+          <Image source={{ uri: imageUrl }} style={styles.profileSmallImage} />
           <View style={styles.infoContainer}>
-            <Text>{'Michelle, 33'}</Text>
-            <Text>{'HK'}</Text>
+            <Text style={styles.nameText}>{`${firstName}, ${age}`}</Text>
+            <Text>{`${city ? `${city}, ` : ''}${countryCode}`}</Text>
           </View>
         </View>
-        <Image source={{ uri: info.item.thumbnailUrl }} style={styles.profileImage} />
+        <Image source={{ uri: `${imageUrl}&width=300&height=300` }} style={styles.profileImage} />
         <View style={styles.buttonsContainer}>
-          <TouchableOpacity style={styles.marginRight}>
+          <TouchableOpacity
+            onPress={this.onMessage.bind(this, id, firstName)}
+            style={styles.marginRight}
+          >
             <Image
               source={Images.messageIcon}
               style={styles.buttonImage}
               placeholderStyle={styles.transparent}
             />
           </TouchableOpacity>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={this.startVideoChat.bind(this, id, firstName)}>
             <Image
               source={Images.videoCallIcon}
               style={styles.buttonImage}
@@ -86,17 +105,6 @@ class MyPicks extends React.Component {
         </View>
       </TouchableOpacity>
     )
-  }
-
-  async fetchProfiles(page, perPage = 20) {
-    const posts = await fetch(
-      `http://jsonplaceholder.typicode.com/photos?_page=${page}&_limit=${perPage}`
-    ).then((response) => response.json())
-    return posts
-  }
-
-  onEndReached() {
-    this.loadData(false)
   }
 
   render() {
@@ -109,8 +117,6 @@ class MyPicks extends React.Component {
         renderItem={(info) => this.renderItem(info)}
         onRefresh={() => this.onRefresh()}
         refreshing={this.state.refreshing}
-        onEndReached={() => this.onEndReached()}
-        loadingMore={this.state.loadingMore}
         marginExternal={4}
         marginInternal={4}
       />
@@ -126,7 +132,7 @@ MyPicks.propTypes = {
   liveInEurope: PropTypes.bool,
 }
 
-const mapStateToProps = (state) => ({})
+const mapStateToProps = (state) => ({ user: state.user.user })
 
 const mapDispatchToProps = (dispatch) => ({})
 

@@ -1,65 +1,92 @@
 import React from 'react'
 import { View, TouchableOpacity, Alert } from 'react-native'
+import Spinner from 'react-native-loading-spinner-overlay'
 import { Image, Text } from 'react-native-elements'
 import { connect } from 'react-redux'
 import { PropTypes } from 'prop-types'
 import Grid from 'react-native-infinite-scroll-grid'
 import styles from './PickedMeStyle'
 import { Images, Helpers } from 'App/Theme'
-import { NavigationActions } from 'react-navigation'
+import { userService } from 'App/Services/UserService'
+import NavigationService from 'App/Services/NavigationService'
 
 class PickedMe extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
       profiles: [],
-      loadingMore: false,
       refreshing: false,
-      nextPage: 1,
+      loading: false,
     }
   }
 
   componentDidMount() {
-    this.loadData(true)
+    this.loadData()
   }
 
   onRefresh() {
-    this.setState({ nextPage: 1, profiles: [] }, () => this.loadData(true))
+    this.setState({ profiles: [] }, () => this.loadData())
   }
 
-  async loadData(refresh) {
+  async loadData() {
     if (this.isLoading) return
-    console.log('loadData ' + this.isLoading + ',' + this.state.nextPage)
-    if (refresh) {
-      this.setState({ refreshing: true })
-    } else {
-      this.setState({ loadingMore: true })
-    }
+
+    this.setState({ refreshing: true })
 
     try {
       this.isLoading = true
-      const profiles = await this.fetchProfiles(this.state.nextPage)
-      this.setState((previousState) => {
-        return {
-          loadingMore: false,
-          profiles: refresh ? profiles : previousState.profiles.concat(profiles),
-          nextPage: previousState.nextPage + 1,
-        }
-      })
+      const profiles = await userService.getPickedMe()
+      this.setState({ profiles })
     } catch (error) {
       console.error(error)
     } finally {
       this.isLoading = false
-      this.setState({ loadingMore: false, refreshing: false })
+      this.setState({ refreshing: false })
     }
   }
 
   navigateProfile = (info) => {
-    console.log(info)
-    this.props.navigation.navigate('Profile')
+    NavigationService.navigate('Profile', { id: info.item.id })
+  }
+
+  handleOnLikeItem = async ({ item }) => {
+    try {
+      this.setState({ loading: true })
+      await userService.setSpeedDatingAnswer(item.id, true)
+      let { profiles } = this.state
+      profiles = profiles.slice(0)
+      profiles.splice(profiles.indexOf(item), 1)
+      this.setState({
+        profiles,
+      })
+    } catch (e) {
+      console.log(e)
+    } finally {
+      this.setState({ loading: false })
+    }
+  }
+
+  handleOnDislikeItem = async ({ item }) => {
+    try {
+      this.setState({ loading: true })
+      await userService.setSpeedDatingAnswer(item.id, false)
+      let { profiles } = this.state
+      profiles = profiles.slice(0)
+      profiles.splice(profiles.indexOf(item), 1)
+      this.setState({
+        profiles,
+      })
+    } catch (e) {
+      console.log(e)
+    } finally {
+      this.setState({ loading: false })
+    }
   }
 
   renderItem = (info) => {
+    const {
+      item: { imageUrl, firstName, age, city, countryCode },
+    } = info
     return (
       <TouchableOpacity
         style={styles.profileContainer}
@@ -67,22 +94,25 @@ class PickedMe extends React.Component {
         onPress={this.navigateProfile.bind(this, info)}
       >
         <View style={Helpers.row}>
-          <Image source={{ uri: info.item.thumbnailUrl }} style={styles.profileSmallImage} />
+          <Image source={{ uri: imageUrl }} style={styles.profileSmallImage} />
           <View style={styles.infoContainer}>
-            <Text>{'Michelle, 33'}</Text>
-            <Text>{'HK'}</Text>
+            <Text style={styles.nameText}>{`${firstName}, ${age}`}</Text>
+            <Text>{`${city ? `${city}, ` : ''}${countryCode}`}</Text>
           </View>
         </View>
-        <Image source={{ uri: info.item.thumbnailUrl }} style={styles.profileImage} />
+        <Image source={{ uri: `${imageUrl}&width=300&height=300` }} style={styles.profileImage} />
         <View style={styles.buttonsContainer}>
-          <TouchableOpacity style={styles.marginRight}>
+          <TouchableOpacity
+            style={styles.marginRight}
+            onPress={this.handleOnDislikeItem.bind(this, info)}
+          >
             <Image
               source={Images.xDislikeSmallButton}
               style={styles.buttonImage}
               placeholderStyle={styles.transparent}
             />
           </TouchableOpacity>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={this.handleOnLikeItem.bind(this, info)}>
             <Image
               source={Images.heartLikeSmallButton}
               style={styles.buttonImage}
@@ -94,32 +124,23 @@ class PickedMe extends React.Component {
     )
   }
 
-  async fetchProfiles(page, perPage = 20) {
-    const posts = await fetch(
-      `http://jsonplaceholder.typicode.com/photos?_page=${page}&_limit=${perPage}`
-    ).then((response) => response.json())
-    return posts
-  }
-
-  onEndReached() {
-    this.loadData(false)
-  }
-
   render() {
+    const { loading } = this.state
     return (
-      <Grid
-        style={styles.container}
-        numColumns={2}
-        data={this.state.profiles}
-        keyExtractor={(item) => item.id.toString()}
-        renderItem={(info) => this.renderItem(info)}
-        onRefresh={() => this.onRefresh()}
-        refreshing={this.state.refreshing}
-        onEndReached={() => this.onEndReached()}
-        loadingMore={this.state.loadingMore}
-        marginExternal={4}
-        marginInternal={4}
-      />
+      <View style={styles.container}>
+        <Spinner visible={loading} />
+        <Grid
+          style={styles.container}
+          numColumns={2}
+          data={this.state.profiles}
+          keyExtractor={(item) => item.id.toString()}
+          renderItem={(info) => this.renderItem(info)}
+          onRefresh={() => this.onRefresh()}
+          refreshing={this.state.refreshing}
+          marginExternal={4}
+          marginInternal={4}
+        />
+      </View>
     )
   }
 }

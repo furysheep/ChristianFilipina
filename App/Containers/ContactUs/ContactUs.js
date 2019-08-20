@@ -1,21 +1,51 @@
 import React from 'react'
-import { View } from 'react-native'
+import { Alert } from 'react-native'
 import { Input, Text, Button, Divider } from 'react-native-elements'
 import { connect } from 'react-redux'
 import { PropTypes } from 'prop-types'
 import styles from './ContactUsStyle'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+import { userService } from 'App/Services/UserService'
 
 class ContactUs extends React.Component {
+  constructor(props) {
+    super(props)
+    this.state = { text: '', sendDisabled: false }
+  }
+
+  onSend = async () => {
+    const { text } = this.state
+    try {
+      this.setState({ sendDisabled: true })
+      await userService.sendContactUsMessage(text)
+      Alert.alert('Contact Us', 'We received your request. Will review it as soon as possible!')
+    } catch {
+      Alert.alert(
+        'Contact Us',
+        "Your request wasn't sent. Please check your internet connection or try later."
+      )
+    } finally {
+      this.setState({ sendDisabled: false })
+    }
+  }
+
   render() {
+    const { text, sendDisabled } = this.state
     return (
       <KeyboardAwareScrollView style={styles.container}>
         <Input
           placeholder={`Please write your message here.${'\n'}Our support team will try to reply as soon as possible.`}
           multiline={true}
           inputStyle={styles.multilineStyle}
+          value={text}
+          onChangeText={(text) => this.setState({ text })}
         />
-        <Button title="Send Message" buttonStyle={styles.sendButton} />
+        <Button
+          title="Send Message"
+          buttonStyle={styles.sendButton}
+          onPress={this.onSend}
+          disabled={sendDisabled || text.trim().length === 0}
+        />
         <Text style={styles.header}>CALL US</Text>
         <Text>(We are available 24 hours a day)</Text>
         <Divider style={styles.divider} />

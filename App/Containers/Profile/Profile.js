@@ -17,7 +17,7 @@ class Profile extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      item: props.navigation.state.params.item,
+      id: props.navigation.state.params.id,
       loading: false,
       photos: [],
       largePhotos: [],
@@ -43,11 +43,10 @@ class Profile extends React.Component {
   })
 
   async componentDidMount() {
-    const {
-      item: { id },
-    } = this.state
+    const { id } = this.state
     this.setState({ loading: true })
     const data = await userService.getUserData(id)
+    console.log(data)
     this.props.navigation.setParams({
       title: `${data.firstName}, ${data.age}`,
       subtitle: `${data.city ? `${data.city}, ` : ''}${data.countryCode}`,
@@ -120,30 +119,48 @@ class Profile extends React.Component {
   }
 
   wink = async () => {
+    const { id } = this.state
+    try {
+      const result = await ChatService.sendWink(id)
+      Alert.alert(result)
+    } catch (e) {
+      Alert.alert(e.message)
+    }
+  }
+
+  onMessage = () => {
     const {
-      item: { id },
+      id,
+      data: { firstName },
     } = this.state
-    const result = await ChatService.sendWink(id)
+    NavigationService.navigate('Message', { id, firstName })
   }
 
   blockUser = async () => {
-    const {
-      item: { id },
-    } = this.state
-    const result = await ChatService.blockUser(id)
+    const { id } = this.state
+    try {
+      const result = await ChatService.blockUser(id)
+      Alert.alert(result)
+      this.props.navigation.goBack()
+    } catch (e) {
+      Alert.alert(e.message)
+    }
   }
 
   unblockUser = async () => {
-    const {
-      item: { id },
-    } = this.state
-    const result = await ChatService.unblockUser(id)
+    const { id } = this.state
+    try {
+      const result = await ChatService.unblockUser(id)
+      Alert.alert(result)
+    } catch (e) {
+      Alert.alert(e.message)
+    }
   }
 
   startVideoChat = async () => {
     if (!this.props.user.canUserStartChat()) {
       const {
-        item: { id },
+        id,
         data: { firstName },
       } = this.state
       const result = await ChatService.sendVideoChatRequest(id)
@@ -160,7 +177,7 @@ class Profile extends React.Component {
   }
 
   render() {
-    const { loading, data, item, photos, largePhotos, showImageViewer, imageIndex } = this.state
+    const { loading, data, id, photos, largePhotos, showImageViewer, imageIndex } = this.state
     return (
       <View style={styles.container}>
         <Modal visible={showImageViewer} transparent={true}>
@@ -181,16 +198,16 @@ class Profile extends React.Component {
           <>
             <Card
               image={{
-                uri: `${Config.BASE_URL}${Config.USER_PICTURE_BASE_URL}?id=${
-                  item.id
-                }&width=600&height=600`,
+                uri: `${Config.BASE_URL}${
+                  Config.USER_PICTURE_BASE_URL
+                }?id=${id}&width=600&height=600`,
               }}
               imageStyle={styles.profileImage}
               containerStyle={styles.profileImageCard}
               wrapperStyle={styles.profileImageCardInner}
             >
               <View style={styles.buttons}>
-                <TouchableOpacity>
+                <TouchableOpacity onPress={this.onMessage}>
                   <Image source={Images.messageIcon} />
                 </TouchableOpacity>
                 <TouchableOpacity onPress={this.wink}>

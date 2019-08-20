@@ -98,7 +98,7 @@ class OnlineUsers extends React.Component {
   }
 
   goToProfile = (info) => {
-    NavigationService.navigate('Profile', { item: info.item })
+    NavigationService.navigate('Profile', { id: info.item.id })
   }
 
   startVideoChat = async (id, firstName) => {

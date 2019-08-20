@@ -6,20 +6,38 @@ import { PropTypes } from 'prop-types'
 import { WebView as RNWebView } from 'react-native-webview'
 
 class WebView extends React.Component {
+  constructor(props) {
+    super(props)
+    this.state = { url: '' }
+  }
+  componentDidMount() {
+    const { routeName } = this.props.navigation.state
+    const { user } = this.props
+    console.log(this.props.user)
+    let url = ''
+    switch (routeName) {
+      case 'Testimonials':
+        url = user.testimonialsUrl
+        break
+      case 'AdviceArticles':
+        url = user.researchUrl
+    }
+    this.setState({ url })
+  }
+
   render() {
-    return <RNWebView source={{ uri: 'https://infinite.red' }} />
+    const { url } = this.state
+    console.log(url)
+    return <RNWebView source={{ uri: url }} />
   }
 }
 
 WebView.propTypes = {
   user: PropTypes.object,
-  userIsLoading: PropTypes.bool,
-  userErrorMessage: PropTypes.string,
-  fetchUser: PropTypes.func,
-  liveInEurope: PropTypes.bool,
+  navigation: PropTypes.object,
 }
 
-const mapStateToProps = (state) => ({})
+const mapStateToProps = (state) => ({ user: state.user.user })
 
 const mapDispatchToProps = (dispatch) => ({})
 

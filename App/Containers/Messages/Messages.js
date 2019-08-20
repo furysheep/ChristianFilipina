@@ -1,10 +1,12 @@
 import React from 'react'
 import { View, FlatList, TouchableOpacity } from 'react-native'
-import { Text, Avatar } from 'react-native-elements'
+import { Text, Avatar, Badge, Icon } from 'react-native-elements'
 import { connect } from 'react-redux'
 import { PropTypes } from 'prop-types'
 import styles from './MessagesStyle'
 import NavigationService from 'App/Services/NavigationService'
+import { ChatService } from 'App/Services/ChatService'
+import { Colors } from 'App/Theme'
 
 class SelectableItem extends React.Component {
   handleOnPress = () => {
@@ -14,20 +16,48 @@ class SelectableItem extends React.Component {
 
   render() {
     const {
-      item: { id, name, subject, message },
+      item: {
+        firstname,
+        age,
+        subject,
+        message,
+        imageUrl,
+        match_type: matchType,
+        user_is_online: isOnline,
+        message_unread: unread,
+      },
     } = this.props
 
     return (
-      <TouchableOpacity key={id} onPress={this.handleOnPress} style={styles.itemContainer}>
-        <Avatar
-          rounded
-          source={{ uri: 'https://s3.amazonaws.com/uifaces/faces/twitter/adhamdannaway/128.jpg' }}
-          size="large"
-        />
+      <TouchableOpacity onPress={this.handleOnPress} style={styles.itemContainer}>
+        <Avatar rounded source={{ uri: imageUrl }} size="large" />
         <View style={styles.textSection}>
-          <Text style={styles.nameText}>{name}</Text>
-          <Text style={styles.subjectText}>{subject}</Text>
-          <Text style={styles.messageText}>{message}</Text>
+          <View style={styles.nameContainer}>
+            <Text style={styles.nameText}>
+              {firstname}, {age}
+            </Text>
+            {isOnline === 'yes' && <Badge status="primary" />}
+            <View style={{ flex: 1 }} />
+            {(matchType === 'new' || matchType === 'old') && (
+              <View style={styles.newMatchContainer}>
+                <Icon type="ionicon" name="md-heart" color={Colors.destructive} />
+                <Text style={styles.newMatchText}>
+                  {matchType === 'new' ? 'NEW MATCH' : 'MATCH'}
+                </Text>
+              </View>
+            )}
+          </View>
+          {subject && subject.length !== 0 ? (
+            <Text style={styles.subjectText}>{subject}</Text>
+          ) : null}
+          {message && message.length !== 0 ? (
+            <Text style={unread === 'yes' ? styles.unreadMessageText : styles.messageText}>
+              {message}
+            </Text>
+          ) : null}
+          {matchType === 'new' && (
+            <Text style={styles.notificationText}>Click to send a message</Text>
+          )}
         </View>
       </TouchableOpacity>
     )
@@ -43,12 +73,23 @@ class Messages extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      data: [{ name: 'Alvie, 34', subject: 'Subject: Welcome', message: 'Hello', id: '1' }],
+      data: [],
+      refreshing: false,
     }
   }
 
+  componentDidMount() {
+    this.onRefresh()
+  }
+
+  onRefresh = async () => {
+    this.setState({ refreshing: true })
+    const data = await ChatService.getInboxList()
+    this.setState({ data, refreshing: false })
+  }
+
   handleOnPressItem = (item) => {
-    NavigationService.navigate('Message', { title: item.name })
+    NavigationService.navigate('Message', { id: item.userid, firstName: item.firstname })
   }
 
   renderItem = ({ item }) => {
@@ -57,7 +98,15 @@ class Messages extends React.Component {
 
   render() {
     const { data } = this.state
-    return <FlatList data={data} keyExtractor={(item) => item.id} renderItem={this.renderItem} />
+    return (
+      <FlatList
+        data={data}
+        keyExtractor={(item) => item.userid}
+        renderItem={this.renderItem}
+        onRefresh={this.onRefresh}
+        refreshing={this.state.refreshing}
+      />
+    )
   }
 }
 

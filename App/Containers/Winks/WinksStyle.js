@@ -6,11 +6,12 @@ export default StyleSheet.create({
   container: {
     ...ApplicationStyles.screen.container,
     flex: 1,
-    justifyContent: 'center',
+    ...Helpers.center,
   },
   itemContainer: {
     ...Helpers.row,
-    padding: Metrics.largeMargin,
+    paddingHorizontal: Metrics.baseMargin,
+    paddingVertical: Metrics.smallMargin,
   },
   textSection: {
     ...Helpers.fillRowCross,

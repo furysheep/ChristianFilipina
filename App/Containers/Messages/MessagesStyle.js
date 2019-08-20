@@ -10,7 +10,8 @@ export default StyleSheet.create({
   },
   itemContainer: {
     ...Helpers.row,
-    padding: Metrics.largeMargin,
+    paddingHorizontal: Metrics.baseMargin,
+    paddingVertical: Metrics.smallMargin,
   },
   textSection: {
     ...Helpers.fillColMain,
@@ -18,10 +19,22 @@ export default StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: Colors.separator,
   },
+  newMatchContainer: {
+    ...Helpers.rowCross,
+  },
+  newMatchText: {
+    marginLeft: Metrics.smallMargin,
+    color: Colors.destructive,
+  },
+  nameContainer: {
+    ...Helpers.rowCross,
+    ...Helpers.selfStretch,
+    marginBottom: Metrics.smallMargin,
+  },
   nameText: {
     fontWeight: 'bold',
     ...Fonts.style.medium,
-    marginBottom: Metrics.smallMargin,
+    marginRight: Metrics.smallMargin,
   },
   subjectText: {
     fontWeight: 'bold',
@@ -29,6 +42,15 @@ export default StyleSheet.create({
   },
   messageText: {
     color: Colors.altText,
+    marginBottom: Metrics.smallMargin,
+  },
+  unreadMessageText: {
+    color: Colors.destructive,
+    fontWeight: 'bold',
+    marginBottom: Metrics.smallMargin,
+  },
+  notificationText: {
+    color: Colors.primary,
     marginBottom: Metrics.smallMargin,
   },
 })

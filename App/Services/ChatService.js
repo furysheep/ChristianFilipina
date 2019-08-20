@@ -78,19 +78,18 @@ function sendVideoChatRequest(id, type = 'V') {
 }
 
 function sendWink(id) {
+  const form = new FormData()
+  form.append('operation', 'sendwink')
+  form.append('ref_id', id)
   return new Promise((resolve, reject) => {
-    ApiClient.post(Config.SHOW_PROFILE_URL, null, {
-      params: { operation: 'sendwink', ref_id: id },
-    })
+    ApiClient.post(Config.SHOW_PROFILE_URL, form)
       .then((response) => {
         if (in200s(response.status)) {
-          parseString(response.data, (err, result) => {
-            if (err) {
-              reject(err)
-            } else {
-              console.log(result)
-            }
-          })
+          if (response.data.success) {
+            resolve(response.data.description)
+          } else {
+            reject(new Error(response.data))
+          }
         } else {
           reject(new Error('Unknown reason'))
         }
@@ -102,19 +101,18 @@ function sendWink(id) {
 }
 
 function blockUser(id) {
+  const form = new FormData()
+  form.append('operation', 'banbuddy')
+  form.append('ref_id', id)
   return new Promise((resolve, reject) => {
-    ApiClient.post(Config.SHOW_PROFILE_URL, null, {
-      params: { operation: 'banbuddy', ref_id: id },
-    })
+    ApiClient.post(Config.SHOW_PROFILE_URL, form)
       .then((response) => {
         if (in200s(response.status)) {
-          parseString(response.data, (err, result) => {
-            if (err) {
-              reject(err)
-            } else {
-              console.log(result)
-            }
-          })
+          if (response.data.success) {
+            resolve(response.data.description)
+          } else {
+            reject(new Error(response.data))
+          }
         } else {
           reject(new Error('Unknown reason'))
         }
@@ -128,8 +126,145 @@ function blockUser(id) {
 function unblockUser(id) {
   return new Promise((resolve, reject) => {
     ApiClient.get(Config.VARIOUS_OPS_URL, {
-      params: { operation: 'unblock_user', ref_userid: id },
+      params: {
+        operation: 'unblock_user',
+        ref_userid: id,
+      },
     })
+      .then((response) => {
+        if (in200s(response.status)) {
+          if (response.data.success === 1) {
+            resolve('Unblocked successfully')
+          } else {
+            reject(new Error(response.data))
+          }
+        } else {
+          reject(new Error('Unknown reason'))
+        }
+      })
+      .catch((e) => {
+        reject(e)
+      })
+  })
+}
+
+function getInboxList(offset = 0, limit = 10) {
+  const form = new FormData()
+  form.append('folder', 'inbox')
+  form.append('limit', limit)
+  form.append('offset', offset)
+  return new Promise((resolve, reject) => {
+    ApiClient.post(Config.MESSAGES_URL, form)
+      .then((response) => {
+        if (in200s(response.status)) {
+          parseString(response.data, (err, result) => {
+            if (err) {
+              reject(err)
+            } else {
+              resolve(
+                result.response.userdata_list[0].userdata.map((item) => ({
+                  ...Object.keys(item).reduce((acc, key) => ({ ...acc, [key]: item[key][0] }), {}),
+                  imageUrl: `${Config.BASE_URL}${Config.USER_PICTURE_BASE_URL}?id=${
+                    item.userid[0]
+                  }`,
+                }))
+              )
+            }
+          })
+        } else {
+          reject(new Error('Unknown reason'))
+        }
+      })
+      .catch((e) => {
+        reject(e)
+      })
+  })
+}
+
+function deleteInboxThread(messageId, userId) {
+  const form = new FormData()
+  form.append('last_message_id', messageId)
+  form.append('ref_userid', userId)
+  form.append('action', 'delete-thread')
+  return new Promise((resolve, reject) => {
+    ApiClient.post(Config.MESSAGES_CHAT_ACTIONS_URL, form)
+      .then((response) => {
+        if (in200s(response.status)) {
+          parseString(response.data, (err, result) => {
+            if (err) {
+              reject(err)
+            } else {
+              resolve(result.response.success[0] === '1')
+            }
+          })
+        } else {
+          reject(new Error('Unknown reason'))
+        }
+      })
+      .catch((e) => {
+        reject(e)
+      })
+  })
+}
+
+function unmatchUser(userId) {
+  const form = new FormData()
+  form.append('ref_userid', userId)
+  form.append('action', 'unmatch-user')
+  return new Promise((resolve, reject) => {
+    ApiClient.post(Config.MESSAGES_CHAT_ACTIONS_URL, form)
+      .then((response) => {
+        if (in200s(response.status)) {
+          parseString(response.data, (err, result) => {
+            if (err) {
+              reject(err)
+            } else {
+              resolve(result.response.success[0] === '1')
+            }
+          })
+        } else {
+          reject(new Error('Unknown reason'))
+        }
+      })
+      .catch((e) => {
+        reject(e)
+      })
+  })
+}
+
+function archiveInboxThread(userId) {
+  const form = new FormData()
+  form.append('ref_userid', userId)
+  form.append('action', 'archive-thread')
+  return new Promise((resolve, reject) => {
+    ApiClient.post(Config.MESSAGES_CHAT_ACTIONS_URL, form)
+      .then((response) => {
+        if (in200s(response.status)) {
+          parseString(response.data, (err, result) => {
+            if (err) {
+              reject(err)
+            } else {
+              resolve(result.response.success[0] === '1')
+            }
+          })
+        } else {
+          reject(new Error('Unknown reason'))
+        }
+      })
+      .catch((e) => {
+        reject(e)
+      })
+  })
+}
+
+function getInboxMessages(userId, offset = 0) {
+  const form = new FormData()
+  form.append('ref_userid', userId)
+  form.append('folder', 'inbox')
+  form.append('limit', 10)
+  form.append('offset', offset)
+  return new Promise((resolve, reject) => {
+    ApiClient.post(Config.MESSAGES_CHAT_URL, form)
       .then((response) => {
         if (in200s(response.status)) {
           parseString(response.data, (err, result) => {
@@ -137,6 +272,40 @@ function unblockUser(id) {
               reject(err)
             } else {
               console.log(result)
+              resolve({
+                locked: result.response.is_locked[0] === 'yes',
+                messages: result.response.messages_list
+                  ? result.response.messages_list[0].message
+                  : [],
+              })
+            }
+          })
+        } else {
+          reject(new Error('Unknown reason'))
+        }
+      })
+      .catch((e) => {
+        reject(e)
+      })
+  })
+}
+
+function sendInboxMessage(userId, message, messageId) {
+  const form = new FormData()
+  form.append('last_message_id', messageId)
+  form.append('ref_userid', userId)
+  form.append('action', 'send-message')
+  form.append('msg_body', message)
+  return new Promise((resolve, reject) => {
+    ApiClient.post(Config.MESSAGES_CHAT_ACTIONS_URL, form)
+      .then((response) => {
+        if (in200s(response.status)) {
+          parseString(response.data, (err, result) => {
+            if (err) {
+              reject(err)
+            } else {
+              resolve(result.response.message_id[0])
+              // resolve(result.response.success[0] === '1')
             }
           })
         } else {
@@ -156,4 +325,10 @@ export const ChatService = {
   sendWink,
   blockUser,
   unblockUser,
+  getInboxList,
+  deleteInboxThread,
+  unmatchUser,
+  archiveInboxThread,
+  getInboxMessages,
+  sendInboxMessage,
 }

@@ -4,6 +4,7 @@ import { Text, Icon } from 'react-native-elements'
 import { connect } from 'react-redux'
 import { PropTypes } from 'prop-types'
 import styles from './NotificationsStyle'
+import { notificationService } from 'App/Services/NotificationService'
 
 class Notifications extends React.Component {
   static navigationOptions = {
@@ -12,6 +13,10 @@ class Notifications extends React.Component {
         <Icon name="refresh" size={35} underlayColor={'#64b5f6'} />
       </TouchableOpacity>
     ),
+  }
+
+  componentDidMount() {
+    notificationService.getRecentPushNotifications()
   }
 
   render() {
