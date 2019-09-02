@@ -1,8 +1,13 @@
-package com.christianfilipina;
+package air.com.christianfilipina.mobile;
 
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import com.dooboolab.RNIap.RNIapPackage;
+import io.invertase.firebase.analytics.ReactNativeFirebaseAnalyticsPackage;
+import io.invertase.firebase.app.ReactNativeFirebaseAppPackage;
+
+import com.imagepicker.ImagePickerPackage;
 import com.azendoo.reactnativesnackbar.SnackbarPackage;
 import com.oblador.keychain.KeychainPackage;
 import com.beefe.picker.PickerViewPackage;
@@ -29,6 +34,10 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+            new RNIapPackage(),
+            new ReactNativeFirebaseAnalyticsPackage(),
+            new ReactNativeFirebaseAppPackage(),
+            new ImagePickerPackage(),
             new SnackbarPackage(),
             new KeychainPackage(),
             new PickerViewPackage(),

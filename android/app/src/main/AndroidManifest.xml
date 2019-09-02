@@ -1,9 +1,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-  package="com.christianfilipina">
+    xmlns:tools="http://schemas.android.com/tools"
+    package="air.com.christianfilipina.mobile">
 
     <uses-permission android:name="android.permission.INTERNET" />
-
+    <uses-permission android:name="com.android.vending.BILLING" />
     <application
+      android:usesCleartextTraffic="true"
       android:name=".MainApplication"
       android:label="@string/app_name"
       android:icon="@mipmap/ic_launcher"

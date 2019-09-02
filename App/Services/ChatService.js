@@ -148,11 +148,11 @@ function unblockUser(id) {
   })
 }
 
-function getInboxList(offset = 0, limit = 10) {
+function getInboxList(page = 0) {
   const form = new FormData()
   form.append('folder', 'inbox')
-  form.append('limit', limit)
-  form.append('offset', offset)
+  form.append('limit', 10)
+  form.append('offset', page * 10)
   return new Promise((resolve, reject) => {
     ApiClient.post(Config.MESSAGES_URL, form)
       .then((response) => {
@@ -161,14 +161,19 @@ function getInboxList(offset = 0, limit = 10) {
             if (err) {
               reject(err)
             } else {
-              resolve(
-                result.response.userdata_list[0].userdata.map((item) => ({
-                  ...Object.keys(item).reduce((acc, key) => ({ ...acc, [key]: item[key][0] }), {}),
-                  imageUrl: `${Config.BASE_URL}${Config.USER_PICTURE_BASE_URL}?id=${
-                    item.userid[0]
-                  }`,
-                }))
-              )
+              if (result.response)
+                resolve(
+                  result.response.userdata_list[0].userdata.map((item) => ({
+                    ...Object.keys(item).reduce(
+                      (acc, key) => ({ ...acc, [key]: item[key][0] }),
+                      {}
+                    ),
+                    imageUrl: `${Config.BASE_URL}${Config.USER_PICTURE_BASE_URL}?id=${
+                      item.userid[0]
+                    }`,
+                  }))
+                )
+              else resolve([])
             }
           })
         } else {
@@ -271,7 +276,6 @@ function getInboxMessages(userId, offset = 0) {
             if (err) {
               reject(err)
             } else {
-              console.log(result)
               resolve({
                 locked: result.response.is_locked[0] === 'yes',
                 messages: result.response.messages_list

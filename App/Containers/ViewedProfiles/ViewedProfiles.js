@@ -107,7 +107,7 @@ class ViewedProfiles extends React.Component {
 
   render() {
     const { profiles, refreshing } = this.state
-    return profiles.length === 0 ? (
+    return !refreshing && profiles.length === 0 ? (
       <View style={styles.container}>
         <Text>No viewed Profiles</Text>
       </View>

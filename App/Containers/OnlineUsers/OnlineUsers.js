@@ -102,7 +102,7 @@ class OnlineUsers extends React.Component {
   }
 
   startVideoChat = async (id, firstName) => {
-    if (!this.props.user.canUserStartChat()) {
+    if (this.props.user.canUserStartChat()) {
       const result = await ChatService.sendVideoChatRequest(id)
 
       if (result === 'success') {

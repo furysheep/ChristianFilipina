@@ -224,3 +224,4 @@ export const countryNameFromCode = (code) =>
   countryCodes.indexOf(code) >= 0 ? countryNames[countryCodes.indexOf(code)] : null
 export const countryCodeFromName = (name) =>
   countryNames.indexOf(name) >= 0 ? countryCodes[countryNames.indexOf(name)] : null
+export default countries

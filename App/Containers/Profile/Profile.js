@@ -46,7 +46,7 @@ class Profile extends React.Component {
     const { id } = this.state
     this.setState({ loading: true })
     const data = await userService.getUserData(id)
-    console.log(data)
+
     this.props.navigation.setParams({
       title: `${data.firstName}, ${data.age}`,
       subtitle: `${data.city ? `${data.city}, ` : ''}${data.countryCode}`,
@@ -158,7 +158,7 @@ class Profile extends React.Component {
   }
 
   startVideoChat = async () => {
-    if (!this.props.user.canUserStartChat()) {
+    if (this.props.user.canUserStartChat()) {
       const {
         id,
         data: { firstName },

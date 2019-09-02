@@ -7,6 +7,13 @@ export default StyleSheet.create({
     ...ApplicationStyles.screen.container,
     flex: 1,
   },
+  center: {
+    ...Helpers.center,
+  },
+  noUsers: {
+    textAlign: 'center',
+    ...Fonts.style.large,
+  },
   profileImageCard: { width: 200, alignSelf: 'center' },
   profileImage: {
     width: 200,
@@ -40,6 +47,14 @@ export default StyleSheet.create({
   },
   description: {
     padding: Metrics.smallMargin,
+    ...Helpers.row,
+  },
+  activityText: {
+    ...Helpers.fill,
+    marginRight: Metrics.baseMargin,
+  },
+  activityTime: {
+    color: Colors.primary,
   },
   specifiedSection: {
     marginVertical: Metrics.baseMargin,

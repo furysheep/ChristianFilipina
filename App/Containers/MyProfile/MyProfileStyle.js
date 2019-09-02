@@ -11,6 +11,9 @@ export default StyleSheet.create({
   scrollView: {
     padding: Metrics.largeMargin,
   },
+  requiredField: {
+    color: 'red',
+  },
   profileImageContainer: {
     ...Helpers.rowCenter,
     marginBottom: Metrics.baseMargin,
@@ -28,9 +31,24 @@ export default StyleSheet.create({
   multilineStyle: {
     height: 100,
     ...Helpers.multilineStyle,
+    paddingLeft: Metrics.baseMargin,
   },
   saveButton: {
     width: '50%',
     alignSelf: 'center',
+  },
+  inputContainer: {
+    alignSelf: 'stretch',
+    paddingHorizontal: 10,
+    marginBottom: Metrics.largeMargin,
+  },
+  input: {
+    paddingLeft: Metrics.baseMargin,
+  },
+  datePicker: { backgroundColor: 'white', width: '100%' },
+  dateIcon: {
+    position: 'absolute',
+    left: 0,
+    marginLeft: 10,
   },
 })

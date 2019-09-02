@@ -1,17 +1,29 @@
-import React from 'react'
-import { View, FlatList, TouchableOpacity } from 'react-native'
-import { Text, Avatar, Badge, Icon } from 'react-native-elements'
+import React, { Fragment } from 'react'
+import { ActivityIndicator, View, FlatList, TouchableOpacity, Alert } from 'react-native'
+import { Text, Avatar, Badge, Icon, Button } from 'react-native-elements'
 import { connect } from 'react-redux'
 import { PropTypes } from 'prop-types'
+import Spinner from 'react-native-loading-spinner-overlay'
+import { connectActionSheet } from '@expo/react-native-action-sheet'
 import styles from './MessagesStyle'
 import NavigationService from 'App/Services/NavigationService'
 import { ChatService } from 'App/Services/ChatService'
-import { Colors } from 'App/Theme'
+import { Colors, Images } from 'App/Theme'
 
 class SelectableItem extends React.Component {
   handleOnPress = () => {
     const { onPressItem, item } = this.props
     onPressItem(item)
+  }
+
+  onDelete = () => {
+    const { onDelete, item } = this.props
+    onDelete(item)
+  }
+
+  onMore = () => {
+    const { onMore, item } = this.props
+    onMore(item)
   }
 
   render() {
@@ -59,6 +71,16 @@ class SelectableItem extends React.Component {
             <Text style={styles.notificationText}>Click to send a message</Text>
           )}
         </View>
+        <View style={styles.buttons}>
+          <Icon
+            reverse
+            name="delete"
+            size={15}
+            color={Colors.destructive}
+            onPress={this.onDelete}
+          />
+          <Icon reverse name="more-horiz" size={15} color={Colors.success} onPress={this.onMore} />
+        </View>
       </TouchableOpacity>
     )
   }
@@ -66,46 +88,180 @@ class SelectableItem extends React.Component {
 
 SelectableItem.propTypes = {
   onPressItem: PropTypes.func,
+  onDelete: PropTypes.func,
+  onMore: PropTypes.func,
   item: PropTypes.object,
 }
 
 class Messages extends React.Component {
+  static navigationOptions = ({ navigation }) => ({
+    headerRight: (
+      <TouchableOpacity onPress={() => {}}>
+        <Icon name="refresh" size={35} underlayColor={'#64b5f6'} />
+      </TouchableOpacity>
+    ),
+  })
+
   constructor(props) {
     super(props)
+    this.page = 0
     this.state = {
       data: [],
       refreshing: false,
+      editing: false,
+      loading: false,
+      loadingMore: false,
+      endReached: false,
     }
   }
 
   componentDidMount() {
+    this.props.navigation.setParams({
+      onEdit: this.onEdit,
+      editing: this.state.editing,
+    })
+
     this.onRefresh()
   }
 
+  onEdit = () => {
+    let { editing } = this.state
+    editing = !editing
+    this.props.navigation.setParams({
+      editing,
+    })
+    this.setState({ editing })
+  }
+
   onRefresh = async () => {
-    this.setState({ refreshing: true })
-    const data = await ChatService.getInboxList()
+    if (this.state.loadingMore) return
+    this.setState({ refreshing: true, endReached: false })
+    this.page = 0
+    const data = await ChatService.getInboxList(this.page)
     this.setState({ data, refreshing: false })
+    if (data.length < 10) {
+      this.setState({ endReached: true })
+    }
   }
 
   handleOnPressItem = (item) => {
     NavigationService.navigate('Message', { id: item.userid, firstName: item.firstname })
   }
 
+  onDelete = async (item) => {
+    this.setState({ loading: true })
+    if (await ChatService.deleteInboxThread(item.message_id, item.userid)) {
+      const { data } = this.state
+      this.setState({ data: data.filter((row) => row.message_id !== item.message_id) })
+    } else {
+      setTimeout(() => Alert.alert('Error', 'Message thread deleting error'), 500)
+    }
+    this.setState({ loading: false })
+  }
+
+  onMore = (item) => {
+    const options = ['Archive', `Block ${item.firstname}`, 'Cancel']
+    const isMatch = item.match_type !== 'no'
+
+    let destructiveButtonIndex = 1
+    let cancelButtonIndex = 2
+
+    if (isMatch) {
+      options.splice(0, 0, `Unmatch ${item.firstname}`)
+      destructiveButtonIndex++
+      cancelButtonIndex++
+    }
+
+    this.props.showActionSheetWithOptions(
+      {
+        options,
+        cancelButtonIndex,
+        destructiveButtonIndex,
+      },
+      async (buttonIndex) => {
+        // Do something here depending on the button index selected
+        if (buttonIndex === cancelButtonIndex) {
+          return
+        }
+        this.setState({ loading: true })
+        if (buttonIndex === destructiveButtonIndex) {
+          // archive
+
+          if (await ChatService.archiveInboxThread(item.userid)) {
+            const { data } = this.state
+            this.setState({ data: data.filter((row) => row.userid !== item.userid) })
+          } else {
+            setTimeout(() => Alert.alert('Error', 'Message thread archiving error'), 500)
+          }
+        } else if (buttonIndex === destructiveButtonIndex - 1) {
+          // block
+          if (await ChatService.blockUser(item.userid)) {
+            const { data } = this.state
+            this.setState({ data: data.filter((row) => row.userid !== item.userid) })
+          } else {
+            setTimeout(() => Alert.alert('Error', 'Block user error'), 500)
+          }
+        } else if (buttonIndex === destructiveButtonIndex - 2) {
+          // unmatch
+          if (await ChatService.unmatchUser(item.userid)) {
+            const { data } = this.state
+            const index = data.findIndex((row) => row.userid === item.userid)
+            const newData = data.slice(0)
+            newData[index] = { ...newData[index], match_type: 'new' }
+            this.setState({ data: newData })
+          } else {
+            setTimeout(() => Alert.alert('Error', 'Unmatch user error'), 500)
+          }
+        }
+        this.setState({ loading: false })
+      }
+    )
+  }
+
   renderItem = ({ item }) => {
-    return <SelectableItem onPressItem={this.handleOnPressItem} item={item} />
+    return (
+      <SelectableItem
+        onPressItem={this.handleOnPressItem}
+        onDelete={this.onDelete}
+        onMore={this.onMore}
+        item={item}
+      />
+    )
+  }
+
+  renderFooter = () => {
+    if (!this.state.loadingMore || this.state.endReached) return null
+    return <ActivityIndicator style={{ color: '#000' }} />
+  }
+
+  handleLoadMore = async () => {
+    if (!this.state.refreshing && !this.state.loadingMore && !this.state.endReached) {
+      this.page = this.page + 1 // increase page by 1
+      this.setState({ loadingMore: true })
+      try {
+        const data = await ChatService.getInboxList(this.page)
+        this.setState({ data: this.state.data.concat(data), endReached: data.length < 10 })
+      } catch {}
+
+      this.setState({ loadingMore: false })
+    }
   }
 
   render() {
-    const { data } = this.state
+    const { data, loading } = this.state
     return (
-      <FlatList
-        data={data}
-        keyExtractor={(item) => item.userid}
-        renderItem={this.renderItem}
-        onRefresh={this.onRefresh}
-        refreshing={this.state.refreshing}
-      />
+      <View style={styles.container}>
+        <Spinner visible={loading} />
+        <FlatList
+          data={data}
+          keyExtractor={(item) => item.userid}
+          renderItem={this.renderItem}
+          onRefresh={this.onRefresh}
+          refreshing={this.state.refreshing}
+          ListFooterComponent={this.renderFooter}
+          onEndReached={this.handleLoadMore}
+        />
+      </View>
     )
   }
 }
@@ -115,14 +271,18 @@ Messages.propTypes = {
   userIsLoading: PropTypes.bool,
   userErrorMessage: PropTypes.string,
   fetchUser: PropTypes.func,
+  showActionSheetWithOptions: PropTypes.func,
   liveInEurope: PropTypes.bool,
+  navigation: PropTypes.object,
 }
 
 const mapStateToProps = (state) => ({})
 
 const mapDispatchToProps = (dispatch) => ({})
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(Messages)
+export default connectActionSheet(
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )(Messages)
+)

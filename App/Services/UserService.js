@@ -122,7 +122,155 @@ function getUserData(id) {
             if (err) {
               reject(err)
             } else {
-              resolve(buildUserObject(result.userdata))
+              resolve({ ...buildUserObject(result.userdata), id })
+            }
+          })
+        } else {
+          reject(new Error('Unknown reason'))
+        }
+      })
+      .catch((e) => {
+        console.log(e)
+        reject(e)
+      })
+  })
+}
+
+function uploadPhoto(uri) {
+  const form = new FormData()
+  form.append('txtimage', { uri, name: 'upload.jpg', type: 'image/jpg' })
+  form.append('mobile_key', '99e241e35e5e284ada802c63440d6ef8')
+  return new Promise((resolve, reject) => {
+    ApiClient.post(Config.PICTURE_UPLOAD_URL, form, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    })
+      .then((response) => {
+        if (in200s(response.status)) {
+          resolve()
+        } else {
+          reject(new Error('Unknown reason'))
+        }
+      })
+      .catch((e) => {
+        console.log(e)
+        reject(e)
+      })
+  })
+}
+
+function getProfileQuestionsAndAnswers() {
+  return new Promise((resolve, reject) => {
+    ApiClient.get(Config.PROFILE_QUESTIONS_AND_ANSWERS_URL, {})
+      .then((response) => {
+        if (in200s(response.status)) {
+          parseString(response.data, (err, result) => {
+            if (err) {
+              reject(err)
+            } else {
+              resolve(
+                result.question_list.question.reduce(
+                  (acc, question) => ({
+                    ...acc,
+                    [question.type]: {
+                      label: question.question_label[0],
+                      options: question.question_options[0].question_option.map((option) => ({
+                        label: option.option_label[0],
+                        value: option.option_id[0],
+                      })),
+                    },
+                  }),
+                  {}
+                )
+              )
+            }
+          })
+        } else {
+          reject(new Error('Unknown reason'))
+        }
+      })
+      .catch((e) => {
+        console.log(e)
+        reject(e)
+      })
+  })
+}
+
+function updateUserProfileData(
+  firstname,
+  lastname,
+  lookagestart,
+  lookageend,
+  agePrefStrict,
+  birthday,
+  timezone,
+  addressLine1,
+  addressLine2,
+  city,
+  state,
+  zip,
+  country,
+  about
+) {
+  const form = new FormData()
+  form.append('firstname', firstname)
+  form.append('lastname', lastname)
+  form.append('lookagestart', lookagestart)
+  form.append('lookageend', lookageend)
+  form.append('age_pref_strict', agePrefStrict ? 'yes' : 'no')
+  const dateComponents = birthday.split('-')
+  form.append('birthday_month', dateComponents[1])
+  form.append('birthday_day', dateComponents[2])
+  form.append('birthday_year', dateComponents[0])
+  form.append('timezone', timezone)
+  form.append('address_line1', addressLine1)
+  form.append('address_line2', addressLine2)
+  form.append('city', city)
+  form.append('state_province', state)
+  form.append('zip', zip)
+  form.append('country', country)
+  form.append('about_me', about)
+  form.append('return_format', 'xml')
+
+  return new Promise((resolve, reject) => {
+    ApiClient.post(Config.UPDATE_USER_PROFILE_URL, form)
+      .then((response) => {
+        if (in200s(response.status)) {
+          parseString(response.data, (err, result) => {
+            if (err) {
+              reject(err)
+            } else {
+              resolve(result.response.success[0] === '1')
+            }
+          })
+        } else {
+          reject(new Error('Unknown reason'))
+        }
+      })
+      .catch((e) => {
+        console.log(e)
+        reject(e)
+      })
+  })
+}
+
+function doQuestionsSave(questions) {
+  const form = new FormData()
+  form.append('operation', 'update_question_answers')
+  Object.keys(questions).forEach((type) => {
+    form.append(type, questions[type])
+  })
+  return new Promise((resolve, reject) => {
+    ApiClient.post(Config.PROFILE_QUESTIONS_AND_ANSWERS_URL, form)
+      .then((response) => {
+        if (in200s(response.status)) {
+          parseString(response.data, (err, result) => {
+            console.log(result)
+            if (err) {
+              reject(err)
+            } else {
+              resolve(result.response.success[0] === '1')
             }
           })
         } else {
@@ -271,6 +419,28 @@ function getMyPicks() {
   })
 }
 
+function loadUsers() {
+  return new Promise((resolve, reject) => {
+    ApiClient.get(Config.LOAD_USERS_URL)
+      .then((response) => {
+        if (in200s(response.status)) {
+          parseString(response.data, (err, result) => {
+            if (err) {
+              reject(err)
+            } else {
+              resolve(result.onlineuserlist.data.map((user) => buildUserObject(user)))
+            }
+          })
+        } else {
+          reject(new Error('Unknown reason'))
+        }
+      })
+      .catch((e) => {
+        reject(e)
+      })
+  })
+}
+
 function setSpeedDatingAnswer(id, interested) {
   const form = new FormData()
   form.append('ref_userid', id)
@@ -377,14 +547,50 @@ function sendBugReport(text) {
   })
 }
 
+function mobileUpgrade(
+  productId,
+  signature,
+  transactionId,
+  transactionDate,
+  originalMessage,
+  receiptId
+) {
+  const form = new FormData()
+  form.append('productId', productId)
+  form.append('signature', signature)
+  form.append('transactionId', transactionId)
+  form.append('transactionDate', transactionDate)
+  form.append('originalMessage', originalMessage)
+  form.append('receipt_id', receiptId)
+  form.append('platform', Platform.OS)
+  return new Promise((resolve, reject) => {
+    ApiClient.post(Config.PROCESS_MOBILE_UPGRADE_URL, form)
+      .then((response) => {
+        if (in200s(response.status)) {
+          console.log(response)
+          resolve()
+        } else {
+          reject(new Error('Unknown reason'))
+        }
+      })
+      .catch((e) => {
+        console.log(e)
+        reject(e)
+      })
+  })
+}
+
 export const userService = {
   loginUser,
   logout,
   getUserData,
   getUserPhotos,
+  updateUserProfileData,
+  doQuestionsSave,
   getViewedProfiles,
   getViewedMeProfiles,
   getWinks,
+  loadUsers,
   setSpeedDatingAnswer,
   resetUnreadViews,
   resetUnreadWinks,
@@ -392,4 +598,7 @@ export const userService = {
   sendBugReport,
   getPickedMe,
   getMyPicks,
+  uploadPhoto,
+  getProfileQuestionsAndAnswers,
+  mobileUpgrade,
 }

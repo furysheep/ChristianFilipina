@@ -11,10 +11,22 @@
 #import <React/RCTBundleURLProvider.h>
 #import <React/RCTRootView.h>
 
+@import Firebase;
+@import FirebaseAnalytics;
+
 @implementation AppDelegate
+
+- (instancetype)init {
+  if (self = [super init]) {
+    [FIRApp configure];
+    [FIRAnalytics setAnalyticsCollectionEnabled:YES];
+  }
+  return self;
+}
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+  
   RCTBridge *bridge = [[RCTBridge alloc] initWithDelegate:self launchOptions:launchOptions];
   RCTRootView *rootView = [[RCTRootView alloc] initWithBridge:bridge
                                                    moduleName:@"ChristianFilipina"

@@ -53,4 +53,15 @@ export default StyleSheet.create({
     color: Colors.primary,
     marginBottom: Metrics.smallMargin,
   },
+  editButton: {
+    padding: Metrics.baseMargin,
+  },
+  buttons: {
+    ...Helpers.rowCross,
+  },
+  deleteButton: {
+    backgroundColor: Colors.destructive,
+    width: 30,
+    height: 30,
+  },
 })

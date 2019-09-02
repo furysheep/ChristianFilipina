@@ -1,18 +1,11 @@
 import React from 'react'
-import {
-  Platform,
-  View,
-  ActivityIndicator,
-  Image,
-  ImageBackground,
-  Linking,
-  Alert,
-} from 'react-native'
-import { Input, CheckBox, Button, Overlay, Text, Icon } from 'react-native-elements'
+import { View, Image, ImageBackground, Linking, Alert } from 'react-native'
+import { Input, CheckBox, Button, Text } from 'react-native-elements'
 import Spinner from 'react-native-loading-spinner-overlay'
 import { connect } from 'react-redux'
 import { PropTypes } from 'prop-types'
 import * as Keychain from 'react-native-keychain'
+import analytics, { firebase } from '@react-native-firebase/analytics'
 
 import UserActions from 'App/Stores/User/Actions'
 import Style from './LoginScreenStyle'
@@ -34,10 +27,12 @@ class LoginScreen extends React.Component {
     userIsLoading: false,
   }
   async componentDidMount() {
+    analytics().setCurrentScreen('Login', 'Login')
+
     try {
       // Retrieve the credentials
       const credentials = await Keychain.getGenericPassword()
-      if (credentials) {
+      if (credentials && credentials.username && credentials.password) {
         this.setState({
           email: credentials.username,
           password: credentials.password,

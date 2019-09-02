@@ -1,4 +1,4 @@
-package com.christianfilipina;
+package air.com.christianfilipina.mobile;
 
 import com.facebook.react.ReactActivity;
 import com.facebook.react.ReactActivityDelegate;

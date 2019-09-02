@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "233674285772",
+    "firebase_url": "https://christian-filipina.firebaseio.com",
+    "project_id": "christian-filipina",
+    "storage_bucket": "christian-filipina.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:233674285772:android:a1c114c1e9792f61",
+        "android_client_info": {
+          "package_name": "air.com.christianfilipina.mobile"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "233674285772-1l0r2g5c0tumgfdaqct1vu3sfbcs34uf.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA2McpxyNgTO1748T9cQ7lrVv4c_pM7zPw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "233674285772-1l0r2g5c0tumgfdaqct1vu3sfbcs34uf.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "233674285772-la2o0uo13o54lln14ltpeiqochkpb7tj.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.christianfilipina.ChristianFilipinaiOSClient",
+                "app_store_id": "688091506"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
