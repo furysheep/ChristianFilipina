@@ -4,11 +4,13 @@ import { Card, Text, Image } from 'react-native-elements'
 import { connect } from 'react-redux'
 import { PropTypes } from 'prop-types'
 import Spinner from 'react-native-loading-spinner-overlay'
+import { SafeAreaView } from 'react-navigation'
+import ImageViewer from 'react-native-image-zoom-viewer'
+import analytics from '@react-native-firebase/analytics'
+
 import styles from './ProfileStyle'
 import { userService } from 'App/Services/UserService'
 import { Images, Helpers } from 'App/Theme'
-import { SafeAreaView } from 'react-navigation'
-import ImageViewer from 'react-native-image-zoom-viewer'
 import { Config } from 'App/Config'
 import { ChatService } from 'App/Services/ChatService'
 import NavigationService from 'App/Services/NavigationService'
@@ -43,6 +45,8 @@ class Profile extends React.Component {
   })
 
   async componentDidMount() {
+    analytics().setCurrentScreen('Profile', 'Profile')
+
     const { id } = this.state
     this.setState({ loading: true })
     const data = await userService.getUserData(id)
@@ -111,6 +115,7 @@ class Profile extends React.Component {
   }
 
   showImageViewer = (imageIndex) => {
+    analytics().setCurrentScreen('FullScreenPhotos', 'FullScreenPhotos')
     this.setState({ showImageViewer: true, imageIndex })
   }
 
@@ -172,7 +177,7 @@ class Profile extends React.Component {
       }
     } else {
       // Go to subscription
-      console.log('the user is free plan')
+      NavigationService.navigate('Subscription')
     }
   }
 

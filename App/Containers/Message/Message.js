@@ -1,12 +1,16 @@
 import React from 'react'
 import { View } from 'react-native'
-import { Input } from 'react-native-elements'
+import { Button, Avatar, Image, Text } from 'react-native-elements'
 import { connect } from 'react-redux'
 import { PropTypes } from 'prop-types'
 import { GiftedChat, Bubble, Time } from 'react-native-gifted-chat'
+import analytics from '@react-native-firebase/analytics'
+
 import styles from './MessageStyle'
 import { ChatService } from 'App/Services/ChatService'
 import { Config } from 'App/Config'
+import { Images, Colors } from 'App/Theme'
+import NavigationService from 'App/Services/NavigationService'
 
 class Message extends React.Component {
   static navigationOptions = ({ navigation }) => ({
@@ -29,10 +33,12 @@ class Message extends React.Component {
   }
 
   async componentDidMount() {
+    analytics().setCurrentScreen('Messaging', 'Messaging')
     const { remoteUserId } = this.state
     const { locked, messages } = await ChatService.getInboxMessages(remoteUserId)
 
     this.setState({
+      locked,
       messages: messages.map((msg) => ({
         _id: msg.message_id[0],
         text: msg.message[0],
@@ -69,7 +75,110 @@ class Message extends React.Component {
     }))
   }
 
+  upgrade = () => {
+    NavigationService.navigate('Subscription')
+  }
+
   render() {
+    const { locked, remoteUserId, remoteUsername } = this.state
+    if (locked) {
+      return (
+        <View style={styles.lockedContainer}>
+          <View style={styles.avatarContainer}>
+            <Avatar
+              rounded
+              source={{
+                uri: `${Config.BASE_URL}${Config.USER_PICTURE_BASE_URL}?id=${remoteUserId}`,
+              }}
+              size="medium"
+            />
+            <Image source={Images.lockIcon} style={styles.lockIcon} />
+            <Text style={styles.lockMessage}>
+              {remoteUsername} has sent you a message but it{"'"}s locked. You will have to upgrade
+              to view his/her messages
+            </Text>
+          </View>
+          <View style={styles.upgradeContainer}>
+            <View style={styles.row}>
+              <View style={styles.benefitItem}>
+                <View style={styles.iconContainer}>
+                  <Image source={Images.benefCommunIcon} />
+                </View>
+                <View style={styles.fill}>
+                  <Text style={styles.benefitTitle}>Communicate</Text>
+                  <Text style={styles.benefitDesc}>
+                    with any free or paid level members. Send 50 custom private messages per day
+                  </Text>
+                </View>
+              </View>
+              <View style={styles.benefitItem}>
+                <View style={styles.iconContainer}>
+                  <Image source={Images.benefVideoIcon} />
+                </View>
+                <View style={styles.fill}>
+                  <Text style={styles.benefitTitle}>Unlimited Live Video</Text>
+                  <Text style={styles.benefitDesc}>Unlimited live video chat with our members</Text>
+                </View>
+              </View>
+            </View>
+            <View style={styles.row}>
+              <View style={styles.benefitItem}>
+                <View style={styles.iconContainer}>
+                  <Image source={Images.benefDiscountIcon} />
+                </View>
+
+                <View style={styles.fill}>
+                  <Text style={styles.benefitTitle}>Travel Discounts</Text>
+                  <Text style={styles.benefitDesc}>
+                    Get travel discounts in the Philippines through our partners
+                  </Text>
+                </View>
+              </View>
+              <View style={styles.benefitItem}>
+                <View style={styles.iconContainer}>
+                  <Image source={Images.benefContactIcon} />
+                </View>
+                <View style={styles.fill}>
+                  <Text style={styles.benefitTitle}>Contact Details</Text>
+                  <Text style={styles.benefitDesc}>
+                    Safely exchange contact details with women on our site
+                  </Text>
+                </View>
+              </View>
+            </View>
+            <View style={styles.row}>
+              <View style={styles.benefitItem}>
+                <View style={styles.iconContainer}>
+                  <Image source={Images.benefConsultIcon} />
+                </View>
+                <View style={styles.fill}>
+                  <Text style={styles.benefitTitle}>Private Consultation</Text>
+                  <Text style={styles.benefitDesc}>
+                    Get Private Consultation to tune-up your profile and improve your matches
+                  </Text>
+                </View>
+              </View>
+              <View style={styles.benefitItem}>
+                <View style={styles.iconContainer}>
+                  <Image source={Images.benefWinksIcon} />
+                </View>
+                <View style={styles.fill}>
+                  <Text style={styles.benefitTitle}>Unlimited Winks</Text>
+                  <Text style={styles.benefitDesc}>
+                    Safely exchange contact details with women on our site
+                  </Text>
+                </View>
+              </View>
+            </View>
+            <Button
+              buttonStyle={{ backgroundColor: Colors.destructive }}
+              title="UPGRADE NOW"
+              onPress={this.upgrade}
+            />
+          </View>
+        </View>
+      )
+    }
     return (
       <GiftedChat
         messages={this.state.messages}
@@ -111,11 +220,7 @@ class Message extends React.Component {
 }
 
 Message.propTypes = {
-  user: PropTypes.object,
-  userIsLoading: PropTypes.bool,
-  userErrorMessage: PropTypes.string,
-  fetchUser: PropTypes.func,
-  liveInEurope: PropTypes.bool,
+  navigation: PropTypes.object,
 }
 
 const mapStateToProps = (state) => ({})

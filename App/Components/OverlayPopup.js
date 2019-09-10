@@ -11,7 +11,7 @@ export default class OverlayPopup extends React.Component {
         isVisible={isVisible}
         width="90%"
         height="auto"
-        overlayStyle={{ padding: 0, overflow: 'hidden' }}
+        overlayStyle={{ padding: 0, overflow: 'hidden', backgroundColor: Colors.background }}
       >
         <View>
           <View

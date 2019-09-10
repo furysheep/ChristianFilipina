@@ -11,6 +11,8 @@ import {
 import { Input, CheckBox, Button, Overlay, Text, Icon } from 'react-native-elements'
 import { connect } from 'react-redux'
 import { PropTypes } from 'prop-types'
+import analytics from '@react-native-firebase/analytics'
+
 import UserActions from 'App/Stores/User/Actions'
 import { liveInEurope } from 'App/Stores/User/Selectors'
 import Style from './SignupScreenStyle'
@@ -24,7 +26,9 @@ class SignupScreen extends React.Component {
     title: 'Sign Up',
   }
 
-  componentDidMount() {}
+  componentDidMount() {
+    analytics().setCurrentScreen('Signup', 'Signup')
+  }
 
   render() {
     const { checked } = this.state
@@ -102,24 +106,11 @@ class SignupScreen extends React.Component {
   }
 }
 
-SignupScreen.propTypes = {
-  user: PropTypes.object,
-  userIsLoading: PropTypes.bool,
-  userErrorMessage: PropTypes.string,
-  fetchUser: PropTypes.func,
-  liveInEurope: PropTypes.bool,
-}
+SignupScreen.propTypes = {}
 
-const mapStateToProps = (state) => ({
-  user: state.example.user,
-  userIsLoading: state.example.userIsLoading,
-  userErrorMessage: state.example.userErrorMessage,
-  liveInEurope: liveInEurope(state),
-})
+const mapStateToProps = (state) => ({})
 
-const mapDispatchToProps = (dispatch) => ({
-  fetchUser: () => dispatch(UserActions.fetchUser()),
-})
+const mapDispatchToProps = (dispatch) => ({})
 
 export default connect(
   mapStateToProps,

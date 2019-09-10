@@ -35,7 +35,7 @@ function loginUser(email, password) {
             } else {
               const { loginresults } = result
               if (loginresults.errid !== undefined) {
-                reject(loginresults.description[0])
+                reject(new Error(loginresults.description[0]))
               } else {
                 resolve(buildUserObject(loginresults))
               }
@@ -566,9 +566,51 @@ function mobileUpgrade(
   return new Promise((resolve, reject) => {
     ApiClient.post(Config.PROCESS_MOBILE_UPGRADE_URL, form)
       .then((response) => {
+        try {
+          if (in200s(response.status)) {
+            resolve(response.data.user_level)
+            return
+          }
+        } catch {}
+        reject(new Error('Unknown reason'))
+      })
+      .catch((e) => {
+        console.log(e)
+        reject(e)
+      })
+  })
+}
+
+function getUnreadNotifications() {
+  const form = new FormData()
+  form.append('operation', 'get_unread_notifications')
+  return new Promise((resolve, reject) => {
+    ApiClient.post(Config.NOTIFICATIONS_REQUEST_URL, form)
+      .then((response) => {
+        if (in200s(response.status) && response.data) {
+          // {"success":true,"new_messages":4,"new_viewwinks":15,"unread_winks":13,"unread_views":2,"unread_messages":4}
+          resolve(response.data)
+        } else {
+          reject(new Error('Unknown reason'))
+        }
+      })
+      .catch((e) => {
+        console.log(e)
+        reject(e)
+      })
+  })
+}
+
+function sendForgotPasswordEmail(email) {
+  const form = new FormData()
+  form.append('txtemail', email)
+  return new Promise((resolve, reject) => {
+    ApiClient.post(Config.FORGOT_PASSWORD_API_URL, form)
+      .then((response) => {
+        console.log(response.data)
         if (in200s(response.status)) {
-          console.log(response)
-          resolve()
+          // {"success":true,"new_messages":4,"new_viewwinks":15,"unread_winks":13,"unread_views":2,"unread_messages":4}
+          resolve(response.data.success)
         } else {
           reject(new Error('Unknown reason'))
         }
@@ -601,4 +643,6 @@ export const userService = {
   uploadPhoto,
   getProfileQuestionsAndAnswers,
   mobileUpgrade,
+  getUnreadNotifications,
+  sendForgotPasswordEmail,
 }

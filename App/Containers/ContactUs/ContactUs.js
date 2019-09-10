@@ -3,14 +3,20 @@ import { Alert } from 'react-native'
 import { Input, Text, Button, Divider } from 'react-native-elements'
 import { connect } from 'react-redux'
 import { PropTypes } from 'prop-types'
-import styles from './ContactUsStyle'
+import analytics from '@react-native-firebase/analytics'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+
+import styles from './ContactUsStyle'
 import { userService } from 'App/Services/UserService'
 
 class ContactUs extends React.Component {
   constructor(props) {
     super(props)
     this.state = { text: '', sendDisabled: false }
+  }
+
+  componentDidMount() {
+    analytics().setCurrentScreen('ContactUsView', 'ContactUsView')
   }
 
   onSend = async () => {

@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, Alert, Image } from 'react-native'
+import { View, Alert, Image, Platform } from 'react-native'
 import { Input, CheckBox, Button, Text, Avatar } from 'react-native-elements'
 import { connect } from 'react-redux'
 import { PropTypes } from 'prop-types'
@@ -9,12 +9,16 @@ import Spinner from 'react-native-loading-spinner-overlay'
 import DatePicker from 'react-native-datepicker'
 import RNPickerSelect from 'react-native-picker-select'
 import moment from 'moment'
+import analytics from '@react-native-firebase/analytics'
+
 import styles from './MyProfileStyle'
 import { Images, Colors, Fonts } from 'App/Theme'
 import { Config } from 'App/Config'
 import { userService } from 'App/Services/UserService'
 import Timezones from 'App/Config/Timezones'
 import Countries from 'App/Config/Countries'
+
+const isIOS = Platform.OS === 'ios'
 
 class MyProfile extends React.Component {
   constructor(props) {
@@ -43,6 +47,8 @@ class MyProfile extends React.Component {
   }
 
   async componentDidMount() {
+    analytics().setCurrentScreen('EditProfile', 'EditProfile')
+
     const { user } = this.props
     this.setState({ loading: true })
     const data = await userService.getUserData(user.id)
@@ -83,6 +89,8 @@ class MyProfile extends React.Component {
   }
 
   selectPhoto = () => {
+    analytics().setCurrentScreen('UploadPhoto', 'UploadPhoto')
+
     const options = {
       quality: 1.0,
       maxWidth: 768,
@@ -250,7 +258,8 @@ class MyProfile extends React.Component {
                   style={{
                     viewContainer: { backgroundColor: 'white', padding: 10 },
                     iconContainer: {
-                      left: 0,
+                      left: isIOS ? 0 : 10,
+                      top: isIOS ? 0 : 15,
                     },
                     inputIOS: {
                       paddingLeft: 27,
@@ -277,11 +286,13 @@ class MyProfile extends React.Component {
                   }}
                   value={lookageend}
                   items={this.ageRanges}
+                  useNativeAndroidPickerStyle={false}
                   placeholder={{}}
                   style={{
                     viewContainer: { backgroundColor: 'white', padding: 10 },
                     iconContainer: {
-                      left: 0,
+                      left: isIOS ? 0 : 10,
+                      top: isIOS ? 0 : 15,
                     },
                     inputIOS: {
                       paddingLeft: 27,
@@ -289,9 +300,10 @@ class MyProfile extends React.Component {
                       fontSize: Fonts.size.regular,
                     },
                     inputAndroid: {
-                      paddingLeft: 27,
+                      paddingLeft: 37,
                       color: 'black',
                       fontSize: Fonts.size.regular,
+                      backgroundColor: 'white',
                     },
                   }}
                   Icon={() => <Image source={Images.preferredAgeIcon} />}

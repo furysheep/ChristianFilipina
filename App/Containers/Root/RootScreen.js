@@ -16,6 +16,7 @@ import RNIap, {
 
 import { Colors, Metrics, Fonts } from 'App/Theme'
 import { userService } from 'App/Services/UserService'
+import UserActions from 'App/Stores/User/Actions'
 
 const theme = {
   colors: {
@@ -74,7 +75,8 @@ class RootScreen extends Component {
             '',
             purchase.transactionReceipt
           )
-          .then((response) => {
+          .then((userLevel) => {
+            this.props.updateUserLevel(userLevel)
             if (Platform.OS === 'ios') {
               RNIap.finishTransactionIOS(purchase.transactionId)
             } else if (Platform.OS === 'android') {
@@ -122,12 +124,14 @@ class RootScreen extends Component {
 
 RootScreen.propTypes = {
   startup: PropTypes.func,
+  updateUserLevel: PropTypes.func,
 }
 
 const mapStateToProps = (state) => ({})
 
 const mapDispatchToProps = (dispatch) => ({
   startup: () => dispatch(StartupActions.startup()),
+  updateUserLevel: (userLevel) => dispatch(UserActions.updateUserLevel(userLevel)),
 })
 
 export default connect(

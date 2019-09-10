@@ -5,6 +5,8 @@ import { connect } from 'react-redux'
 import { PropTypes } from 'prop-types'
 import Spinner from 'react-native-loading-spinner-overlay'
 import { connectActionSheet } from '@expo/react-native-action-sheet'
+import analytics from '@react-native-firebase/analytics'
+
 import styles from './MessagesStyle'
 import NavigationService from 'App/Services/NavigationService'
 import { ChatService } from 'App/Services/ChatService'
@@ -116,6 +118,7 @@ class Messages extends React.Component {
   }
 
   componentDidMount() {
+    analytics().setCurrentScreen('Messages', 'Messages')
     this.props.navigation.setParams({
       onEdit: this.onEdit,
       editing: this.state.editing,

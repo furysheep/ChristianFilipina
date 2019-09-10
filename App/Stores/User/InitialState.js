@@ -5,4 +5,5 @@ export const INITIAL_STATE = {
   user: null,
   userIsLoading: false,
   userErrorMessage: null,
+  notification: {},
 }

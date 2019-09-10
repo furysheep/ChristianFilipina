@@ -3,6 +3,8 @@ import { FlatList, TouchableOpacity, View, Image } from 'react-native'
 import { Avatar, Text } from 'react-native-elements'
 import { connect } from 'react-redux'
 import { PropTypes } from 'prop-types'
+import analytics from '@react-native-firebase/analytics'
+
 import styles from './WinksStyle'
 import { Images } from 'App/Theme'
 import NavigationService from 'App/Services/NavigationService'
@@ -65,6 +67,8 @@ class Winks extends React.Component {
   }
 
   componentDidMount() {
+    analytics().setCurrentScreen('Winks', 'Winks')
+
     this.onRefresh()
   }
 

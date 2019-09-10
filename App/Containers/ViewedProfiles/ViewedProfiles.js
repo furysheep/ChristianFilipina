@@ -3,6 +3,8 @@ import { FlatList, TouchableOpacity, View, Image } from 'react-native'
 import { Avatar, Text } from 'react-native-elements'
 import { connect } from 'react-redux'
 import { PropTypes } from 'prop-types'
+import analytics from '@react-native-firebase/analytics'
+
 import styles from './ViewedProfilesStyle'
 import { Images } from 'App/Theme'
 import { userService } from 'App/Services/UserService'
@@ -65,6 +67,8 @@ class ViewedProfiles extends React.Component {
   }
 
   componentDidMount() {
+    analytics().setCurrentScreen('ViewedByMe', 'ViewedByMe')
+
     this.onRefresh()
   }
 

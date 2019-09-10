@@ -62,4 +62,12 @@ export default {
   countryIcon: require('App/Assets/Images/countryIcon.png'),
   // Subscription
   greenTick: require('App/Assets/Images/greenTick.png'),
+  // Locked chat
+  lockIcon: require('App/Assets/Images/SmallLockIcon.png'),
+  benefCommunIcon: require('App/Assets/Images/benefCommunIcon.png'),
+  benefVideoIcon: require('App/Assets/Images/benefVideoIcon.png'),
+  benefDiscountIcon: require('App/Assets/Images/benefDiscountIcon.png'),
+  benefContactIcon: require('App/Assets/Images/benefContactIcon.png'),
+  benefConsultIcon: require('App/Assets/Images/benefConsultIcon.png'),
+  benefWinksIcon: require('App/Assets/Images/benefWinksIcon.png'),
 }

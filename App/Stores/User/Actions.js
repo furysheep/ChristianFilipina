@@ -27,6 +27,10 @@ const { Types, Creators } = createActions({
   loginUserSuccess: ['user'],
   // An error occurred
   loginUserFailure: ['errorMessage'],
+  updateUserLevel: ['userLevel'],
+
+  getUnreadNotifications: null,
+  updateNotification: ['notification'],
 
   logout: null,
 })

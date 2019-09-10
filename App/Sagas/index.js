@@ -1,7 +1,7 @@
 import { takeLatest, all } from 'redux-saga/effects'
 import { UserTypes } from 'App/Stores/User/Actions'
 import { StartupTypes } from 'App/Stores/Startup/Actions'
-import { loginUser, logout } from './UserSaga'
+import { loginUser, logout, getUnreadNotifications } from './UserSaga'
 import { startup } from './StartupSaga'
 import { SearchTypes } from 'App/Stores/Search/Actions'
 import {
@@ -23,6 +23,7 @@ export default function* root() {
 
     takeLatest(UserTypes.LOGIN_USER, loginUser),
     takeLatest(UserTypes.LOGOUT, logout),
+    takeLatest(UserTypes.GET_UNREAD_NOTIFICATIONS, getUnreadNotifications),
 
     takeLatest(SearchTypes.SEARCH_USER, searchUser),
     takeLatest(SearchTypes.SET_CUSTOM_SEARCH, setCustomSearch),

@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import { StyleSheet, Text, TouchableOpacity, View, TextInput, ListView } from 'react-native'
 import { NavigationEvents } from 'react-navigation'
-
 import { Button, Icon } from 'react-native-elements'
 import {
   RTCPeerConnection,
@@ -15,6 +14,8 @@ import { connect } from 'react-redux'
 import Modal from 'react-native-modal'
 import Snackbar from 'react-native-snackbar'
 import PropTypes from 'prop-types'
+import analytics from '@react-native-firebase/analytics'
+
 import { ChatService } from 'App/Services/ChatService'
 import styles from './VideoChatStyle'
 import { Colors } from 'App/Theme'
@@ -297,6 +298,8 @@ class VideoChat extends Component {
   }
 
   componentDidMount() {
+    analytics().setCurrentScreen('VideoChat', 'VideoChat')
+
     this.props.navigation.setParams({
       handleAudio: this.initCall.bind(this, false),
       handleVideo: this.initCall.bind(this, true),

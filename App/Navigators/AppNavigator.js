@@ -31,6 +31,8 @@ import Profile from 'App/Containers/Profile/Profile'
 import OnlineUsers from 'App/Containers/OnlineUsers/OnlineUsers'
 import SearchFilter from 'App/Containers/SearchFilter/SearchFilter'
 import VideoChat from 'App/Containers/VideoChat/VideoChat'
+import DrawerLabel from 'App/Navigators/DrawerLabel'
+import MessageIcon from 'App/Navigators/MessageIcon'
 
 // class HomeScreen extends React.Component {
 //   render() {
@@ -167,9 +169,7 @@ const MeetScreen = createBottomTabNavigator(
 
           return {
             tabBarVisible,
-            tabBarIcon: ({ tintColor }) => (
-              <Image source={Images.messageMenuIcon} style={{ tintColor }} />
-            ),
+            tabBarIcon: ({ tintColor }) => <MessageIcon tintColor={tintColor} />,
           }
         },
         defaultNavigationOptions: defaultStackNavigationOptions,
@@ -353,7 +353,9 @@ const DrawerContainer = createDrawerNavigator(
           drawerIcon: ({ focused, tintColor }) => (
             <Image source={Images.whoViewedMeMenuIcon} style={{ tintColor }} />
           ),
-          drawerLabel: ({ focused, tintColor }) => createDrawerLabel('Who viewed me', 2, tintColor),
+          drawerLabel: ({ focused, tintColor }) => (
+            <DrawerLabel text="Who viewed me" tintColor={tintColor} label="unread_views" />
+          ),
         },
         defaultNavigationOptions: defaultStackNavigationOptions,
       }
@@ -380,8 +382,9 @@ const DrawerContainer = createDrawerNavigator(
           drawerIcon: ({ focused, tintColor }) => (
             <Image source={Images.winksMenuIcon} style={{ tintColor }} />
           ),
-          drawerLabel: ({ focused, tintColor }) =>
-            createDrawerLabel('Winks received', 1, tintColor),
+          drawerLabel: ({ focused, tintColor }) => (
+            <DrawerLabel text="Winks received" tintColor={tintColor} label="unread_winks" />
+          ),
         },
         defaultNavigationOptions: defaultStackNavigationOptions,
       }
@@ -426,7 +429,9 @@ const DrawerContainer = createDrawerNavigator(
           drawerIcon: ({ focused, tintColor }) => (
             <Image source={Images.messageMenuIcon} style={{ tintColor }} />
           ),
-          drawerLabel: ({ focused, tintColor }) => createDrawerLabel('Messages', 0, tintColor),
+          drawerLabel: ({ focused, tintColor }) => (
+            <DrawerLabel text="Messages" tintColor={tintColor} label="unread_messages" />
+          ),
         },
         defaultNavigationOptions: defaultStackNavigationOptions,
       }
@@ -546,6 +551,24 @@ const StackNavigator = createStackNavigator(
       navigationOptions: {
         gesturesEnabled: false,
         header: null,
+      },
+    },
+    PrivacyPolicy: {
+      screen: WebView,
+      navigationOptions: {
+        title: 'Privacy Policy', // Title to appear in status bar
+      },
+    },
+    TermsOfService: {
+      screen: WebView,
+      navigationOptions: {
+        title: 'Terms of Service', // Title to appear in status bar
+      },
+    },
+    ContactUs: {
+      screen: ContactUs,
+      navigationOptions: {
+        title: 'Contact Us', // Title to appear in status bar
       },
     },
   },

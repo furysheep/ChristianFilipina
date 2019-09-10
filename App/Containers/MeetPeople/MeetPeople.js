@@ -3,6 +3,9 @@ import { View, TouchableOpacity, Image } from 'react-native'
 import { Input, Card, Text, Button, Icon } from 'react-native-elements'
 import { connect } from 'react-redux'
 import { PropTypes } from 'prop-types'
+import analytics from '@react-native-firebase/analytics'
+
+import UserActions from 'App/Stores/User/Actions'
 import styles from './MeetPeopleStyle'
 import { Images, Helpers } from 'App/Theme'
 import { ScrollView } from 'react-native-gesture-handler'
@@ -22,12 +25,14 @@ class MeetPeople extends React.Component {
   }
 
   async componentDidMount() {
+    analytics().setCurrentScreen('SpeedDating', 'SpeedDating')
     this.setState({ loading: true })
     const users = await userService.loadUsers()
     if (users.length > 0) {
       users.splice(0, 1, await userService.getUserData(users[0].id))
     }
     this.setState({ users, loading: false })
+    this.props.getUnreadNotifications()
   }
 
   onNoAnswer = async () => {
@@ -199,7 +204,9 @@ MeetPeople.propTypes = {
 
 const mapStateToProps = (state) => ({})
 
-const mapDispatchToProps = (dispatch) => ({})
+const mapDispatchToProps = (dispatch) => ({
+  getUnreadNotifications: () => dispatch(UserActions.getUnreadNotifications()),
+})
 
 export default connect(
   mapStateToProps,

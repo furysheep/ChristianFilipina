@@ -8,7 +8,7 @@ import * as RNIap from 'react-native-iap'
 import styles from './SubscriptionStyle'
 import { Images } from 'App/Theme'
 import { TouchableOpacity } from 'react-native-gesture-handler'
-import { userService } from 'App/Services/UserService'
+import analytics from '@react-native-firebase/analytics'
 
 class Subscription extends React.Component {
   constructor() {
@@ -17,16 +17,19 @@ class Subscription extends React.Component {
   }
 
   async componentDidMount() {
+    analytics().setCurrentScreen('Subscriptions', 'Subscriptions')
     const items = Platform.select({
       ios: [
         'com.christianfilipina.app.platinum_monthly3',
         'com.christianfilipina.app.silver_monthly3',
         'com.christianfilipina.ChristianFilipinaiOSClient.christianfilipinaOneYearAccess',
+        'air.com.christianfilipina.mobile.gold3months',
       ],
       android: [
         'com.christianfilipina.app.platinum_monthly',
         'com.christianfilipina.app.silver_monthly',
         'oneyearaccess_gp_008',
+        'air.com.christianfilipina.mobile.gold3months',
       ],
     })
 
@@ -63,35 +66,35 @@ class Subscription extends React.Component {
               </View>
             </TouchableOpacity>
           ))}
-          <Text>Benefits of a paid member:</Text>
+          <Text>Benefits of a Gold Membership:</Text>
           <View style={styles.row}>
             <View style={styles.benefitItem}>
               <Image source={Images.greenTick} />
-              <Text style={styles.fill}>Communicate with any member</Text>
+              <Text style={styles.fill}>Live Video Chat with our members</Text>
             </View>
             <View style={styles.benefitItem}>
               <Image source={Images.greenTick} />
-              <Text style={styles.fill}>Unlock all messages</Text>
+              <Text style={styles.fill}>Send 50 custom messages per day</Text>
             </View>
           </View>
           <View style={styles.row}>
             <View style={styles.benefitItem}>
               <Image source={Images.greenTick} />
-              <Text style={styles.fill}>Email, chat & webcam access</Text>
+              <Text style={styles.fill}>Exchange Contact Details</Text>
             </View>
             <View style={styles.benefitItem}>
               <Image source={Images.greenTick} />
-              <Text style={styles.fill}>Partner Discounts</Text>
+              <Text style={styles.fill}>60-Min Consultation with your Romance Consultant</Text>
             </View>
           </View>
           <View style={styles.row}>
             <View style={styles.benefitItem}>
               <Image source={Images.greenTick} />
-              <Text style={styles.fill}>See all profile visitors</Text>
+              <Text style={styles.fill}>Send Unlimited Winks per day</Text>
             </View>
             <View style={styles.benefitItem}>
               <Image source={Images.greenTick} />
-              <Text style={styles.fill}>Custom messages</Text>
+              <Text style={styles.fill}>Membership discounts with our partners</Text>
             </View>
           </View>
         </View>

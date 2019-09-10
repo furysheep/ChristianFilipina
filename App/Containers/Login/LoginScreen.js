@@ -5,13 +5,14 @@ import Spinner from 'react-native-loading-spinner-overlay'
 import { connect } from 'react-redux'
 import { PropTypes } from 'prop-types'
 import * as Keychain from 'react-native-keychain'
-import analytics, { firebase } from '@react-native-firebase/analytics'
+import analytics from '@react-native-firebase/analytics'
 
 import UserActions from 'App/Stores/User/Actions'
 import Style from './LoginScreenStyle'
 import OverlayPopup from 'App/Components/OverlayPopup'
 import { Images, Colors } from 'App/Theme'
 import NavigationService from 'App/Services/NavigationService'
+import { userService } from 'App/Services/UserService'
 
 class LoginScreen extends React.Component {
   static navigationOptions = {
@@ -25,6 +26,8 @@ class LoginScreen extends React.Component {
     password: '',
     user: null,
     userIsLoading: false,
+    errorMsg: '',
+    forgotEmail: '',
   }
   async componentDidMount() {
     analytics().setCurrentScreen('Login', 'Login')
@@ -84,8 +87,30 @@ class LoginScreen extends React.Component {
     loginUser(email, password)
   }
 
+  onForgotPassword = async () => {
+    let { forgotEmail } = this.state
+    forgotEmail = forgotEmail.trim()
+    if (forgotEmail.length === 0) {
+      this.setState({ errorMsg: 'This field is required.' })
+      return
+    }
+    this.setState({ errorMsg: '', isForgotVisible: false })
+
+    try {
+      if (await userService.sendForgotPasswordEmail(forgotEmail)) {
+        Alert.alert('Your password has been emailed')
+      } else {
+        Alert.alert(
+          'We were not able to locate your email address. Please try using a different email address, or email us at support@christianfilipina.com'
+        )
+      }
+    } catch {
+      Alert.alert('Cannot parse server answer. Please try later')
+    }
+  }
+
   render() {
-    const { email, password, userIsLoading } = this.state
+    const { email, password, userIsLoading, errorMsg, forgotEmail } = this.state
     const { userErrorMessage } = this.props
 
     return (
@@ -103,17 +128,20 @@ class LoginScreen extends React.Component {
           <Input
             placeholder="Your email address"
             leftIcon={<Image source={Images.emailIcon} />}
-            containerStyle={{ backgroundColor: 'white', marginVertical: 20 }}
+            containerStyle={{ marginVertical: 20 }}
+            inputContainerStyle={{ backgroundColor: 'white' }}
             autoCompleteType="email"
             keyboardType="email-address"
             textContentType="emailAddress"
-            shake={true}
+            autoCapitalize="none"
             errorStyle={{ color: Colors.error }}
-            errorMessage="This field is required."
+            errorMessage={errorMsg}
+            value={forgotEmail}
+            onChangeText={(forgotEmail) => this.setState({ forgotEmail })}
           />
           <Text>
             After receipt of the new password you should change it immediately after login, for
-            security. If you do not receive the email, check your spam/bulk box.If you still do not
+            security. If you do not receive the email, check your spam/bulk box. If you still do not
             see the email,{' '}
             <Text
               style={{ color: Colors.primary }}
@@ -124,7 +152,7 @@ class LoginScreen extends React.Component {
               Contact Us
             </Text>
           </Text>
-          <Button title="NEXT" containerStyle={{ marginTop: 10 }} />
+          <Button title="NEXT" containerStyle={{ marginTop: 10 }} onPress={this.onForgotPassword} />
         </OverlayPopup>
         <Image source={Images.bgTop} style={Style.bgTop} />
         <View style={{ padding: 30 }}>
@@ -174,6 +202,7 @@ class LoginScreen extends React.Component {
               type="clear"
               titleStyle={{ color: 'white' }}
               containerStyle={{ flex: 1 }}
+              onPress={() => NavigationService.navigate('PrivacyPolicy')}
             />
             <View style={{ height: '80%', width: 1, backgroundColor: 'white' }} />
             <Button
@@ -181,9 +210,15 @@ class LoginScreen extends React.Component {
               type="clear"
               titleStyle={{ color: 'white' }}
               containerStyle={{ flex: 1 }}
+              onPress={() => NavigationService.navigate('TermsOfService')}
             />
           </View>
-          <Button title="Contact Us" type="clear" titleStyle={{ color: 'white' }} />
+          <Button
+            title="Contact Us"
+            type="clear"
+            titleStyle={{ color: 'white' }}
+            onPress={() => NavigationService.navigate('ContactUs')}
+          />
           <Text style={{ alignSelf: 'center', marginTop: 20, marginBottom: 10, color: 'white' }}>
             Don't have an account?
           </Text>

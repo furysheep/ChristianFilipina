@@ -5,6 +5,8 @@ import { connect } from 'react-redux'
 import { PropTypes } from 'prop-types'
 import Grid from 'react-native-infinite-scroll-grid'
 import Dialog from 'react-native-dialog'
+import analytics from '@react-native-firebase/analytics'
+
 import styles from './OnlineUsersStyle'
 import { Images, Helpers } from 'App/Theme'
 import SearchActions from 'App/Stores/Search/Actions'
@@ -77,6 +79,8 @@ class OnlineUsers extends React.Component {
   }
 
   componentDidMount() {
+    analytics().setCurrentScreen('UsersList', 'UsersList')
+
     this.loadData(true)
   }
 
@@ -111,8 +115,12 @@ class OnlineUsers extends React.Component {
       }
     } else {
       // Go to subscription
-      console.log('the user is free plan')
+      NavigationService.navigate('Subscription')
     }
+  }
+
+  onMessage = (id, firstName) => {
+    NavigationService.navigate('Message', { id, firstName })
   }
 
   renderItem(info) {
@@ -134,7 +142,10 @@ class OnlineUsers extends React.Component {
         </View>
         <Image source={{ uri: `${imageUrl}&width=300&height=300` }} style={styles.profileImage} />
         <View style={styles.buttonsContainer}>
-          <TouchableOpacity style={styles.marginRight}>
+          <TouchableOpacity
+            onPress={this.onMessage.bind(this, id, firstName)}
+            style={styles.marginRight}
+          >
             <Image
               source={Images.messageIcon}
               style={styles.buttonImage}

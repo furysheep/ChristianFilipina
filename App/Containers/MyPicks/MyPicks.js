@@ -62,7 +62,7 @@ class MyPicks extends React.Component {
       }
     } else {
       // Go to subscription
-      console.log('the user is free plan')
+      NavigationService.navigate('Subscription')
     }
   }
 
