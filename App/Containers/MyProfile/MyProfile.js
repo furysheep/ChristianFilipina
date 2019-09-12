@@ -254,6 +254,7 @@ class MyProfile extends React.Component {
                   }}
                   value={lookagestart}
                   items={this.ageRanges}
+                  useNativeAndroidPickerStyle={false}
                   placeholder={{}}
                   style={{
                     viewContainer: { backgroundColor: 'white', padding: 10 },
@@ -267,9 +268,10 @@ class MyProfile extends React.Component {
                       fontSize: Fonts.size.regular,
                     },
                     inputAndroid: {
-                      paddingLeft: 27,
+                      paddingLeft: 37,
                       color: 'black',
                       fontSize: Fonts.size.regular,
+                      backgroundColor: 'white',
                     },
                   }}
                   Icon={() => <Image source={Images.preferredAgeIcon} />}
@@ -362,10 +364,12 @@ class MyProfile extends React.Component {
                 }}
                 value={timezone}
                 items={this.timezones}
+                useNativeAndroidPickerStyle={false}
                 style={{
                   viewContainer: { backgroundColor: 'white', padding: 10 },
                   iconContainer: {
-                    left: 0,
+                    left: isIOS ? 0 : 10,
+                    top: isIOS ? 0 : 15,
                   },
                   inputIOS: {
                     paddingLeft: 27,
@@ -373,9 +377,10 @@ class MyProfile extends React.Component {
                     fontSize: Fonts.size.regular,
                   },
                   inputAndroid: {
-                    paddingLeft: 27,
+                    paddingLeft: 37,
                     color: 'black',
                     fontSize: Fonts.size.regular,
+                    backgroundColor: 'white',
                   },
                 }}
                 Icon={() => <Image source={Images.timezoneIcon} />}
@@ -428,10 +433,12 @@ class MyProfile extends React.Component {
                 }}
                 value={country}
                 items={this.countries}
+                useNativeAndroidPickerStyle={false}
                 style={{
                   viewContainer: { backgroundColor: 'white', padding: 10 },
                   iconContainer: {
-                    left: 0,
+                    left: isIOS ? 0 : 10,
+                    top: isIOS ? 0 : 15,
                   },
                   inputIOS: {
                     paddingLeft: 27,
@@ -439,9 +446,10 @@ class MyProfile extends React.Component {
                     fontSize: Fonts.size.regular,
                   },
                   inputAndroid: {
-                    paddingLeft: 27,
+                    paddingLeft: 37,
                     color: 'black',
                     fontSize: Fonts.size.regular,
+                    backgroundColor: 'white',
                   },
                 }}
                 Icon={() => <Image source={Images.countryIcon} />}
@@ -464,6 +472,7 @@ class MyProfile extends React.Component {
                       profileData: Object.assign({}, profileData, { [type]: value }),
                     })
                   }}
+                  useNativeAndroidPickerStyle={false}
                   placeholder={questions[type].options[0]}
                   value={profileData[type]}
                   items={questions[type].options.filter((value, index) => index > 0)}
@@ -476,6 +485,7 @@ class MyProfile extends React.Component {
                     inputAndroid: {
                       color: 'black',
                       fontSize: Fonts.size.regular,
+                      backgroundColor: 'white',
                     },
                   }}
                 />

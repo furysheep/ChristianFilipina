@@ -214,6 +214,9 @@ class Message extends React.Component {
             }}
           />
         )}
+        onPressAvatar={(user) => {
+          NavigationService.navigate('Profile', { id: remoteUserId })
+        }}
       />
     )
   }

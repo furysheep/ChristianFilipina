@@ -370,12 +370,14 @@ function getPickedMe() {
             if (err) {
               reject(err)
             } else {
-              resolve(
-                result.response.list.map((item) => ({
-                  ...buildUserObject(item),
-                  imageUrl: `${Config.BASE_URL}${Config.USER_PICTURE_BASE_URL}?id=${item.id[0]}`,
-                }))
-              )
+              if (result.response.list)
+                resolve(
+                  result.response.list.map((item) => ({
+                    ...buildUserObject(item),
+                    imageUrl: `${Config.BASE_URL}${Config.USER_PICTURE_BASE_URL}?id=${item.id[0]}`,
+                  }))
+                )
+              else resolve([])
             }
           })
         } else {
@@ -566,6 +568,7 @@ function mobileUpgrade(
   return new Promise((resolve, reject) => {
     ApiClient.post(Config.PROCESS_MOBILE_UPGRADE_URL, form)
       .then((response) => {
+        console.log(response)
         try {
           if (in200s(response.status)) {
             resolve(response.data.user_level)

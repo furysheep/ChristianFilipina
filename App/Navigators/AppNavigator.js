@@ -158,6 +158,15 @@ const MeetScreen = createBottomTabNavigator(
         },
         Message: {
           screen: Message,
+          navigationOptions: ({ navigation }) => ({
+            headerBackTitle: ' ',
+          }),
+        },
+        Profile: {
+          screen: Profile,
+          navigationOptions: ({ navigation }) => ({
+            headerBackTitle: ' ',
+          }),
         },
       },
       {
@@ -193,6 +202,9 @@ const MeetScreen = createBottomTabNavigator(
         },
         VideoChat: {
           screen: VideoChat,
+          navigationOptions: ({ navigation }) => ({
+            headerBackTitle: ' ',
+          }),
         },
       },
       {

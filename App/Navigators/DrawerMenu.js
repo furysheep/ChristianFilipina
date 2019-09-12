@@ -51,7 +51,13 @@ const styles = StyleSheet.create({
   container: {
     ...Helpers.fill,
   },
-  logout: { alignSelf: 'center', backgroundColor: Colors.destructive, marginTop: 20, width: '50%' },
+  logout: {
+    alignSelf: 'center',
+    backgroundColor: Colors.destructive,
+    marginTop: 20,
+    marginBottom: 20,
+    width: '50%',
+  },
   profile: {
     ...Helpers.rowCross,
     padding: 20,

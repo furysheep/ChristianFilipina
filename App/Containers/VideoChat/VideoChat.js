@@ -19,6 +19,7 @@ import analytics from '@react-native-firebase/analytics'
 import { ChatService } from 'App/Services/ChatService'
 import styles from './VideoChatStyle'
 import { Colors } from 'App/Theme'
+import NavigationService from 'App/Services/NavigationService'
 
 let socket = null
 const room = 'd0cec4e6392fd9b3a22af2f41be9ec76'
@@ -764,6 +765,7 @@ class VideoChat extends Component {
       calleeModal,
       endCallEnabled,
       terminateEnabled,
+      remoteUserId,
     } = this.state
     return (
       <View style={styles.container}>
@@ -896,6 +898,9 @@ class VideoChat extends Component {
                   this.loadMessages()
                 }
               },
+            }}
+            onPressAvatar={(user) => {
+              NavigationService.navigate('Profile', { id: remoteUserId })
             }}
           />
         )}
