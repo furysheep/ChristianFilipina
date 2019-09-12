@@ -40,6 +40,7 @@ class SelectableItem extends React.Component {
         user_is_online: isOnline,
         message_unread: unread,
       },
+      editing,
     } = this.props
 
     return (
@@ -73,16 +74,24 @@ class SelectableItem extends React.Component {
             <Text style={styles.notificationText}>Click to send a message</Text>
           )}
         </View>
-        <View style={styles.buttons}>
-          <Icon
-            reverse
-            name="delete"
-            size={15}
-            color={Colors.destructive}
-            onPress={this.onDelete}
-          />
-          <Icon reverse name="more-horiz" size={15} color={Colors.success} onPress={this.onMore} />
-        </View>
+        {editing && (
+          <View style={styles.buttons}>
+            <Icon
+              reverse
+              name="delete"
+              size={15}
+              color={Colors.destructive}
+              onPress={this.onDelete}
+            />
+            <Icon
+              reverse
+              name="more-horiz"
+              size={15}
+              color={Colors.success}
+              onPress={this.onMore}
+            />
+          </View>
+        )}
       </TouchableOpacity>
     )
   }
@@ -96,14 +105,6 @@ SelectableItem.propTypes = {
 }
 
 class Messages extends React.Component {
-  static navigationOptions = ({ navigation }) => ({
-    headerRight: (
-      <TouchableOpacity onPress={() => {}}>
-        <Icon name="refresh" size={35} underlayColor={'#64b5f6'} />
-      </TouchableOpacity>
-    ),
-  })
-
   constructor(props) {
     super(props)
     this.page = 0
@@ -222,11 +223,13 @@ class Messages extends React.Component {
   }
 
   renderItem = ({ item }) => {
+    const { editing } = this.state
     return (
       <SelectableItem
         onPressItem={this.handleOnPressItem}
         onDelete={this.onDelete}
         onMore={this.onMore}
+        editing={editing}
         item={item}
       />
     )
@@ -263,6 +266,7 @@ class Messages extends React.Component {
           refreshing={this.state.refreshing}
           ListFooterComponent={this.renderFooter}
           onEndReached={this.handleLoadMore}
+          extraData={this.state}
         />
       </View>
     )
@@ -275,17 +279,18 @@ Messages.propTypes = {
   userErrorMessage: PropTypes.string,
   fetchUser: PropTypes.func,
   showActionSheetWithOptions: PropTypes.func,
-  liveInEurope: PropTypes.bool,
   navigation: PropTypes.object,
 }
 
 const mapStateToProps = (state) => ({})
 
 const mapDispatchToProps = (dispatch) => ({})
-
-export default connectActionSheet(
-  connect(
-    mapStateToProps,
-    mapDispatchToProps
-  )(Messages)
-)
+const conn = connectActionSheet(Messages)
+conn.navigationOptions = ({ navigation }) => ({
+  headerRight: navigation.state.params && (
+    <TouchableOpacity onPress={navigation.state.params.onEdit} style={styles.editButton}>
+      <Text>{navigation.state.params.editing ? 'Done' : 'Edit'}</Text>
+    </TouchableOpacity>
+  ),
+})
+export default conn

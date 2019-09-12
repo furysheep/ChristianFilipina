@@ -13,8 +13,6 @@ import { connect } from 'react-redux'
 import { PropTypes } from 'prop-types'
 import analytics from '@react-native-firebase/analytics'
 
-import UserActions from 'App/Stores/User/Actions'
-import { liveInEurope } from 'App/Stores/User/Selectors'
 import Style from './SignupScreenStyle'
 import OverlayPopup from 'App/Components/OverlayPopup'
 import { Images, Colors } from 'App/Theme'
