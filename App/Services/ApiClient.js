@@ -15,7 +15,7 @@ class User {
 
   canUserStartChat = () => {
     const { userLevel } = this
-
+    console.log(userLevel)
     switch (userLevel) {
       case User.GOLD:
       case User.UNLIMITED_LIFETIME:

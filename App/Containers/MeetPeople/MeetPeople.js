@@ -17,7 +17,6 @@ class MeetPeople extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      currentUserId: '',
       loading: false,
       users: [],
       index: 0,
@@ -33,6 +32,7 @@ class MeetPeople extends React.Component {
     }
     this.setState({ users, loading: false })
     this.props.getUnreadNotifications()
+    this.props.getIncomingChat()
   }
 
   onNoAnswer = async () => {
@@ -201,10 +201,11 @@ MeetPeople.propTypes = {
   fetchUser: PropTypes.func,
 }
 
-const mapStateToProps = (state) => ({})
+const mapStateToProps = (state) => ({ user: state.user.user })
 
 const mapDispatchToProps = (dispatch) => ({
   getUnreadNotifications: () => dispatch(UserActions.getUnreadNotifications()),
+  getIncomingChat: () => dispatch(UserActions.getIncomingChat()),
 })
 
 export default connect(

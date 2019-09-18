@@ -66,14 +66,15 @@ class RootScreen extends Component {
       const receipt = purchase.transactionReceipt
       if (receipt) {
         console.log(purchase)
+        const isAndroid = Platform.OS === 'android'
         userService
           .mobileUpgrade(
             purchase.productId,
-            '',
+            isAndroid ? purchase.signatureAndroid : '',
             purchase.transactionId,
             purchase.transactionDate,
-            '',
-            purchase.transactionReceipt
+            isAndroid ? purchase.transactionReceipt : '',
+            isAndroid ? '' : purchase.transactionReceipt
           )
           .then((userLevel) => {
             this.props.updateUserLevel(userLevel)

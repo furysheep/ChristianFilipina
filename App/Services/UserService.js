@@ -33,6 +33,7 @@ function loginUser(email, password) {
             if (err) {
               reject(err)
             } else {
+              console.log(result)
               const { loginresults } = result
               if (loginresults.errid !== undefined) {
                 reject(new Error(loginresults.description[0]))
@@ -402,12 +403,14 @@ function getMyPicks() {
             if (err) {
               reject(err)
             } else {
-              resolve(
-                result.response.list.map((item) => ({
-                  ...buildUserObject(item),
-                  imageUrl: `${Config.BASE_URL}${Config.USER_PICTURE_BASE_URL}?id=${item.id[0]}`,
-                }))
-              )
+              if (result.response.list)
+                resolve(
+                  result.response.list.map((item) => ({
+                    ...buildUserObject(item),
+                    imageUrl: `${Config.BASE_URL}${Config.USER_PICTURE_BASE_URL}?id=${item.id[0]}`,
+                  }))
+                )
+              else resolve([])
             }
           })
         } else {
@@ -565,6 +568,10 @@ function mobileUpgrade(
   form.append('originalMessage', originalMessage)
   form.append('receipt_id', receiptId)
   form.append('platform', Platform.OS)
+  if (Platform.OS === 'ios') {
+    form.append('ios_password', 'dcd937df41634d13883e054c64bda425')
+  }
+  console.log('---form----', form)
   return new Promise((resolve, reject) => {
     ApiClient.post(Config.PROCESS_MOBILE_UPGRADE_URL, form)
       .then((response) => {
@@ -604,6 +611,26 @@ function getUnreadNotifications() {
   })
 }
 
+function checkIncomingChat(userId) {
+  const form = new FormData()
+  form.append('mobile_app', true)
+  form.append('user', userId)
+  return new Promise((resolve, reject) => {
+    ApiClient.post(Config.INCOMING_CHAT_REQUEST_URL, form)
+      .then((response) => {
+        if (in200s(response.status) && response.data) {
+          resolve(response.data)
+        } else {
+          reject(new Error('Unknown reason'))
+        }
+      })
+      .catch((e) => {
+        console.log(e)
+        reject(e)
+      })
+  })
+}
+
 function sendForgotPasswordEmail(email) {
   const form = new FormData()
   form.append('txtemail', email)
@@ -614,6 +641,65 @@ function sendForgotPasswordEmail(email) {
         if (in200s(response.status)) {
           // {"success":true,"new_messages":4,"new_viewwinks":15,"unread_winks":13,"unread_views":2,"unread_messages":4}
           resolve(response.data.success)
+        } else {
+          reject(new Error('Unknown reason'))
+        }
+      })
+      .catch((e) => {
+        console.log(e)
+        reject(e)
+      })
+  })
+}
+
+function signupUser(email, password, firstName, gender) {
+  const form = new FormData()
+  form.append('first_name', firstName)
+  form.append('email', email)
+  form.append('password', password)
+  form.append('gender', gender ? 'M' : 'F')
+  form.append('tzoffset', new Date().getTimezoneOffset())
+  form.append('return_format', 'xml')
+  return new Promise((resolve, reject) => {
+    ApiClient.post(Config.SIGNUP_URL, form)
+      .then((response) => {
+        if (in200s(response.status)) {
+          parseString(response.data, (err, result) => {
+            console.log(result)
+            if (err) {
+              reject(err)
+            } else {
+              resolve(result.response)
+            }
+          })
+        } else {
+          reject(new Error('Unknown reason'))
+        }
+      })
+      .catch((e) => {
+        console.log(e)
+        reject(e)
+      })
+  })
+}
+
+function updateUserDeviceToken(deviceId) {
+  const form = new FormData()
+  form.append('device_token', deviceId)
+  form.append('network', Platform.OS === 'ios' ? 'itunes' : 'android')
+  form.append('is_fcm', true)
+  return new Promise((resolve, reject) => {
+    ApiClient.post(Config.UPDATE_USER_DEVICE_TOKEN_URL, form)
+      .then((response) => {
+        if (in200s(response.status)) {
+          parseString(response.data, (err, result) => {
+            console.log(result)
+            if (err) {
+              reject(err)
+            } else {
+              resolve(result.response)
+            }
+          })
         } else {
           reject(new Error('Unknown reason'))
         }
@@ -648,4 +734,7 @@ export const userService = {
   mobileUpgrade,
   getUnreadNotifications,
   sendForgotPasswordEmail,
+  checkIncomingChat,
+  signupUser,
+  updateUserDeviceToken,
 }

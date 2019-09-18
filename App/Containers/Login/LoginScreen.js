@@ -13,6 +13,7 @@ import OverlayPopup from 'App/Components/OverlayPopup'
 import { Images, Colors } from 'App/Theme'
 import NavigationService from 'App/Services/NavigationService'
 import { userService } from 'App/Services/UserService'
+import { NavigationActions, StackActions } from 'react-navigation'
 
 class LoginScreen extends React.Component {
   static navigationOptions = {
@@ -68,7 +69,23 @@ class LoginScreen extends React.Component {
       if (prevState.rememberPassword) {
         Keychain.setGenericPassword(prevState.email, prevState.password)
       }
-      NavigationService.navigateAndReset('DrawerContainer')
+
+      const navigateAction = NavigationActions.navigate({
+        routeName: 'DrawerContainer',
+
+        params: {},
+
+        action: NavigationActions.navigate({
+          routeName: nextProps.firstLogin ? 'MyProfile' : 'Meet',
+        }),
+      })
+
+      nextProps.navigation.dispatch(
+        StackActions.reset({
+          index: 0,
+          actions: [navigateAction],
+        })
+      )
     }
 
     return Object.keys(update).length ? update : null
@@ -238,12 +255,13 @@ LoginScreen.propTypes = {
 
 const mapStateToProps = (state) => ({
   user: state.user.user,
+  firstLogin: state.user.firstLogin,
   userIsLoading: state.user.userIsLoading,
   userErrorMessage: state.user.userErrorMessage,
 })
 
 const mapDispatchToProps = (dispatch) => ({
-  loginUser: (email, password) => dispatch(UserActions.loginUser(email, password)),
+  loginUser: (email, password) => dispatch(UserActions.loginUser(email, password, false)),
 })
 
 export default connect(

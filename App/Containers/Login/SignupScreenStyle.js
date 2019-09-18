@@ -1,13 +1,14 @@
 import { StyleSheet } from 'react-native'
 import Fonts from 'App/Theme/Fonts'
 import ApplicationStyles from 'App/Theme/ApplicationStyles'
+import { Colors } from 'App/Theme'
 
 export default StyleSheet.create({
   container: {
     ...ApplicationStyles.screen.container,
     flex: 1,
     justifyContent: 'center',
-    backgroundColor: '#d2d2d2',
+    backgroundColor: Colors.separator,
   },
   bgTop: {
     width: '100%',

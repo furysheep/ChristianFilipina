@@ -36,9 +36,19 @@ export const loginUserFailure = (state, { errorMessage }) => {
 }
 
 export const updateUserLevel = (state, { userLevel }) => {
+  const user = state.user
+  user.userLevel = userLevel
   return {
     ...state,
-    user: { ...state.user, userLevel },
+    user,
+  }
+}
+
+export const updateFirstLogin = (state, { firstLogin }) => {
+  console.log('c', firstLogin)
+  return {
+    ...state,
+    firstLogin,
   }
 }
 
@@ -51,4 +61,5 @@ export const reducer = createReducer(INITIAL_STATE, {
   [UserTypes.LOGIN_USER_FAILURE]: loginUserFailure,
   [UserTypes.UPDATE_NOTIFICATION]: updateNotification,
   [UserTypes.UPDATE_USER_LEVEL]: updateUserLevel,
+  [UserTypes.UPDATE_FIRST_LOGIN]: updateFirstLogin,
 })

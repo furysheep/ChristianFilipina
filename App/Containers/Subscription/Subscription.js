@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, Image, Platform, ScrollView } from 'react-native'
+import { View, Image, Platform, ScrollView, Alert } from 'react-native'
 import { Text } from 'react-native-elements'
 import { connect } from 'react-redux'
 import { PropTypes } from 'prop-types'
@@ -17,20 +17,16 @@ class Subscription extends React.Component {
   }
 
   async componentDidMount() {
+    this.setState({ loading: true })
     analytics().setCurrentScreen('Subscriptions', 'Subscriptions')
     const items = Platform.select({
       ios: [
-        'com.christianfilipina.app.platinum_monthly3',
-        'com.christianfilipina.app.silver_monthly3',
-        'com.christianfilipina.ChristianFilipinaiOSClient.christianfilipinaOneYearAccess',
+        // 'com.christianfilipina.app.platinum_monthly3',
+        // 'com.christianfilipina.app.silver_monthly3',
+        // 'com.christianfilipina.ChristianFilipinaiOSClient.christianfilipinaOneYearAccess',
         'air.com.christianfilipina.mobile.gold3months',
       ],
-      android: [
-        'com.christianfilipina.app.platinum_monthly',
-        'com.christianfilipina.app.silver_monthly',
-        'oneyearaccess_gp_008',
-        'air.com.christianfilipina.mobile.gold3months',
-      ],
+      android: ['air.com.christianfilipina.mobile.gold3months'],
     })
 
     try {
@@ -40,6 +36,7 @@ class Subscription extends React.Component {
     } catch (err) {
       console.warn(err) // standardized err.code and err.message available
     }
+    this.setState({ loading: false })
   }
   render() {
     const { products, loading } = this.state
@@ -52,11 +49,14 @@ class Subscription extends React.Component {
               style={styles.productContainer}
               key={index}
               onPress={async () => {
+                this.setState({ loading: true })
                 try {
                   await RNIap.requestSubscription(product.productId)
                 } catch (err) {
                   console.warn(err.code, err.message)
+                  setTimeout(() => Alert.alert(err.message), 500)
                 }
+                this.setState({ loading: false })
               }}
             >
               <Text style={styles.productTitle}>{product.title}</Text>

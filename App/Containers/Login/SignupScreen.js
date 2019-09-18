@@ -5,20 +5,33 @@ import {
   ActivityIndicator,
   Image,
   ImageBackground,
-  Linking,
+  Alert,
   TouchableOpacity,
 } from 'react-native'
+import Spinner from 'react-native-loading-spinner-overlay'
+import * as Keychain from 'react-native-keychain'
 import { Input, CheckBox, Button, Overlay, Text, Icon } from 'react-native-elements'
 import { connect } from 'react-redux'
-import { PropTypes } from 'prop-types'
+import PropTypes from 'prop-types'
 import analytics from '@react-native-firebase/analytics'
 
+import UserActions from 'App/Stores/User/Actions'
 import Style from './SignupScreenStyle'
 import OverlayPopup from 'App/Components/OverlayPopup'
 import { Images, Colors } from 'App/Theme'
+import { userService } from 'App/Services/UserService'
 
 class SignupScreen extends React.Component {
-  state = { checked: false, isForgotVisible: false }
+  state = {
+    checked: false,
+    isForgotVisible: false,
+    email: '',
+    password: '',
+    confirm: '',
+    firstName: '',
+    gender: true,
+    loading: false,
+  }
 
   static navigationOptions = {
     title: 'Sign Up',
@@ -28,10 +41,46 @@ class SignupScreen extends React.Component {
     analytics().setCurrentScreen('Signup', 'Signup')
   }
 
+  signUp = async () => {
+    let { email, password, confirm, firstName, gender } = this.state
+    email = email.trim()
+    firstName = firstName.trim()
+    if (
+      email.length === 0 ||
+      password.length === 0 ||
+      confirm.length === 0 ||
+      firstName.length === 0
+    ) {
+      Alert.alert('Please fill all the fields')
+      return
+    }
+
+    if (password !== confirm) {
+      Alert.alert('Passwords do not match')
+      return
+    }
+
+    try {
+      this.setState({ loading: true })
+      const result = await userService.signupUser(email, password, firstName, gender)
+      this.setState({ loading: false })
+      if (result.success[0] === '1') {
+        Keychain.setGenericPassword(email, password)
+        await this.props.loginUser(email, password)
+      } else {
+        setTimeout(() => Alert.alert(result.description[0]), 500)
+      }
+    } catch (e) {
+      this.setState({ loading: false })
+      setTimeout(() => Alert.alert(e.message), 500)
+    }
+  }
+
   render() {
-    const { checked } = this.state
+    const { checked, email, password, confirm, firstName, gender, loading } = this.state
     return (
       <View style={Style.container}>
+        <Spinner visible={loading} />
         <OverlayPopup
           isVisible={this.state.isForgotVisible}
           title={'END USERS LICENSE AGREEMENT'}
@@ -46,6 +95,9 @@ class SignupScreen extends React.Component {
             autoCompleteType="email"
             keyboardType="email-address"
             textContentType="emailAddress"
+            autoCapitalize="none"
+            value={email}
+            onChangeText={(email) => this.setState({ email })}
           />
           <Input
             placeholder="Password"
@@ -53,6 +105,8 @@ class SignupScreen extends React.Component {
             secureTextEntry
             autoCompleteType="password"
             textContentType="password"
+            value={password}
+            onChangeText={(password) => this.setState({ password })}
           />
           <Input
             placeholder="Repeat password"
@@ -60,12 +114,16 @@ class SignupScreen extends React.Component {
             secureTextEntry
             autoCompleteType="password"
             textContentType="password"
+            value={confirm}
+            onChangeText={(confirm) => this.setState({ confirm })}
           />
           <Input
             placeholder="First Name"
             leftIcon={<Image source={Images.firstNameIcon} />}
             autoCompleteType="name"
             textContentType="givenName"
+            value={firstName}
+            onChangeText={(firstName) => this.setState({ firstName })}
           />
           <View style={{ flexDirection: 'row' }}>
             <CheckBox
@@ -81,8 +139,9 @@ class SignupScreen extends React.Component {
                 borderWidth: 5,
                 marginLeft: 30,
                 borderRadius: 5,
-                borderColor: Colors.primary,
+                borderColor: gender ? Colors.primary : Colors.separator,
               }}
+              onPress={() => this.setState({ gender: true })}
             >
               <Image source={Images.maleSexIcon} style={{ width: 60, height: 60 }} />
             </TouchableOpacity>
@@ -91,24 +150,34 @@ class SignupScreen extends React.Component {
                 borderWidth: 5,
                 marginLeft: 30,
                 borderRadius: 5,
-                borderColor: Colors.primary,
+                borderColor: !gender ? Colors.primary : Colors.separator,
               }}
+              onPress={() => this.setState({ gender: false })}
             >
               <Image source={Images.femaleSexIcon} style={{ width: 60, height: 60 }} />
             </TouchableOpacity>
           </View>
-          <Button title="JOIN CHRISTIAN FILIPINA" disabled={!checked} style={{ marginTop: 20 }} />
+          <Button
+            title="JOIN CHRISTIAN FILIPINA"
+            disabled={!checked}
+            style={{ marginTop: 20 }}
+            onPress={this.signUp}
+          />
         </View>
       </View>
     )
   }
 }
 
-SignupScreen.propTypes = {}
+SignupScreen.propTypes = {
+  loginUser: PropTypes.func,
+}
 
 const mapStateToProps = (state) => ({})
 
-const mapDispatchToProps = (dispatch) => ({})
+const mapDispatchToProps = (dispatch) => ({
+  loginUser: (email, password) => dispatch(UserActions.loginUser(email, password, true)),
+})
 
 export default connect(
   mapStateToProps,
