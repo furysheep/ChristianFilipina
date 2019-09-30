@@ -14,7 +14,8 @@ import { connect } from 'react-redux'
 import Modal from 'react-native-modal'
 import Snackbar from 'react-native-snackbar'
 import PropTypes from 'prop-types'
-import analytics from '@react-native-firebase/analytics'
+import firebase from 'react-native-firebase'
+import md5 from 'md5'
 
 import { ChatService } from 'App/Services/ChatService'
 import styles from './VideoChatStyle'
@@ -22,7 +23,6 @@ import { Colors } from 'App/Theme'
 import NavigationService from 'App/Services/NavigationService'
 
 let socket = null
-const room = 'd0cec4e6392fd9b3a22af2f41be9ec76'
 
 const configuration = {}
 // const configuration = {
@@ -40,6 +40,7 @@ function randomString(length) {
 
 class VideoChat extends Component {
   static navigationOptions = ({ navigation }) => {
+    if (!navigation.state.params) return null
     const headerRight = (
       <View style={{ flexDirection: 'row', marginRight: 10 }}>
         <TouchableOpacity onPress={navigation.state.params.handleAudio} style={{ marginRight: 20 }}>
@@ -78,7 +79,9 @@ class VideoChat extends Component {
     super(props)
     this.state = {
       status: 'init',
-      roomID: '',
+      roomID: props.navigation.state.params.caller
+        ? md5(`${props.user.id}-${props.navigation.state.params.id}`)
+        : md5(`${props.navigation.state.params.id}-${props.user.id}`),
       isFront: true,
       selfViewSrc: null,
       remoteSrc: null,
@@ -107,7 +110,7 @@ class VideoChat extends Component {
       const data = JSON.parse(e.data)
       console.log(data)
 
-      if (data.room === room) {
+      if (data.room === this.state.roomID) {
         // above check is not necessary since all messages coming to this user are for the user's current room
         // but just to be on the safe side
         switch (data.action) {
@@ -213,7 +216,7 @@ class VideoChat extends Component {
             socket.send(
               JSON.stringify({
                 action: 'imOnline',
-                room: room,
+                room: this.state.roomID,
               })
             )
 
@@ -250,7 +253,7 @@ class VideoChat extends Component {
       socket.send(
         JSON.stringify({
           action: 'subscribe',
-          room: room,
+          room: this.state.roomID,
         })
       )
       this.connected = true
@@ -299,7 +302,7 @@ class VideoChat extends Component {
   }
 
   componentDidMount() {
-    analytics().setCurrentScreen('VideoChat', 'VideoChat')
+    firebase.analytics().setCurrentScreen('VideoChat', 'VideoChat')
 
     this.props.navigation.setParams({
       handleAudio: this.initCall.bind(this, false),
@@ -358,7 +361,7 @@ class VideoChat extends Component {
       JSON.stringify({
         action: 'initCall',
         msg: callType === 'Video' ? `Video call from ${firstName}` : `Audio call from ${firstName}`,
-        room: room,
+        room: this.state.roomID,
         servers: this.servers,
       })
     )
@@ -380,7 +383,7 @@ class VideoChat extends Component {
       JSON.stringify({
         action: 'endCall',
         msg: msg,
-        room: room,
+        room: this.state.roomID,
       })
     )
 
@@ -412,7 +415,7 @@ class VideoChat extends Component {
           JSON.stringify({
             action: 'candidate',
             candidate: e.candidate,
-            room: room,
+            room: this.state.roomID,
           })
         )
       }
@@ -467,7 +470,7 @@ class VideoChat extends Component {
       JSON.stringify({
         action: 'sdp',
         sdp: desc,
-        room: room,
+        room: this.state.roomID,
       })
     )
   }
@@ -529,7 +532,7 @@ class VideoChat extends Component {
         socket.send(
           JSON.stringify({
             action: 'startCall',
-            room: room,
+            room: this.state.roomID,
           })
         )
       } else {
@@ -572,7 +575,7 @@ class VideoChat extends Component {
         action: 'txt',
         msg: msg.text,
         date: date,
-        room: room,
+        room: this.state.roomID,
         from_id: id,
         to_id: remoteUserId,
       })
@@ -672,7 +675,7 @@ class VideoChat extends Component {
     socket.send(
       JSON.stringify({
         action: 'terminateCall',
-        room: room,
+        room: this.state.roomID,
       })
     )
 
@@ -728,7 +731,7 @@ class VideoChat extends Component {
         JSON.stringify({
           action: 'typingStatus',
           status: true,
-          room: room,
+          room: this.state.roomID,
         })
       )
     }
@@ -738,7 +741,7 @@ class VideoChat extends Component {
         JSON.stringify({
           action: 'typingStatus',
           status: false,
-          room: room,
+          room: this.state.roomID,
         })
       )
     }
@@ -814,7 +817,7 @@ class VideoChat extends Component {
                     JSON.stringify({
                       action: 'callRejected',
                       msg: `Call rejected by ${firstName}`,
-                      room: room,
+                      room: this.state.roomID,
                     })
                   )
 

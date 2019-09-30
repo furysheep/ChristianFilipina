@@ -3,10 +3,12 @@ package air.com.christianfilipina.mobile;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import io.invertase.firebase.RNFirebasePackage;
 import com.dooboolab.RNIap.RNIapPackage;
-import io.invertase.firebase.analytics.ReactNativeFirebaseAnalyticsPackage;
-import io.invertase.firebase.app.ReactNativeFirebaseAppPackage;
 
+import io.invertase.firebase.analytics.RNFirebaseAnalyticsPackage;
+import io.invertase.firebase.notifications.RNFirebaseNotificationsPackage;
+import io.invertase.firebase.messaging.RNFirebaseMessagingPackage;
 import com.imagepicker.ImagePickerPackage;
 import com.azendoo.reactnativesnackbar.SnackbarPackage;
 import com.oblador.keychain.KeychainPackage;
@@ -34,9 +36,11 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+            new RNFirebasePackage(),
+            new RNFirebaseMessagingPackage(),
+            new RNFirebaseNotificationsPackage(),
+            new RNFirebaseAnalyticsPackage(),
             new RNIapPackage(),
-            new ReactNativeFirebaseAnalyticsPackage(),
-            new ReactNativeFirebaseAppPackage(),
             new ImagePickerPackage(),
             new SnackbarPackage(),
             new KeychainPackage(),

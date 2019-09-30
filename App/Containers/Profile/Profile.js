@@ -6,7 +6,7 @@ import { PropTypes } from 'prop-types'
 import Spinner from 'react-native-loading-spinner-overlay'
 import { SafeAreaView } from 'react-navigation'
 import ImageViewer from 'react-native-image-zoom-viewer'
-import analytics from '@react-native-firebase/analytics'
+import firebase from 'react-native-firebase'
 
 import styles from './ProfileStyle'
 import { userService } from 'App/Services/UserService'
@@ -45,7 +45,7 @@ class Profile extends React.Component {
   })
 
   async componentDidMount() {
-    analytics().setCurrentScreen('Profile', 'Profile')
+    firebase.analytics().setCurrentScreen('Profile', 'Profile')
 
     const { id } = this.state
     this.setState({ loading: true })
@@ -115,7 +115,7 @@ class Profile extends React.Component {
   }
 
   showImageViewer = (imageIndex) => {
-    analytics().setCurrentScreen('FullScreenPhotos', 'FullScreenPhotos')
+    firebase.analytics().setCurrentScreen('FullScreenPhotos', 'FullScreenPhotos')
     this.setState({ showImageViewer: true, imageIndex })
   }
 
@@ -172,7 +172,7 @@ class Profile extends React.Component {
 
       if (result === 'success') {
         // const creds = await ChatService.getTurnCredentials()
-        NavigationService.navigate('VideoChat', { id, firstName })
+        NavigationService.navigate('VideoChat', { id, firstName, caller: true })
         // console.log(creds)
       }
     } else {

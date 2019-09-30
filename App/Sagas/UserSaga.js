@@ -1,4 +1,5 @@
 import { put, call, delay, select } from 'redux-saga/effects'
+import { AsyncStorage } from 'react-native'
 import * as Keychain from 'react-native-keychain'
 import UserActions from 'App/Stores/User/Actions'
 import { userService } from 'App/Services/UserService'
@@ -11,6 +12,14 @@ export function* loginUser({ email, password, signUp }) {
     if (user) {
       yield put(UserActions.updateFirstLogin(signUp))
       yield put(UserActions.loginUserSuccess(user))
+
+      // token
+      const token = yield call(AsyncStorage.getItem, 'FCM_TOKEN')
+      console.log(token)
+      if (token) {
+        const success = yield call(userService.updateUserDeviceToken, token)
+        console.log('success', success)
+      }
     } else {
       yield put(
         UserActions.loginUserFailure('There was an error while fetching user informations.')
@@ -63,7 +72,10 @@ export function* getIncomingChat() {
       const user = yield select((state) => state.user.user)
       if (user) {
         const response = yield call(userService.checkIncomingChat, user.id)
-        console.log(response)
+        if (response.fromuserid) {
+          const data = yield call(userService.getUserData, response.fromuserid)
+          yield put(UserActions.setIncomingUserId(response.fromuserid, data))
+        }
         // if (notifications.success) {
         //   console.log(notifications)
         //   yield put(UserActions.updateNotification(notifications))

@@ -5,7 +5,8 @@ import Spinner from 'react-native-loading-spinner-overlay'
 import { connect } from 'react-redux'
 import { PropTypes } from 'prop-types'
 import * as Keychain from 'react-native-keychain'
-import analytics from '@react-native-firebase/analytics'
+import firebase from 'react-native-firebase'
+// import PushNotification from 'react-native-push-notification'
 
 import UserActions from 'App/Stores/User/Actions'
 import Style from './LoginScreenStyle'
@@ -31,7 +32,21 @@ class LoginScreen extends React.Component {
     forgotEmail: '',
   }
   async componentDidMount() {
-    analytics().setCurrentScreen('Login', 'Login')
+    firebase.analytics().setCurrentScreen('Login', 'Login')
+
+    const enabled = await firebase.messaging().hasPermission()
+    if (enabled) {
+      // user has permissions
+      console.log('Push notifications enabled')
+    } else {
+      // user doesn't have permission
+      try {
+        await firebase.messaging().requestPermission()
+        // User has authorised
+      } catch (error) {
+        // User has rejected permissions
+      }
+    }
 
     try {
       // Retrieve the credentials

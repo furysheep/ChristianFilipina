@@ -3,7 +3,7 @@ import { Alert } from 'react-native'
 import { Input, Text, Button, Divider } from 'react-native-elements'
 import { connect } from 'react-redux'
 import { PropTypes } from 'prop-types'
-import analytics from '@react-native-firebase/analytics'
+import firebase from 'react-native-firebase'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
 import styles from './ContactUsStyle'
@@ -16,7 +16,7 @@ class ContactUs extends React.Component {
   }
 
   componentDidMount() {
-    analytics().setCurrentScreen('ContactUsView', 'ContactUsView')
+    firebase.analytics().setCurrentScreen('ContactUsView', 'ContactUsView')
   }
 
   onSend = async () => {

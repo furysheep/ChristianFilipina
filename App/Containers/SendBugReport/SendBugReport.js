@@ -3,7 +3,7 @@ import { View, Alert } from 'react-native'
 import { Input, Text, Button } from 'react-native-elements'
 import { connect } from 'react-redux'
 import { PropTypes } from 'prop-types'
-import analytics from '@react-native-firebase/analytics'
+import firebase from 'react-native-firebase'
 
 import styles from './SendBugReportStyle'
 import { userService } from 'App/Services/UserService'
@@ -15,7 +15,7 @@ class SendBugReport extends React.Component {
   }
 
   componentDidMount() {
-    analytics().setCurrentScreen('SendReport', 'SendReport')
+    firebase.analytics().setCurrentScreen('SendReport', 'SendReport')
   }
 
   onSend = async () => {

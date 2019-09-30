@@ -6,7 +6,7 @@ import { connect } from 'react-redux'
 import { PropTypes } from 'prop-types'
 import Picker from 'react-native-picker'
 import Dialog from 'react-native-dialog'
-import analytics from '@react-native-firebase/analytics'
+import firebase from 'react-native-firebase'
 
 import styles from './SearchFilterStyle'
 import { Images, Helpers, Colors } from 'App/Theme'
@@ -113,7 +113,7 @@ class SearchFilter extends React.Component {
   }
 
   loadSavedSearch = (searchName) => {
-    analytics().setCurrentScreen('SavedSearches', 'SavedSearches')
+    firebase.analytics().setCurrentScreen('SavedSearches', 'SavedSearches')
     this.props.setSavedSearch(searchName)
     this.props.navigation.goBack()
   }
@@ -303,7 +303,7 @@ class SearchFilter extends React.Component {
                 buttonStyle={styles.search}
                 onPress={() => {
                   const screen = basic ? 'BasicUserSearch' : 'AdvancedUserSearch'
-                  analytics().setCurrentScreen(screen, screen)
+                  firebase.analytics().setCurrentScreen(screen, screen)
                   this.props.setCustomSearch(true)
                   this.props.navigation.goBack()
                 }}

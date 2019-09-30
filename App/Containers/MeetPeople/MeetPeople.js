@@ -3,7 +3,7 @@ import { View, TouchableOpacity, Image } from 'react-native'
 import { Input, Card, Text, Button, Icon } from 'react-native-elements'
 import { connect } from 'react-redux'
 import { PropTypes } from 'prop-types'
-import analytics from '@react-native-firebase/analytics'
+import firebase from 'react-native-firebase'
 
 import UserActions from 'App/Stores/User/Actions'
 import styles from './MeetPeopleStyle'
@@ -24,7 +24,7 @@ class MeetPeople extends React.Component {
   }
 
   async componentDidMount() {
-    analytics().setCurrentScreen('SpeedDating', 'SpeedDating')
+    firebase.analytics().setCurrentScreen('SpeedDating', 'SpeedDating')
     this.setState({ loading: true })
     const users = await userService.loadUsers()
     if (users.length > 0) {

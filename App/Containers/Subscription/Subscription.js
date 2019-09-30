@@ -8,7 +8,7 @@ import * as RNIap from 'react-native-iap'
 import styles from './SubscriptionStyle'
 import { Images } from 'App/Theme'
 import { TouchableOpacity } from 'react-native-gesture-handler'
-import analytics from '@react-native-firebase/analytics'
+import firebase from 'react-native-firebase'
 
 class Subscription extends React.Component {
   constructor() {
@@ -18,7 +18,7 @@ class Subscription extends React.Component {
 
   async componentDidMount() {
     this.setState({ loading: true })
-    analytics().setCurrentScreen('Subscriptions', 'Subscriptions')
+    firebase.analytics().setCurrentScreen('Subscriptions', 'Subscriptions')
     const items = Platform.select({
       ios: [
         // 'com.christianfilipina.app.platinum_monthly3',

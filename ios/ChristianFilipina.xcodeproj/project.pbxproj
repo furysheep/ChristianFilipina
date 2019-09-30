@@ -41,6 +41,7 @@
 		2D16E6881FA4F8E400B85C8A /* libReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D16E6891FA4F8E400B85C8A /* libReact.a */; };
 		2DCD954D1E0B4F2C00145EB5 /* ChristianFilipinaTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* ChristianFilipinaTests.m */; };
 		2DF0FFEE2056DD460020B375 /* libReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3DAD3EA31DF850E9000B6D8A /* libReact.a */; };
+		425D0A3A74D543039353B80E /* libRNFirebase.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F9D2B551ED474CFAADE7B35C /* libRNFirebase.a */; };
 		43457BC42FDF4000B0D01760 /* AntDesign.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6E447AC6E8964B1983F0245D /* AntDesign.ttf */; };
 		4A26436EC29210B374064333 /* libPods-ChristianFilipinaTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 18F764EC7E0689CE7366CC08 /* libPods-ChristianFilipinaTests.a */; };
 		4C6DDCF33D3C49E2B56D9B59 /* EvilIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = FA5B3F5AFB9A40B5BC751119 /* EvilIcons.ttf */; };
@@ -63,6 +64,7 @@
 		D99677A5789C4D31970EEAD3 /* Ionicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = DC1CE391E4E841E299C5DEED /* Ionicons.ttf */; };
 		DB50DCE6571543748F8F01A1 /* Octicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F845693639AB491CA7B35772 /* Octicons.ttf */; };
 		DF0E0C1723182196001896DA /* AdSupport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DF0E0BE723182196001896DA /* AdSupport.framework */; };
+		DF4753752334BC1100B42B28 /* UserNotifications.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DF4753442334BC1100B42B28 /* UserNotifications.framework */; };
 		DF491774231D625B0047C76E /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DF491773231D625B0047C76E /* StoreKit.framework */; };
 		DFBBF09122FC98A6006E7772 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DFBBF09022FC98A6006E7772 /* AVFoundation.framework */; };
 		DFBBF09322FC98AF006E7772 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DFBBF09222FC98AF006E7772 /* AudioToolbox.framework */; };
@@ -350,6 +352,13 @@
 			remoteGlobalIDString = 014A3B5C1C6CF33500B6D375;
 			remoteInfo = RNImagePicker;
 		};
+		DF4752922334AEFC00B42B28 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = DE58A3F97F4B4989BF4D5590 /* RNFirebase.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 134814201AA4EA6300B7C361;
+			remoteInfo = RNFirebase;
+		};
 		DF65EB4022F8A6BD00F5011F /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = B22C7466B6E846EFBF2A7332 /* RCTBEEPickerManager.xcodeproj */;
@@ -503,7 +512,9 @@
 		DC1CE391E4E841E299C5DEED /* Ionicons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Ionicons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Ionicons.ttf"; sourceTree = "<group>"; };
 		DD2D19567EA44B7EA9A15CF6 /* libRNCWebView.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNCWebView.a; sourceTree = "<group>"; };
 		DE2CD0CBA562E6174901650A /* libPods-ChristianFilipina-tvOSTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-ChristianFilipina-tvOSTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		DE58A3F97F4B4989BF4D5590 /* RNFirebase.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNFirebase.xcodeproj; path = "../node_modules/react-native-firebase/ios/RNFirebase.xcodeproj"; sourceTree = "<group>"; };
 		DF0E0BE723182196001896DA /* AdSupport.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AdSupport.framework; path = System/Library/Frameworks/AdSupport.framework; sourceTree = SDKROOT; };
+		DF4753442334BC1100B42B28 /* UserNotifications.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UserNotifications.framework; path = System/Library/Frameworks/UserNotifications.framework; sourceTree = SDKROOT; };
 		DF491738231D1E5D0047C76E /* ChristianFilipina.entitlements */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.entitlements; name = ChristianFilipina.entitlements; path = ChristianFilipina/ChristianFilipina.entitlements; sourceTree = "<group>"; };
 		DF491773231D625B0047C76E /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		DFBBF09022FC98A6006E7772 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
@@ -526,6 +537,7 @@
 		F31149504C2FDF10AD888FE4 /* Pods-ChristianFilipina.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ChristianFilipina.release.xcconfig"; path = "Pods/Target Support Files/Pods-ChristianFilipina/Pods-ChristianFilipina.release.xcconfig"; sourceTree = "<group>"; };
 		F845693639AB491CA7B35772 /* Octicons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Octicons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Octicons.ttf"; sourceTree = "<group>"; };
 		F907C0EA41CB4DBB9F3E53C6 /* FontAwesome5_Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome5_Regular.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome5_Regular.ttf"; sourceTree = "<group>"; };
+		F9D2B551ED474CFAADE7B35C /* libRNFirebase.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNFirebase.a; sourceTree = "<group>"; };
 		FA5B3F5AFB9A40B5BC751119 /* EvilIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = EvilIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/EvilIcons.ttf"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -543,6 +555,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DF4753752334BC1100B42B28 /* UserNotifications.framework in Frameworks */,
 				DF0E0C1723182196001896DA /* AdSupport.framework in Frameworks */,
 				DFBBF0A322FC98E2006E7772 /* libsqlite3.tbd in Frameworks */,
 				DFBBF0A022FC98DD006E7772 /* libc++.tbd in Frameworks */,
@@ -576,6 +589,7 @@
 				EDD739D72AC846488B7A3FB9 /* libRNSnackbar.a in Frameworks */,
 				AB562AE1FEE846B98812D9C9 /* libRNImagePicker.a in Frameworks */,
 				67557B6A2F5C0FE404E1179A /* libPods-ChristianFilipina.a in Frameworks */,
+				425D0A3A74D543039353B80E /* libRNFirebase.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -680,6 +694,7 @@
 				3D8B9687810F4DE6A706798F /* libRNKeychain.a */,
 				8F087F013228486FA03ADBD5 /* libRNSnackbar.a */,
 				7EE5701AEEBF43D48E78A077 /* libRNImagePicker.a */,
+				F9D2B551ED474CFAADE7B35C /* libRNFirebase.a */,
 			);
 			name = "Recovered References";
 			sourceTree = "<group>";
@@ -766,6 +781,7 @@
 		2D16E6871FA4F8E400B85C8A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				DF4753442334BC1100B42B28 /* UserNotifications.framework */,
 				DF491773231D625B0047C76E /* StoreKit.framework */,
 				DF0E0BE723182196001896DA /* AdSupport.framework */,
 				DFD8E3582317E6730097BDF9 /* libFirebaseCore.a */,
@@ -829,6 +845,7 @@
 				3772697019ED4004A1350248 /* RNKeychain.xcodeproj */,
 				A00D68AF8A974FF3B1234B83 /* RNSnackbar.xcodeproj */,
 				6D24AFA7F0964363B50CFBF0 /* RNImagePicker.xcodeproj */,
+				DE58A3F97F4B4989BF4D5590 /* RNFirebase.xcodeproj */,
 			);
 			name = Libraries;
 			sourceTree = "<group>";
@@ -916,6 +933,14 @@
 			isa = PBXGroup;
 			children = (
 				DF142F072315A08900088C9D /* libRNImagePicker.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		DF47528F2334AEFC00B42B28 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				DF4752932334AEFC00B42B28 /* libRNFirebase.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1052,6 +1077,9 @@
 						DevelopmentTeam = W868Q7CJL7;
 						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
+							com.apple.BackgroundModes = {
+								enabled = 1;
+							};
 							com.apple.GameCenter.iOS = {
 								enabled = 0;
 							};
@@ -1144,6 +1172,10 @@
 				{
 					ProductGroup = DFCE867C22F0FBFA004D4E68 /* Products */;
 					ProjectRef = BA50DE5B8F3843DFAE44B3C7 /* RNCWebView.xcodeproj */;
+				},
+				{
+					ProductGroup = DF47528F2334AEFC00B42B28 /* Products */;
+					ProjectRef = DE58A3F97F4B4989BF4D5590 /* RNFirebase.xcodeproj */;
 				},
 				{
 					ProductGroup = 0476B6FF2256026D006BDB17 /* Products */;
@@ -1429,6 +1461,13 @@
 			remoteRef = DF142F062315A08900088C9D /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
+		DF4752932334AEFC00B42B28 /* libRNFirebase.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libRNFirebase.a;
+			remoteRef = DF4752922334AEFC00B42B28 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 		DF65EB4122F8A6BD00F5011F /* libRCTBEEPickerManager.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
@@ -1615,21 +1654,17 @@
 			buildActionMask = 2147483647;
 			files = (
 			);
-			inputFileListPaths = (
-			);
 			inputPaths = (
-				"${SRCROOT}/Pods/Target Support Files/Pods-ChristianFilipina/Pods-ChristianFilipina-frameworks.sh",
+				"${PODS_ROOT}/Target Support Files/Pods-ChristianFilipina/Pods-ChristianFilipina-frameworks.sh",
 				"${PODS_ROOT}/../../node_modules/react-native-webrtc/ios/WebRTC.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
-			outputFileListPaths = (
-			);
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/WebRTC.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-ChristianFilipina/Pods-ChristianFilipina-frameworks.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-ChristianFilipina/Pods-ChristianFilipina-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		647A09F007F63CA2A2F65978 /* [CP] Check Pods Manifest.lock */ = {
@@ -1760,12 +1795,14 @@
 					"$(SRCROOT)/../node_modules/react-native-keychain/RNKeychainManager",
 					"$(SRCROOT)/../node_modules/react-native-snackbar/ios",
 					"$(SRCROOT)/../node_modules/react-native-image-picker/ios",
+					"$(SRCROOT)/../node_modules/react-native-firebase/ios/RNFirebase/**",
 				);
 				INFOPLIST_FILE = ChristianFilipinaTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
@@ -1803,12 +1840,14 @@
 					"$(SRCROOT)/../node_modules/react-native-keychain/RNKeychainManager",
 					"$(SRCROOT)/../node_modules/react-native-snackbar/ios",
 					"$(SRCROOT)/../node_modules/react-native-image-picker/ios",
+					"$(SRCROOT)/../node_modules/react-native-firebase/ios/RNFirebase/**",
 				);
 				INFOPLIST_FILE = ChristianFilipinaTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
@@ -1840,7 +1879,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = NO;
-				DEVELOPMENT_TEAM = W868Q7CJL7;
+				DEVELOPMENT_TEAM = "";
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1857,6 +1896,7 @@
 					"$(SRCROOT)/../node_modules/react-native-keychain/RNKeychainManager",
 					"$(SRCROOT)/../node_modules/react-native-snackbar/ios",
 					"$(SRCROOT)/../node_modules/react-native-image-picker/ios",
+					"$(SRCROOT)/../node_modules/react-native-firebase/ios/RNFirebase/**",
 				);
 				INFOPLIST_FILE = ChristianFilipina/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
@@ -1886,7 +1926,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = W868Q7CJL7;
+				DEVELOPMENT_TEAM = "";
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1903,6 +1943,7 @@
 					"$(SRCROOT)/../node_modules/react-native-keychain/RNKeychainManager",
 					"$(SRCROOT)/../node_modules/react-native-snackbar/ios",
 					"$(SRCROOT)/../node_modules/react-native-image-picker/ios",
+					"$(SRCROOT)/../node_modules/react-native-firebase/ios/RNFirebase/**",
 				);
 				INFOPLIST_FILE = ChristianFilipina/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
@@ -1945,11 +1986,13 @@
 					"$(SRCROOT)/../node_modules/react-native-keychain/RNKeychainManager",
 					"$(SRCROOT)/../node_modules/react-native-snackbar/ios",
 					"$(SRCROOT)/../node_modules/react-native-image-picker/ios",
+					"$(SRCROOT)/../node_modules/react-native-firebase/ios/RNFirebase/**",
 				);
 				INFOPLIST_FILE = "ChristianFilipina-tvOS/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
@@ -1994,11 +2037,13 @@
 					"$(SRCROOT)/../node_modules/react-native-keychain/RNKeychainManager",
 					"$(SRCROOT)/../node_modules/react-native-snackbar/ios",
 					"$(SRCROOT)/../node_modules/react-native-image-picker/ios",
+					"$(SRCROOT)/../node_modules/react-native-firebase/ios/RNFirebase/**",
 				);
 				INFOPLIST_FILE = "ChristianFilipina-tvOS/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
@@ -2042,11 +2087,13 @@
 					"$(SRCROOT)/../node_modules/react-native-keychain/RNKeychainManager",
 					"$(SRCROOT)/../node_modules/react-native-snackbar/ios",
 					"$(SRCROOT)/../node_modules/react-native-image-picker/ios",
+					"$(SRCROOT)/../node_modules/react-native-firebase/ios/RNFirebase/**",
 				);
 				INFOPLIST_FILE = "ChristianFilipina-tvOSTests/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
@@ -2091,11 +2138,13 @@
 					"$(SRCROOT)/../node_modules/react-native-keychain/RNKeychainManager",
 					"$(SRCROOT)/../node_modules/react-native-snackbar/ios",
 					"$(SRCROOT)/../node_modules/react-native-image-picker/ios",
+					"$(SRCROOT)/../node_modules/react-native-firebase/ios/RNFirebase/**",
 				);
 				INFOPLIST_FILE = "ChristianFilipina-tvOSTests/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",

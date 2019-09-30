@@ -3,7 +3,7 @@ import { View, TouchableOpacity } from 'react-native'
 import { Text, Icon } from 'react-native-elements'
 import { connect } from 'react-redux'
 import { PropTypes } from 'prop-types'
-import analytics from '@react-native-firebase/analytics'
+import firebase from 'react-native-firebase'
 
 import styles from './NotificationsStyle'
 import { notificationService } from 'App/Services/NotificationService'
@@ -18,7 +18,7 @@ class Notifications extends React.Component {
   }
 
   componentDidMount() {
-    analytics().setCurrentScreen('Notifications', 'Notifications')
+    firebase.analytics().setCurrentScreen('Notifications', 'Notifications')
     notificationService.getRecentPushNotifications()
   }
 

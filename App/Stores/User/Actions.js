@@ -32,6 +32,7 @@ const { Types, Creators } = createActions({
 
   getUnreadNotifications: null,
   getIncomingChat: null,
+  setIncomingUserId: ['userId', 'user'],
   updateNotification: ['notification'],
 
   logout: null,

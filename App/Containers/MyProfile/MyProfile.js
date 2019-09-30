@@ -9,7 +9,7 @@ import Spinner from 'react-native-loading-spinner-overlay'
 import DatePicker from 'react-native-datepicker'
 import RNPickerSelect from 'react-native-picker-select'
 import moment from 'moment'
-import analytics from '@react-native-firebase/analytics'
+import firebase from 'react-native-firebase'
 
 import styles from './MyProfileStyle'
 import { Images, Colors, Fonts } from 'App/Theme'
@@ -47,7 +47,7 @@ class MyProfile extends React.Component {
   }
 
   async componentDidMount() {
-    analytics().setCurrentScreen('EditProfile', 'EditProfile')
+    firebase.analytics().setCurrentScreen('EditProfile', 'EditProfile')
 
     const { user } = this.props
     this.setState({ loading: true })
@@ -89,7 +89,7 @@ class MyProfile extends React.Component {
   }
 
   selectPhoto = () => {
-    analytics().setCurrentScreen('UploadPhoto', 'UploadPhoto')
+    firebase.analytics().setCurrentScreen('UploadPhoto', 'UploadPhoto')
 
     const options = {
       quality: 1.0,

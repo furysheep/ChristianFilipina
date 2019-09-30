@@ -26,6 +26,9 @@ target 'ChristianFilipina' do
   ]
   pod 'Folly', :podspec => "#{rn_path}/third-party-podspecs/Folly.podspec"
   
+  pod 'Firebase/Core', '~> 6.3.0'
+  pod 'Firebase/Messaging', '~> 6.3.0'
+
   pod 'RNIap', :path => '../node_modules/react-native-iap'
 
   post_install do |installer|
@@ -37,8 +40,6 @@ target 'ChristianFilipina' do
   end
   
 
-  pod 'RNFBApp', :path => '../node_modules/@react-native-firebase/app'
-  pod 'RNFBAnalytics', :path => '../node_modules/@react-native-firebase/analytics'
   pod 'react-native-webrtc', :path => '../node_modules/react-native-webrtc'
 
 

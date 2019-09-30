@@ -4,7 +4,7 @@ import { Input } from 'react-native-elements'
 import { connect } from 'react-redux'
 import { PropTypes } from 'prop-types'
 import { WebView as RNWebView } from 'react-native-webview'
-import analytics from '@react-native-firebase/analytics'
+import firebase from 'react-native-firebase'
 import { Config } from 'App/Config'
 
 class WebView extends React.Component {
@@ -18,19 +18,19 @@ class WebView extends React.Component {
     let url = ''
     switch (routeName) {
       case 'Testimonials':
-        analytics().setCurrentScreen('Testimonials', 'Testimonials')
+        firebase.analytics().setCurrentScreen('Testimonials', 'Testimonials')
         url = user.testimonialsUrl
         break
       case 'AdviceArticles':
-        analytics().setCurrentScreen('AdviceArticles', 'AdviceArticles')
+        firebase.analytics().setCurrentScreen('AdviceArticles', 'AdviceArticles')
         url = user.researchUrl
         break
       case 'PrivacyPolicy':
-        analytics().setCurrentScreen('PrivacyPolicy', 'PrivacyPolicy')
+        firebase.analytics().setCurrentScreen('PrivacyPolicy', 'PrivacyPolicy')
         url = Config.PRIVACY_POLICY_URL
         break
       case 'TermsOfService':
-        analytics().setCurrentScreen('TermsOfService', 'TermsOfService')
+        firebase.analytics().setCurrentScreen('TermsOfService', 'TermsOfService')
         url = Config.TERMS_OF_SERVICE_URL
         break
     }

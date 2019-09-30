@@ -5,7 +5,7 @@ import { connect } from 'react-redux'
 import { PropTypes } from 'prop-types'
 import Grid from 'react-native-infinite-scroll-grid'
 import Dialog from 'react-native-dialog'
-import analytics from '@react-native-firebase/analytics'
+import firebase from 'react-native-firebase'
 
 import styles from './OnlineUsersStyle'
 import { Images, Helpers } from 'App/Theme'
@@ -79,7 +79,7 @@ class OnlineUsers extends React.Component {
   }
 
   componentDidMount() {
-    analytics().setCurrentScreen('UsersList', 'UsersList')
+    firebase.analytics().setCurrentScreen('UsersList', 'UsersList')
 
     this.loadData(true)
   }
@@ -110,7 +110,7 @@ class OnlineUsers extends React.Component {
       const result = await ChatService.sendVideoChatRequest(id)
 
       if (result === 'success') {
-        NavigationService.navigate('VideoChat', { id, firstName })
+        NavigationService.navigate('VideoChat', { id, firstName, caller: true })
       } else {
       }
     } else {

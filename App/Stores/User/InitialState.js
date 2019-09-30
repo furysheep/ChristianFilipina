@@ -3,6 +3,7 @@
  */
 export const INITIAL_STATE = {
   user: null,
+  incomingUserId: null,
   userIsLoading: false,
   userErrorMessage: null,
   notification: {},

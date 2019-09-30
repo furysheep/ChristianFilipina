@@ -4,7 +4,7 @@ import { Button, Avatar, Image, Text } from 'react-native-elements'
 import { connect } from 'react-redux'
 import { PropTypes } from 'prop-types'
 import { GiftedChat, Bubble, Time } from 'react-native-gifted-chat'
-import analytics from '@react-native-firebase/analytics'
+import firebase from 'react-native-firebase'
 
 import styles from './MessageStyle'
 import { ChatService } from 'App/Services/ChatService'
@@ -33,7 +33,7 @@ class Message extends React.Component {
   }
 
   async componentDidMount() {
-    analytics().setCurrentScreen('Messaging', 'Messaging')
+    firebase.analytics().setCurrentScreen('Messaging', 'Messaging')
     const { remoteUserId } = this.state
     const { locked, messages } = await ChatService.getInboxMessages(remoteUserId)
 

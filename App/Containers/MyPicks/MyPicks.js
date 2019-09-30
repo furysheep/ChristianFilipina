@@ -57,7 +57,7 @@ class MyPicks extends React.Component {
       const result = await ChatService.sendVideoChatRequest(id)
 
       if (result === 'success') {
-        NavigationService.navigate('VideoChat', { id, firstName })
+        NavigationService.navigate('VideoChat', { id, firstName, caller: true })
       } else {
       }
     } else {

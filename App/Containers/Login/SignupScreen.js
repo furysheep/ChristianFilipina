@@ -13,7 +13,7 @@ import * as Keychain from 'react-native-keychain'
 import { Input, CheckBox, Button, Overlay, Text, Icon } from 'react-native-elements'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
-import analytics from '@react-native-firebase/analytics'
+import firebase from 'react-native-firebase'
 
 import UserActions from 'App/Stores/User/Actions'
 import Style from './SignupScreenStyle'
@@ -38,7 +38,7 @@ class SignupScreen extends React.Component {
   }
 
   componentDidMount() {
-    analytics().setCurrentScreen('Signup', 'Signup')
+    firebase.analytics().setCurrentScreen('Signup', 'Signup')
   }
 
   signUp = async () => {
