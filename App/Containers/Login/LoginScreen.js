@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, Image, ImageBackground, Linking, Alert } from 'react-native'
+import { View, Image, ImageBackground, Linking, Alert, AsyncStorage } from 'react-native'
 import { Input, CheckBox, Button, Text } from 'react-native-elements'
 import Spinner from 'react-native-loading-spinner-overlay'
 import { connect } from 'react-redux'
@@ -38,6 +38,12 @@ class LoginScreen extends React.Component {
     if (enabled) {
       // user has permissions
       console.log('Push notifications enabled')
+      const fcmToken = await firebase.messaging().getToken()
+      console.log(fcmToken)
+      if (fcmToken) {
+        // user has a device token
+        await AsyncStorage.setItem('FCM_TOKEN', fcmToken)
+      }
     } else {
       // user doesn't have permission
       try {
@@ -205,6 +211,7 @@ class LoginScreen extends React.Component {
             secureTextEntry
             autoCompleteType="password"
             textContentType="password"
+            autoCapitalize="none"
             value={password}
             onChangeText={(password) => this.setState({ password })}
             errorStyle={{ color: Colors.error }}

@@ -9,17 +9,31 @@ import styles from './NotificationsStyle'
 import { notificationService } from 'App/Services/NotificationService'
 
 class Notifications extends React.Component {
-  static navigationOptions = {
-    headerRight: (
-      <TouchableOpacity onPress={() => {}}>
-        <Icon name="refresh" size={35} underlayColor={'#64b5f6'} />
-      </TouchableOpacity>
-    ),
+  static navigationOptions = ({ navigation }) => {
+    if (!navigation.state.params) return null
+    return {
+      headerRight: (
+        <TouchableOpacity onPress={navigation.state.params.refreshNotifications}>
+          <Icon name="refresh" size={35} underlayColor={'#64b5f6'} />
+        </TouchableOpacity>
+      ),
+    }
+  }
+
+  constructor(props) {
+    super(props)
+    props.navigation.setParams({
+      refreshNotifications: this.refreshNotifications,
+    })
+  }
+
+  refreshNotifications = async () => {
+    const data = await notificationService.getRecentPushNotifications()
+    console.log(data)
   }
 
   componentDidMount() {
     firebase.analytics().setCurrentScreen('Notifications', 'Notifications')
-    notificationService.getRecentPushNotifications()
   }
 
   render() {

@@ -112,10 +112,11 @@ class MyProfile extends React.Component {
         try {
           await userService.uploadPhoto(response.uri)
           Alert.alert(
-            'Your photo has been uploaded successfully. It will be reviewed by our staff and if approved will be live on your profile within 6 hours.'
+            'Your photo has been uploaded successfully.',
+            'It will be reviewed by our staff and if approved will be live on your profile within 6 hours.'
           )
         } catch {
-          Alert.alert('Sorry, some error occured during uploading. Please contact support team.')
+          Alert.alert('Sorry, some error occured during uploading', 'Please contact support team.')
         } finally {
           this.setState({ loading: false })
         }
