@@ -121,7 +121,7 @@ class ViewedMe extends React.Component {
     ) : (
       <FlatList
         data={profiles}
-        keyExtractor={(item) => `${item.id[0]}${item.act_time[0]}`}
+        keyExtractor={(item, index) => `${item.id[0]}${index}`}
         renderItem={this.renderItem}
         onRefresh={this.onRefresh}
         refreshing={refreshing}

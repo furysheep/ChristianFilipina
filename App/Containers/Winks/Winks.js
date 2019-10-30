@@ -42,9 +42,11 @@ class SelectableItem extends React.Component {
             <Text style={styles.cityText}>{city}</Text>
             <Text style={styles.viewText}>Click to view Profile</Text>
           </View>
-          <TouchableOpacity onPress={this.handleOnLike}>
-            <Image source={Images.gameHeart} style={styles.like} />
-          </TouchableOpacity>
+          {!liked && (
+            <TouchableOpacity onPress={this.handleOnLike}>
+              <Image source={Images.gameHeart} style={styles.like} />
+            </TouchableOpacity>
+          )}
         </View>
       </TouchableOpacity>
     )
@@ -100,7 +102,7 @@ class Winks extends React.Component {
     }
   }
 
-  renderItem = ({ item }) => {
+  renderItem = ({ item, index }) => {
     return (
       <SelectableItem
         onPressItem={this.handleOnPressItem}
@@ -119,7 +121,7 @@ class Winks extends React.Component {
     ) : (
       <FlatList
         data={profiles}
-        keyExtractor={(item) => `${item.id[0]}${item.act_time[0]}`}
+        keyExtractor={(item, index) => `${item.id[0]}${index}`}
         renderItem={this.renderItem}
         onRefresh={this.onRefresh}
         refreshing={refreshing}
