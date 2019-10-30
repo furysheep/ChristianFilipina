@@ -50,6 +50,7 @@ Notifications.propTypes = {
   userIsLoading: PropTypes.bool,
   userErrorMessage: PropTypes.string,
   fetchUser: PropTypes.func,
+  navigation: PropTypes.object,
 }
 
 const mapStateToProps = (state) => ({})

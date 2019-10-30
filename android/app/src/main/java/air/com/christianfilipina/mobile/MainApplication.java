@@ -1,30 +1,26 @@
 package air.com.christianfilipina.mobile;
-
+import androidx.multidex.MultiDex;
 import android.app.Application;
+import android.content.Context;
 
 import com.facebook.react.ReactApplication;
-import io.invertase.firebase.RNFirebasePackage;
-import com.dooboolab.RNIap.RNIapPackage;
-
-import io.invertase.firebase.analytics.RNFirebaseAnalyticsPackage;
-import io.invertase.firebase.notifications.RNFirebaseNotificationsPackage;
-import io.invertase.firebase.messaging.RNFirebaseMessagingPackage;
-import com.imagepicker.ImagePickerPackage;
-import com.azendoo.reactnativesnackbar.SnackbarPackage;
-import com.oblador.keychain.KeychainPackage;
-import com.beefe.picker.PickerViewPackage;
-import com.reactnativecommunity.webview.RNCWebViewPackage;
-import com.oblador.vectoricons.VectorIconsPackage;
-import com.swmansion.gesturehandler.react.RNGestureHandlerPackage;
+import com.facebook.react.PackageList;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
-import com.facebook.react.shell.MainReactPackage;
 import com.facebook.soloader.SoLoader;
 
 import java.util.Arrays;
 import java.util.List;
 
+import io.invertase.firebase.analytics.RNFirebaseAnalyticsPackage;
+import io.invertase.firebase.messaging.RNFirebaseMessagingPackage;
+
 public class MainApplication extends Application implements ReactApplication {
+  @Override
+  protected void attachBaseContext(Context base) {
+    super.attachBaseContext(base);
+    MultiDex.install(this);
+  }
 
   private final ReactNativeHost mReactNativeHost = new ReactNativeHost(this) {
     @Override
@@ -34,21 +30,11 @@ public class MainApplication extends Application implements ReactApplication {
 
     @Override
     protected List<ReactPackage> getPackages() {
-      return Arrays.<ReactPackage>asList(
-          new MainReactPackage(),
-            new RNFirebasePackage(),
-            new RNFirebaseMessagingPackage(),
-            new RNFirebaseNotificationsPackage(),
-            new RNFirebaseAnalyticsPackage(),
-            new RNIapPackage(),
-            new ImagePickerPackage(),
-            new SnackbarPackage(),
-            new KeychainPackage(),
-            new PickerViewPackage(),
-            new RNCWebViewPackage(),
-            new VectorIconsPackage(),
-            new RNGestureHandlerPackage()
-      );
+      List<ReactPackage> packages = new PackageList(this).getPackages();
+      // Packages that cannot be autolinked yet can be added manually here, for example:
+       packages.add(new RNFirebaseMessagingPackage());
+       packages.add(new RNFirebaseAnalyticsPackage());
+      return packages;
     }
 
     @Override

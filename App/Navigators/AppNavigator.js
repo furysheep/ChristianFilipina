@@ -265,6 +265,9 @@ const DrawerContainer = createDrawerNavigator(
         VideoChat: {
           screen: VideoChat,
         },
+        Message: {
+          screen: Message,
+        },
       },
       {
         navigationOptions: {

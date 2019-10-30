@@ -1,7 +1,6 @@
 import React, { Fragment } from 'react'
-import { View, TouchableOpacity, Switch, ScrollView } from 'react-native'
+import { Modal, View, TouchableHighlight, ScrollView } from 'react-native'
 import { ButtonGroup, ListItem, Button, Text, Icon } from 'react-native-elements'
-import Modal from 'react-native-modal'
 import { connect } from 'react-redux'
 import { PropTypes } from 'prop-types'
 import Picker from 'react-native-picker'
@@ -52,7 +51,10 @@ class SearchFilter extends React.Component {
     return Object.keys(update).length ? update : null
   }
 
-  updateIndex = (selectedIndex) => this.setState({ selectedIndex })
+  updateIndex = (selectedIndex) => {
+    Picker.hide()
+    this.setState({ selectedIndex })
+  }
 
   showPicker = (data, selectedValue, pickerTitleText, question) => {
     Picker.init({
@@ -90,13 +92,23 @@ class SearchFilter extends React.Component {
       pickerCancelBtnText: 'Cancel',
       pickerTitleText,
     })
+    // this.setState({ isPickerShowing: true })
     Picker.show()
-    this.setState({ isPickerShowing: true })
   }
 
   hidePicker = () => {
     Picker.hide()
     this.setState({ isPickerShowing: false })
+  }
+
+  componentDidUpdate() {
+    // if (this.state.isPickerShowing) {
+    //   if (!Picker.isPickerShow()) Picker.show()
+    // }
+  }
+
+  componentWillUnmount() {
+    Picker.hide()
   }
 
   confirmDialog = () => {
@@ -145,18 +157,20 @@ class SearchFilter extends React.Component {
           <Dialog.Button label="Ok" onPress={this.confirmDialog} />
           <Dialog.Button label="Cancel" onPress={this.hideDialog} />
         </Dialog.Container>
-        <Modal
-          style={styles.modal}
-          backdropOpacity={0.2}
-          animationTiming={1} // show modal and picker instantly to avoid undue delay, since picker can't show till after modal is showing
-          isVisible={this.state.isPickerShowing}
-          onBackdropPress={this.hidePicker}
-          onBackButtonPress={this.hidePicker}
-          onModalHide={this.hidePicker}
+        {/* <Modal
+          animationType="fade"
+          backdropOpacity={0.2} // show modal and picker instantly to avoid undue delay, since picker can't show till after modal is showing
+          visible={this.state.isPickerShowing}
+          onRequestClose={this.hidePicker}
+          transparent={true}
+          onShow={() => {
+            Picker.show()
+          }}
         >
-          {/* Modal is empty */}
-          <View />
-        </Modal>
+          <TouchableHighlight style={styles.modal} onPress={this.hidePicker}>
+            <View />
+          </TouchableHighlight>
+        </Modal> */}
 
         <ButtonGroup onPress={this.updateIndex} selectedIndex={selectedIndex} buttons={buttons} />
         {selectedIndex === 0 ? (
@@ -215,6 +229,9 @@ class SearchFilter extends React.Component {
                     title={question.question_label[0]}
                     {...props}
                     onPress={() => {
+                      if (props.switch) {
+                        return
+                      }
                       if (question.question_type[0] === 'text') {
                         this.setState({
                           dialogForName: question.question_label[0],
@@ -293,6 +310,7 @@ class SearchFilter extends React.Component {
                 title={basic ? 'Power Search' : 'Basic Search'}
                 buttonStyle={styles.powerSearch}
                 onPress={() => {
+                  Picker.hide()
                   this.setState({ basic: !basic }, () => {
                     this.props.searchBasicUpdate(this.state.basic)
                   })
@@ -302,6 +320,7 @@ class SearchFilter extends React.Component {
                 title="Search"
                 buttonStyle={styles.search}
                 onPress={() => {
+                  Picker.hide()
                   const screen = basic ? 'BasicUserSearch' : 'AdvancedUserSearch'
                   firebase.analytics().setCurrentScreen(screen, screen)
                   this.props.setCustomSearch(true)

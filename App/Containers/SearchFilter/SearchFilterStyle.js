@@ -8,10 +8,9 @@ export default StyleSheet.create({
     flex: 1,
   },
   modal: {
-    justifyContent: 'flex-end',
+    backgroundColor: 'black',
+    opacity: 0.2,
     flex: 1,
-    // somehow top goes off screen when not full screen
-    paddingTop: 55,
   },
   scrollView: {},
   powerSearch: {
