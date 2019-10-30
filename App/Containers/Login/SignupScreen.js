@@ -14,6 +14,7 @@ import { Input, CheckBox, Button, Overlay, Text, Icon } from 'react-native-eleme
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import firebase from 'react-native-firebase'
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
 import UserActions from 'App/Stores/User/Actions'
 import Style from './SignupScreenStyle'
@@ -88,82 +89,79 @@ class SignupScreen extends React.Component {
         >
           <View />
         </OverlayPopup>
-        <View style={{ padding: 30 }}>
-          <Input
-            placeholder="Email"
-            leftIcon={<Image source={Images.emailIcon} />}
-            autoCompleteType="email"
-            keyboardType="email-address"
-            textContentType="emailAddress"
-            autoCapitalize="none"
-            value={email}
-            onChangeText={(email) => this.setState({ email })}
-          />
-          <Input
-            placeholder="Password"
-            leftIcon={<Image source={Images.passwordIcon} />}
-            secureTextEntry
-            autoCompleteType="password"
-            textContentType="password"
-            value={password}
-            onChangeText={(password) => this.setState({ password })}
-          />
-          <Input
-            placeholder="Repeat password"
-            leftIcon={<Image source={Images.passwordIcon} />}
-            secureTextEntry
-            autoCompleteType="password"
-            textContentType="password"
-            value={confirm}
-            onChangeText={(confirm) => this.setState({ confirm })}
-          />
-          <Input
-            placeholder="First Name"
-            leftIcon={<Image source={Images.firstNameIcon} />}
-            autoCompleteType="name"
-            textContentType="givenName"
-            value={firstName}
-            onChangeText={(firstName) => this.setState({ firstName })}
-          />
-          <View style={{ flexDirection: 'row' }}>
-            <CheckBox
-              title="I agree with EULA"
-              checked={checked}
-              onPress={() => this.setState({ checked: !checked })}
+        <KeyboardAwareScrollView>
+          <View style={{ padding: 30 }}>
+            <Input
+              placeholder="Email"
+              leftIcon={<Image source={Images.emailIcon} />}
+              autoCompleteType="email"
+              keyboardType="email-address"
+              textContentType="emailAddress"
+              autoCapitalize="none"
+              value={email}
+              onChangeText={(email) => this.setState({ email })}
             />
+            <Input
+              placeholder="Password"
+              leftIcon={<Image source={Images.passwordIcon} />}
+              secureTextEntry
+              autoCompleteType="password"
+              textContentType="password"
+              value={password}
+              onChangeText={(password) => this.setState({ password })}
+            />
+            <Input
+              placeholder="Repeat password"
+              leftIcon={<Image source={Images.passwordIcon} />}
+              secureTextEntry
+              autoCompleteType="password"
+              textContentType="password"
+              value={confirm}
+              onChangeText={(confirm) => this.setState({ confirm })}
+            />
+            <Input
+              placeholder="First Name"
+              leftIcon={<Image source={Images.firstNameIcon} />}
+              autoCompleteType="name"
+              textContentType="givenName"
+              value={firstName}
+              onChangeText={(firstName) => this.setState({ firstName })}
+            />
+            <View style={{ flexDirection: 'row' }}>
+              <CheckBox
+                title="I agree with EULA"
+                checked={checked}
+                onPress={() => this.setState({ checked: !checked })}
+              />
+            </View>
+            <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 20 }}>
+              <Text>I'm a</Text>
+              <TouchableOpacity
+                style={{
+                  borderWidth: 5,
+                  marginLeft: 30,
+                  borderRadius: 5,
+                  borderColor: gender ? Colors.primary : Colors.separator,
+                }}
+                onPress={() => this.setState({ gender: true })}
+              >
+                <Image source={Images.maleSexIcon} style={{ width: 60, height: 60 }} />
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={{
+                  borderWidth: 5,
+                  marginLeft: 30,
+                  borderRadius: 5,
+                  borderColor: !gender ? Colors.primary : Colors.separator,
+                }}
+                onPress={() => this.setState({ gender: false })}
+              >
+                <Image source={Images.femaleSexIcon} style={{ width: 60, height: 60 }} />
+              </TouchableOpacity>
+            </View>
+            <Button title="JOIN CHRISTIAN FILIPINA" disabled={!checked} onPress={this.signUp} />
           </View>
-          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-            <Text>I'm a</Text>
-            <TouchableOpacity
-              style={{
-                borderWidth: 5,
-                marginLeft: 30,
-                borderRadius: 5,
-                borderColor: gender ? Colors.primary : Colors.separator,
-              }}
-              onPress={() => this.setState({ gender: true })}
-            >
-              <Image source={Images.maleSexIcon} style={{ width: 60, height: 60 }} />
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={{
-                borderWidth: 5,
-                marginLeft: 30,
-                borderRadius: 5,
-                borderColor: !gender ? Colors.primary : Colors.separator,
-              }}
-              onPress={() => this.setState({ gender: false })}
-            >
-              <Image source={Images.femaleSexIcon} style={{ width: 60, height: 60 }} />
-            </TouchableOpacity>
-          </View>
-          <Button
-            title="JOIN CHRISTIAN FILIPINA"
-            disabled={!checked}
-            style={{ marginTop: 20 }}
-            onPress={this.signUp}
-          />
-        </View>
+        </KeyboardAwareScrollView>
       </View>
     )
   }
