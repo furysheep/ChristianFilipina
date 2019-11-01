@@ -175,6 +175,9 @@ class OnlineUsers extends React.Component {
 
   showDialog = () => {
     this.setState({ dialogVisible: true, dialogCurrentValue: '' })
+    setTimeout(() => {
+      if (this.input) this.input.focus()
+    }, 500)
   }
 
   confirmDialog = () => {
@@ -198,9 +201,13 @@ class OnlineUsers extends React.Component {
         <Dialog.Container visible={dialogVisible}>
           <Dialog.Title>{`Please enter a name for your saved search to view it later`}</Dialog.Title>
           <Dialog.Input
+            textInputRef={(ref) => {
+              this.input = ref
+            }}
             placeholder="e.g. Girls to meet in Philippines"
             value={dialogCurrentValue}
             onChangeText={(dialogCurrentValue) => this.setState({ dialogCurrentValue })}
+            wrapperStyle={styles.dialogInput}
           />
           <Dialog.Button label="Save" onPress={this.confirmDialog} />
           <Dialog.Button label="Cancel" onPress={this.hideDialog} />

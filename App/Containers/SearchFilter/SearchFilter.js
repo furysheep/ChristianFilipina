@@ -151,8 +151,12 @@ class SearchFilter extends React.Component {
         <Dialog.Container visible={dialogVisible}>
           <Dialog.Title>{`Please enter a value for ${dialogForName}`}</Dialog.Title>
           <Dialog.Input
+            textInputRef={(ref) => {
+              this.input = ref
+            }}
             value={dialogCurrentValue}
             onChangeText={(dialogCurrentValue) => this.setState({ dialogCurrentValue })}
+            wrapperStyle={styles.dialogInput}
           />
           <Dialog.Button label="Ok" onPress={this.confirmDialog} />
           <Dialog.Button label="Cancel" onPress={this.hideDialog} />
@@ -239,6 +243,10 @@ class SearchFilter extends React.Component {
                           dialogVisible: true,
                           dialogCurrentValue: questionValues[question.question_name_for_search[0]],
                         })
+                        setTimeout(() => {
+                          if (this.input) this.input.focus()
+                        }, 500)
+
                         return
                       }
 

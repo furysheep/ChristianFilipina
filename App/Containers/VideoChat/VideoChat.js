@@ -104,12 +104,11 @@ class VideoChat extends Component {
     }
     this.lastMessageId = 0
     // configuration.iceServers = props.navigation.state.params.creds
-    socket = new WebSocket('wss://dev.christianfilipina.com/wss2/comm')
+    socket = new WebSocket('wss://www.christianfilipina.com/wss3/comm')
     // console.log(configuration)
     socket.onmessage = (e) => {
       const data = JSON.parse(e.data)
       console.log(data)
-
       if (data.room === this.state.roomID) {
         // above check is not necessary since all messages coming to this user are for the user's current room
         // but just to be on the safe side
@@ -173,13 +172,20 @@ class VideoChat extends Component {
 
           case 'candidate':
             // message is iceCandidate
-            if (this.myPC) this.myPC.addIceCandidate(new RTCIceCandidate(data.candidate))
+            if (this.myPC) {
+              console.log('add ice candidate')
+              this.myPC.addIceCandidate(new RTCIceCandidate(data.candidate))
+            }
 
             break
 
           case 'sdp':
             // message is signal description
-            if (this.myPC) this.myPC.setRemoteDescription(new RTCSessionDescription(data.sdp))
+            console.log('sdp')
+            if (this.myPC) {
+              console.log('setRemoteDescription')
+              this.myPC.setRemoteDescription(new RTCSessionDescription(data.sdp))
+            }
 
             break
 
@@ -268,7 +274,6 @@ class VideoChat extends Component {
       const {
         user: { firstName },
       } = this.props
-      console.log(data)
       if (data.length > 0) {
         this.lastMessageId = data[0].message_id
       } else {
@@ -404,7 +409,6 @@ class VideoChat extends Component {
   }
 
   startCall = (isCaller) => {
-    console.log(this.servers)
     this.myPC = new RTCPeerConnection({ iceServers: this.servers }) // RTCPeerconnection obj
 
     // When my ice candidates become available
@@ -463,6 +467,7 @@ class VideoChat extends Component {
   }
 
   description = (desc) => {
+    console.log('setLocalDescription')
     this.myPC.setLocalDescription(desc)
 
     // send sdp
@@ -477,7 +482,6 @@ class VideoChat extends Component {
 
   getLocalStream = (callback) => {
     mediaDevices.enumerateDevices().then((sourceInfos) => {
-      console.log(sourceInfos)
       // let videoSourceId
       // for (let i = 0; i < sourceInfos.length; i++) {
       //   const sourceInfo = sourceInfos[i]
@@ -504,6 +508,7 @@ class VideoChat extends Component {
         .getUserMedia(this.streamConstraints)
         .then((stream) => {
           // Got stream!
+          console.log('Got stream')
           callback(stream)
         })
         .catch((error) => {
@@ -630,27 +635,30 @@ class VideoChat extends Component {
 
   _switchVideoType = () => {
     if (this.streamConstraints.video) {
-      const isFront = !this.state.isFront
-      this.setState({ isFront })
-
-      this.streamConstraints = {
-        ...this.streamConstraints,
-        video: {
-          ...this.streamConstraints.video,
-          facingMode: this.streamConstraints.video.facingMode === 'user' ? 'environment' : 'user',
-        },
-      }
-
-      this.getLocalStream((stream) => {
-        if (this.myMediaStream) {
-          if (this.myPC) this.myPC.removeStream(this.myMediaStream)
-          this.myMediaStream.release()
-        }
-        this.myMediaStream = stream
-        this.setState({ selfViewSrc: stream.toURL() })
-
-        if (this.myPC) this.myPC.addStream(this.myMediaStream)
+      this.myMediaStream.getTracks().forEach((t) => {
+        if (t.kind === 'video') t._switchCamera()
       })
+      // const isFront = !this.state.isFront
+      // this.setState({ isFront })
+
+      // this.streamConstraints = {
+      //   ...this.streamConstraints,
+      //   video: {
+      //     ...this.streamConstraints.video,
+      //     facingMode: this.streamConstraints.video.facingMode === 'user' ? 'environment' : 'user',
+      //   },
+      // }
+
+      // this.getLocalStream((stream) => {
+      //   if (this.myMediaStream) {
+      //     if (this.myPC) this.myPC.removeStream(this.myMediaStream)
+      //     this.myMediaStream.release()
+      //   }
+      //   this.myMediaStream = stream
+      //   this.setState({ selfViewSrc: stream.toURL() })
+
+      //   if (this.myPC) this.myPC.addStream(this.myMediaStream)
+      // })
     }
   }
 
@@ -831,8 +839,18 @@ class VideoChat extends Component {
 
         {terminateEnabled ? (
           <>
-            <RTCView objectFit="cover" streamURL={this.state.remoteSrc} style={styles.remoteView} />
-            <RTCView streamURL={this.state.selfViewSrc} style={styles.selfView} />
+            <RTCView
+              objectFit="cover"
+              streamURL={this.state.remoteSrc}
+              style={styles.remoteView}
+              zOrder={0}
+            />
+            <RTCView
+              objectFit="cover"
+              streamURL={this.state.selfViewSrc}
+              style={styles.selfView}
+              zOrder={1}
+            />
             <View style={styles.bottomButtons}>
               <Button
                 buttonStyle={styles.hangupButton}

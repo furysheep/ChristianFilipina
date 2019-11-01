@@ -149,6 +149,14 @@ class Messages extends React.Component {
   }
 
   handleOnPressItem = (item) => {
+    if (item.message_unread === 'yes') {
+      const { data } = this.state
+      const index = data.findIndex((row) => row.userid === item.userid)
+      const newData = data.slice(0)
+      newData[index] = { ...newData[index], message_unread: 'no' }
+      this.setState({ data: newData })
+    }
+
     NavigationService.navigate('Message', { id: item.userid, firstName: item.firstname })
   }
 
@@ -188,7 +196,7 @@ class Messages extends React.Component {
           return
         }
         this.setState({ loading: true })
-        if (buttonIndex === destructiveButtonIndex) {
+        if (buttonIndex === destructiveButtonIndex - 1) {
           // archive
 
           if (await ChatService.archiveInboxThread(item.userid)) {
@@ -197,7 +205,7 @@ class Messages extends React.Component {
           } else {
             setTimeout(() => Alert.alert('Error', 'Message thread archiving error'), 500)
           }
-        } else if (buttonIndex === destructiveButtonIndex - 1) {
+        } else if (buttonIndex === destructiveButtonIndex) {
           // block
           if (await ChatService.blockUser(item.userid)) {
             const { data } = this.state
@@ -205,7 +213,7 @@ class Messages extends React.Component {
           } else {
             setTimeout(() => Alert.alert('Error', 'Block user error'), 500)
           }
-        } else if (buttonIndex === destructiveButtonIndex - 2) {
+        } else {
           // unmatch
           if (await ChatService.unmatchUser(item.userid)) {
             const { data } = this.state
@@ -282,9 +290,6 @@ Messages.propTypes = {
   navigation: PropTypes.object,
 }
 
-const mapStateToProps = (state) => ({})
-
-const mapDispatchToProps = (dispatch) => ({})
 const conn = connectActionSheet(Messages)
 conn.navigationOptions = ({ navigation }) => ({
   headerRight: navigation.state.params && (

@@ -62,7 +62,6 @@ class Message extends React.Component {
           this.setState((prevState) => {
             const findIndex = prevState.messages.findIndex((oldMsg) => oldMsg._id === msg._id)
             prevState.messages[findIndex] = { ...prevState.messages[findIndex], _id: msgId }
-            console.log(this.state.messages)
           })
         })
         .catch((e) => {

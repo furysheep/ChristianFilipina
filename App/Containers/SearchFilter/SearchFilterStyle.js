@@ -7,6 +7,10 @@ export default StyleSheet.create({
     ...ApplicationStyles.screen.container,
     flex: 1,
   },
+  dialogInput: {
+    borderBottomWidth: 1,
+    borderBottomColor: Colors.separator,
+  },
   modal: {
     backgroundColor: 'black',
     opacity: 0.2,

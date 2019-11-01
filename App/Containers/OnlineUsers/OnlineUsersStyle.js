@@ -8,6 +8,10 @@ export default StyleSheet.create({
     flex: 1,
     backgroundColor: Colors.background,
   },
+  dialogInput: {
+    borderBottomWidth: 1,
+    borderBottomColor: Colors.separator,
+  },
   grid: {
     flex: 1,
   },

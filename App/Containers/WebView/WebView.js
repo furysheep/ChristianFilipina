@@ -1,6 +1,6 @@
 import React from 'react'
-import { View } from 'react-native'
-import { Input } from 'react-native-elements'
+import { TouchableOpacity } from 'react-native'
+import { Icon } from 'react-native-elements'
 import { connect } from 'react-redux'
 import { PropTypes } from 'prop-types'
 import { WebView as RNWebView } from 'react-native-webview'
@@ -8,11 +8,38 @@ import firebase from 'react-native-firebase'
 import { Config } from 'App/Config'
 
 class WebView extends React.Component {
+  static navigationOptions = ({ navigation, screenProps }) => ({
+    headerRight: (
+      <>
+        <TouchableOpacity onPress={() => navigation.state.params.goBack()}>
+          <Icon name="navigate-before" size={35} underlayColor={'#64b5f6'} />
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.state.params.goForth()}>
+          <Icon name="navigate-next" size={35} underlayColor={'#64b5f6'} />
+        </TouchableOpacity>
+      </>
+    ),
+  })
+
   constructor(props) {
     super(props)
     this.state = { url: '' }
+    this.props.navigation.setParams({
+      goBack: this.goBack,
+      goForth: this.goForth,
+    })
   }
+
+  goBack = () => {
+    this.webView.goBack()
+  }
+
+  goForth = () => {
+    this.webView.goForward()
+  }
+
   componentDidMount() {
+    console.log('mount')
     const { routeName } = this.props.navigation.state
     const { user } = this.props
     let url = ''
@@ -40,7 +67,7 @@ class WebView extends React.Component {
   render() {
     const { url } = this.state
     console.log(url)
-    return <RNWebView source={{ uri: url }} />
+    return <RNWebView ref={(ref) => (this.webView = ref)} source={{ uri: url }} />
   }
 }
 

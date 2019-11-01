@@ -533,7 +533,9 @@ const DrawerContainer = createDrawerNavigator(
     ),
   },
   {
+    unmountInactiveRoutes: true,
     drawerLockMode: 'locked-closed',
+    overlayColor: '#0007',
     initialRouteName: 'Meet',
     contentComponent: DrawerMenu,
     contentOptions: {
