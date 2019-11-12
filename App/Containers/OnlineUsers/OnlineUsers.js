@@ -240,7 +240,6 @@ class OnlineUsers extends React.Component {
 OnlineUsers.propTypes = {
   users: PropTypes.array,
   loading: PropTypes.bool,
-  userErrorMessage: PropTypes.string,
   loadMoreUrl: PropTypes.string,
   searchUser: PropTypes.func,
   totalRecords: PropTypes.string,

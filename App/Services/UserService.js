@@ -1,9 +1,10 @@
 import { Platform } from 'react-native'
 import md5 from 'md5'
-import { Config } from 'App/Config'
-import ApiClient, { buildUserObject } from './ApiClient'
 import { parseString } from 'react-native-xml2js'
 import { is, curryN, gte } from 'ramda'
+import { Buffer } from 'buffer'
+import { Config } from 'App/Config'
+import ApiClient, { buildUserObject } from './ApiClient'
 
 const isWithin = curryN(3, (min, max, value) => {
   const isNumber = is(Number)
@@ -533,12 +534,33 @@ function sendContactUsMessage(text) {
   })
 }
 
-function sendBugReport(text) {
+function sendBugReport(userId, text) {
   const form = new FormData()
-  form.append('message', text)
+  form.append('ouid', userId)
+  // form.append('txtlogs', { uri, name: 'logs.txt', type: 'text/plain' })
+  form.append('txtlogs', text)
   return new Promise((resolve, reject) => {
-    ApiClient.post(Config.SEND_PROBLEM_REPORT_URL, form)
+    // fetch(`${Config.BASE_URL}${Config.SEND_PROBLEM_REPORT_URL}`, {
+    //   method: 'POST',
+    //   body: form,
+    //   headers: {
+    //     'Content-Type': 'multipart/form-data',
+    //   },
+    // })
+    //   .then((res) => {
+    //     console.log(res)
+    //   })
+    //   .catch((e) => {
+    //     console.log(e)
+    //   })
+
+    ApiClient.post(Config.SEND_PROBLEM_REPORT_URL, form, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    })
       .then((response) => {
+        console.log(response)
         if (in200s(response.status)) {
           resolve()
         } else {

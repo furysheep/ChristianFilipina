@@ -1,5 +1,6 @@
 import React from 'react'
-import { View, Image, ImageBackground, Linking, Alert, AsyncStorage } from 'react-native'
+import { View, Image, ImageBackground, Linking, Alert } from 'react-native'
+import AsyncStorage from '@react-native-community/async-storage'
 import { Input, CheckBox, Button, Text } from 'react-native-elements'
 import Spinner from 'react-native-loading-spinner-overlay'
 import { connect } from 'react-redux'

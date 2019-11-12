@@ -47,9 +47,6 @@ class Notifications extends React.Component {
 
 Notifications.propTypes = {
   user: PropTypes.object,
-  userIsLoading: PropTypes.bool,
-  userErrorMessage: PropTypes.string,
-  fetchUser: PropTypes.func,
   navigation: PropTypes.object,
 }
 

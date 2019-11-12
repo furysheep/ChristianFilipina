@@ -20,11 +20,15 @@ class SendBugReport extends React.Component {
 
   onSend = async () => {
     const { text } = this.state
+    const {
+      user: { id },
+    } = this.props
     try {
       this.setState({ sendDisabled: true })
-      await userService.sendBugReport(text)
+      await userService.sendBugReport(id, text)
       Alert.alert('Contact Us', 'We received your request. Will review it as soon as possible!')
-    } catch {
+    } catch (e) {
+      console.log(e)
       Alert.alert(
         'Contact Us',
         "Your request wasn't sent. Please check your internet connection or try later."
@@ -53,6 +57,7 @@ class SendBugReport extends React.Component {
         <Button
           title="Send report to support team"
           disabled={sendDisabled || text.trim().length === 0}
+          onPress={this.onSend}
         />
       </View>
     )
@@ -61,12 +66,9 @@ class SendBugReport extends React.Component {
 
 SendBugReport.propTypes = {
   user: PropTypes.object,
-  userIsLoading: PropTypes.bool,
-  userErrorMessage: PropTypes.string,
-  fetchUser: PropTypes.func,
 }
 
-const mapStateToProps = (state) => ({})
+const mapStateToProps = (state) => ({ user: state.user.user })
 
 const mapDispatchToProps = (dispatch) => ({})
 

@@ -147,9 +147,6 @@ class PickedMe extends React.Component {
 
 PickedMe.propTypes = {
   user: PropTypes.object,
-  userIsLoading: PropTypes.bool,
-  userErrorMessage: PropTypes.string,
-  fetchUser: PropTypes.func,
 }
 
 const mapStateToProps = (state) => ({})

@@ -126,9 +126,6 @@ class MyPicks extends React.Component {
 
 MyPicks.propTypes = {
   user: PropTypes.object,
-  userIsLoading: PropTypes.bool,
-  userErrorMessage: PropTypes.string,
-  fetchUser: PropTypes.func,
 }
 
 const mapStateToProps = (state) => ({ user: state.user.user })

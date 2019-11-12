@@ -194,6 +194,9 @@ class Message extends React.Component {
                 right: {
                   color: 'white',
                 },
+                left: {
+                  color: 'white',
+                },
               }}
               wrapperStyle={{
                 left: {
@@ -206,9 +209,9 @@ class Message extends React.Component {
         renderTime={(props) => (
           <Time
             {...props}
-            textStyle={{
+            timeTextStyle={{
               left: {
-                color: 'black',
+                color: 'white',
               },
             }}
           />

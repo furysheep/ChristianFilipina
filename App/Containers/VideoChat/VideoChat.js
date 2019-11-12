@@ -9,6 +9,7 @@ import {
   RTCView,
   mediaDevices,
 } from 'react-native-webrtc'
+import InCallManager from 'react-native-incall-manager'
 import { GiftedChat, Bubble, Time } from 'react-native-gifted-chat'
 import { connect } from 'react-redux'
 import Modal from 'react-native-modal'
@@ -118,6 +119,7 @@ class VideoChat extends Component {
             // start ringtone here
             // Audio call from xxx, Audio Call, Video Call, Reject Call
             // show popup: data.msg
+            InCallManager.startRingtone('_DEFAULT_')
             this.setState({ modalText: data.msg, modalRedText: false })
             this.toggleCalleeModal()
 
@@ -139,6 +141,7 @@ class VideoChat extends Component {
             }, 3000)
 
             // stop tone
+            InCallManager.stop({ busytone: '_DEFAULT_' })
 
             // enable call buttons
             this.enableCallBtns()
@@ -156,7 +159,8 @@ class VideoChat extends Component {
             }, 3000)
 
             // stop tone
-
+            InCallManager.stopRingtone()
+            InCallManager.stop()
             break
 
           case 'startCall':
@@ -167,7 +171,7 @@ class VideoChat extends Component {
             this.toggleCallerModal()
 
             // stop tone
-
+            InCallManager.stopRingback()
             break
 
           case 'candidate':
@@ -209,6 +213,7 @@ class VideoChat extends Component {
           case 'terminateCall': // when remote terminates call (while call is ongoing)
             this.handleCallTermination()
             // play termination tone
+            InCallManager.stop({ busytone: '_DEFAULT_' })
             break
 
           case 'newSub':
@@ -346,6 +351,7 @@ class VideoChat extends Component {
     })
 
     // start calling tone
+    InCallManager.start({ media: isVideo ? 'video' : 'audio', ringback: '_DEFAULT_' })
 
     this.setState({ endCallEnabled: false })
 
@@ -401,6 +407,8 @@ class VideoChat extends Component {
       }, 3000)
 
       this.enableCallBtns()
+
+      InCallManager.stop({ busytone: '_DEFAULT_' })
     } else {
       this.toggleCallerModal()
     }
@@ -708,6 +716,9 @@ class VideoChat extends Component {
 
     // enable the terminateCall btn
     this.disableCallBtns()
+
+    InCallManager.stopRingtone()
+    InCallManager.start({ media: video ? 'video' : 'audio' })
   }
 
   onSend(messages = []) {
@@ -797,6 +808,7 @@ class VideoChat extends Component {
 
                 // enable call buttons
                 this.enableCallBtns()
+                InCallManager.stop({ busytone: '_DEFAULT_' })
               }}
               buttonStyle={styles.endCallButton}
               title="End call"
@@ -830,6 +842,9 @@ class VideoChat extends Component {
                   )
 
                   this.toggleCalleeModal()
+
+                  InCallManager.stopRingtone()
+                  InCallManager.stop()
                 }}
                 icon={<Icon name="call-end" color="white" />}
               />

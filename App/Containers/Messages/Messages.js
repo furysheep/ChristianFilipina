@@ -283,9 +283,6 @@ class Messages extends React.Component {
 
 Messages.propTypes = {
   user: PropTypes.object,
-  userIsLoading: PropTypes.bool,
-  userErrorMessage: PropTypes.string,
-  fetchUser: PropTypes.func,
   showActionSheetWithOptions: PropTypes.func,
   navigation: PropTypes.object,
 }
