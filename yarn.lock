@@ -687,15 +687,10 @@
     exec-sh "^0.3.2"
     minimist "^1.2.0"
 
-"@expo/react-native-action-sheet@^3.0.3":
-  version "3.0.3"
-  resolved "https://registry.yarnpkg.com/@expo/react-native-action-sheet/-/react-native-action-sheet-3.0.3.tgz#1d69a2668784961c6d458babe52e9a02893936a2"
-  integrity sha512-MsVDCDQwJthoolqUqbg1nF8hmzA2gYfvnUV6j/h4gXPSKsrLqdaQz+Vi5onCB18oxmUZbYQ1+QNU+n1PwTp0Zw==
-
-"@expo/react-native-action-sheet@^3.1.0":
-  version "3.3.0"
-  resolved "https://registry.yarnpkg.com/@expo/react-native-action-sheet/-/react-native-action-sheet-3.3.0.tgz#5636aaeaa2a99d75acf3b28b7b7832ec36e5edb3"
-  integrity sha512-4YcX1E3zOLgbQSm5sp/wWz0uScrcJoIrV+kif/o8GXwWgMU/wE4r9XrWyvanYnc9dPt5oYm+UXTikJphlcZqLw==
+"@expo/react-native-action-sheet@^3.1.0", "@expo/react-native-action-sheet@^3.3.2":
+  version "3.3.2"
+  resolved "https://registry.yarnpkg.com/@expo/react-native-action-sheet/-/react-native-action-sheet-3.3.2.tgz#11ebee96294056df5bdf51d877a089f9a0178832"
+  integrity sha512-mnR2fuwMPtibXHnIiJel3fL4zxLKuNRrXI7Vei5ozcmLbzbEyEWVCgnAE1edJPQ6Inc8hJqMwrITmDJSQHLnag==
   dependencies:
     "@types/hoist-non-react-statics" "^3.3.1"
     hoist-non-react-statics "^3.3.0"
