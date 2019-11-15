@@ -413,6 +413,12 @@ const DrawerContainer = createDrawerNavigator(
             headerLeft: drawerHeaderLeft(navigation),
           }),
         },
+        Profile: {
+          screen: Profile,
+          navigationOptions: ({ navigation }) => ({
+            headerBackTitle: ' ',
+          }),
+        },
       },
       {
         navigationOptions: {

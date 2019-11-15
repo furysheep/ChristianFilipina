@@ -2,7 +2,7 @@ import { Platform } from 'react-native'
 import md5 from 'md5'
 import { parseString } from 'react-native-xml2js'
 import { is, curryN, gte } from 'ramda'
-import { Buffer } from 'buffer'
+import RNFS from 'react-native-fs'
 import { Config } from 'App/Config'
 import ApiClient, { buildUserObject } from './ApiClient'
 
@@ -534,43 +534,49 @@ function sendContactUsMessage(text) {
   })
 }
 
-function sendBugReport(userId, text) {
+async function sendBugReport(userId, text) {
   const form = new FormData()
   form.append('ouid', userId)
-  // form.append('txtlogs', { uri, name: 'logs.txt', type: 'text/plain' })
-  form.append('txtlogs', text)
+  const path = `${RNFS.TemporaryDirectoryPath}/logs.txt`
+  await RNFS.writeFile(path, text, 'utf8')
+  console.log(path)
+  form.append('txtlogs', {
+    uri: `file:///${path}`,
+    type: 'text/plain',
+    name: 'logs.txt',
+  })
+  // form.append('txtlogs', new Blob([text, { type: 'text/plain' }]), 'logs.txt')
+  // form.append('txtlogs', text)
   return new Promise((resolve, reject) => {
-    // fetch(`${Config.BASE_URL}${Config.SEND_PROBLEM_REPORT_URL}`, {
-    //   method: 'POST',
-    //   body: form,
-    //   headers: {
-    //     'Content-Type': 'multipart/form-data',
-    //   },
-    // })
-    //   .then((res) => {
-    //     console.log(res)
-    //   })
-    //   .catch((e) => {
-    //     console.log(e)
-    //   })
-
-    ApiClient.post(Config.SEND_PROBLEM_REPORT_URL, form, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
+    fetch(`${Config.BASE_URL}${Config.SEND_PROBLEM_REPORT_URL}`, {
+      method: 'POST',
+      body: form,
+      headers: { 'Content-Type': 'multipart/form-data' },
     })
-      .then((response) => {
-        console.log(response)
-        if (in200s(response.status)) {
-          resolve()
-        } else {
-          reject(new Error('Unknown reason'))
-        }
+      .then((res) => {
+        console.log(res)
       })
       .catch((e) => {
         console.log(e)
-        reject(e)
       })
+
+    // ApiClient.post(Config.SEND_PROBLEM_REPORT_URL, form, {
+    //   headers: {
+    //     'Content-Type': 'application/x-www-form-urlencoded',
+    //   },
+    // })
+    //   .then((response) => {
+    //     console.log(response)
+    //     if (in200s(response.status)) {
+    //       resolve()
+    //     } else {
+    //       reject(new Error('Unknown reason'))
+    //     }
+    //   })
+    //   .catch((e) => {
+    //     console.log(e)
+    //     reject(e)
+    //   })
   })
 }
 
