@@ -307,6 +307,8 @@ PODS:
     - Fabric
     - Firebase/Core
     - React
+  - RNFS (2.16.2):
+    - React
   - RNGestureHandler (1.5.0):
     - React
   - RNIap (3.4.1):
@@ -356,6 +358,7 @@ DEPENDENCIES:
   - ReactNativeIncallManager (from `../node_modules/react-native-incall-manager`)
   - "RNCAsyncStorage (from `../node_modules/@react-native-community/async-storage`)"
   - RNFirebase (from `../node_modules/react-native-firebase/ios`)
+  - RNFS (from `../node_modules/react-native-fs`)
   - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
   - RNIap (from `../node_modules/react-native-iap`)
   - RNKeychain (from `../node_modules/react-native-keychain`)
@@ -442,6 +445,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@react-native-community/async-storage"
   RNFirebase:
     :path: "../node_modules/react-native-firebase/ios"
+  RNFS:
+    :path: "../node_modules/react-native-fs"
   RNGestureHandler:
     :path: "../node_modules/react-native-gesture-handler"
   RNIap:
@@ -500,6 +505,7 @@ SPEC CHECKSUMS:
   ReactNativeIncallManager: bc7439600f5ddcd079a715b3aa998d5dd64afc19
   RNCAsyncStorage: 60a80e72d95bf02a01cace55d3697d9724f0d77f
   RNFirebase: ac0de8b24c6f91ae9459575491ed6a77327619c6
+  RNFS: 0d4191b1052bef9ce70deff00a5b4169c62bbd9b
   RNGestureHandler: a4ddde1ffc6e590c8127b8b7eabfdade45475c74
   RNIap: 8104f5fb44555f163531ca9c6200b7b405a44f1c
   RNKeychain: c658833a9cb2cbcba6423bdd6e16cce59e27da0e
@@ -509,4 +515,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: 8e1113d085d0979675ee3d5d71c78edbf81a4ce9
 
-COCOAPODS: 1.8.3
+COCOAPODS: 1.8.4
