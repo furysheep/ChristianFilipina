@@ -222,19 +222,25 @@ class OnlineUsers extends React.Component {
             onPress={this.showDialog}
           />
         )}
-        <Grid
-          style={styles.grid}
-          numColumns={2}
-          data={users}
-          keyExtractor={(item) => item.id.toString()}
-          renderItem={(info) => this.renderItem(info)}
-          onRefresh={() => this.onRefresh()}
-          refreshing={this.state.refreshing}
-          onEndReached={this.onEndReached}
-          loadingMore={this.state.loadingMore}
-          marginExternal={4}
-          marginInternal={4}
-        />
+        {users.length ? (
+          <Grid
+            style={styles.grid}
+            numColumns={2}
+            data={users}
+            keyExtractor={(item) => item.id.toString()}
+            renderItem={(info) => this.renderItem(info)}
+            onRefresh={() => this.onRefresh()}
+            refreshing={this.state.refreshing}
+            onEndReached={this.onEndReached}
+            loadingMore={this.state.loadingMore}
+            marginExternal={4}
+            marginInternal={4}
+          />
+        ) : (
+          <View style={styles.noUsers}>
+            <Text>No Users</Text>
+          </View>
+        )}
       </View>
     )
   }

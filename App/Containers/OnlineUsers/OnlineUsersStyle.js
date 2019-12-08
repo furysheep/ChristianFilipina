@@ -8,6 +8,10 @@ export default StyleSheet.create({
     flex: 1,
     backgroundColor: Colors.background,
   },
+  noUsers: {
+    flex: 1,
+    ...Helpers.center,
+  },
   dialogInput: {
     borderBottomWidth: 1,
     borderBottomColor: Colors.separator,
