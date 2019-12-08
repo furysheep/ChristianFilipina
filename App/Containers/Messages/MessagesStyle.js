@@ -8,6 +8,16 @@ export default StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
   },
+  badge: {
+    position: 'absolute',
+    bottom: 6,
+    right: 6,
+  },
+  badgeSize: {
+    width: 12,
+    height: 12,
+    borderRadius: 6,
+  },
   itemContainer: {
     ...Helpers.row,
     paddingHorizontal: Metrics.baseMargin,

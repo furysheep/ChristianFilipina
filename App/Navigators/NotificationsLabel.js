@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 import { View } from 'react-native'
 import { Badge, Text } from 'react-native-elements'
 import { connect } from 'react-redux'
@@ -10,11 +11,11 @@ const DrawerTextStyle = (tintColor) => ({
   color: tintColor,
 })
 
-class DrawerLabel extends Component {
+class NotificationsLabel extends Component {
   render() {
-    const { text, tintColor, notification, label } = this.props
-
-    const badge = notification ? notification[label] : 0
+    const { tintColor, text, notifications } = this.props
+    console.log(notifications)
+    const badge = notifications ? notifications.length : 0
     return (
       <View style={Helpers.row}>
         <Text style={DrawerTextStyle(tintColor)}>{text}</Text>
@@ -24,8 +25,14 @@ class DrawerLabel extends Component {
   }
 }
 
+NotificationsLabel.propTypes = {
+  notifications: PropTypes.array,
+  tintColor: PropTypes.string.isRequired,
+  text: PropTypes.string.isRequired,
+}
+
 const mapStateToProps = (state) => ({
-  notification: state.user.notification,
+  notifications: state.notifications.notifications,
 })
 
-export default connect(mapStateToProps)(DrawerLabel)
+export default connect(mapStateToProps)(NotificationsLabel)

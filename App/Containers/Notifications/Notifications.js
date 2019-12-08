@@ -1,12 +1,13 @@
 import React from 'react'
 import { View, TouchableOpacity, FlatList } from 'react-native'
-import { Text, Icon, Avatar } from 'react-native-elements'
+import { Text, Icon, Avatar, Badge } from 'react-native-elements'
 import { connect } from 'react-redux'
 import { PropTypes } from 'prop-types'
 import firebase from 'react-native-firebase'
+import moment from 'moment'
 
 import styles from './NotificationsStyle'
-import { notificationService } from 'App/Services/NotificationService'
+import NotificationsActions from 'App/Stores/Notifications/Actions'
 import NavigationService from 'App/Services/NavigationService'
 import { Config } from 'App/Config'
 
@@ -18,23 +19,33 @@ class SelectableItem extends React.Component {
 
   render() {
     const {
-      item: {
-        pushnotification: { message, ref_userid: uid, date },
-      },
+      item: { message, ref_userid: uid, firstname, date, is_online: isOnline },
     } = this.props
 
     return (
       <TouchableOpacity onPress={this.handleOnPress} style={styles.itemContainer}>
-        <Avatar
-          rounded
-          source={{
-            uri: `${Config.BASE_URL}${Config.USER_PICTURE_BASE_URL}?id=${uid}&width=300&height=300`,
-          }}
-          size="large"
-        />
+        <View>
+          <Avatar
+            rounded
+            source={{
+              uri: `${Config.BASE_URL}${
+                Config.USER_PICTURE_BASE_URL
+              }?id=${uid}&width=300&height=300`,
+            }}
+            size="large"
+          />
+          {isOnline === 1 && (
+            <Badge status="success" containerStyle={styles.badge} badgeStyle={styles.badgeSize} />
+          )}
+        </View>
         <View style={styles.textSection}>
           <View style={styles.column}>
-            <Text style={styles.nameText}>{message}</Text>
+            <Text style={styles.nameText}>{firstname}</Text>
+            <Text style={styles.cityText}>{message}</Text>
+            <View style={styles.row}>
+              <Text style={styles.viewText}>Click to view</Text>
+              <Text style={styles.viewText}>{moment.unix(date).fromNow()}</Text>
+            </View>
           </View>
         </View>
       </TouchableOpacity>
@@ -70,16 +81,15 @@ class Notifications extends React.Component {
     })
   }
 
-  refreshNotifications = async () => {
-    this.setState({ refreshing: true })
-    let data = []
-    try {
-      data = await notificationService.getRecentPushNotifications()
-      console.log(data)
-    } catch (e) {
-      console.log(e)
+  static getDerivedStateFromProps(nextProps, prevState) {
+    if (nextProps.notifications !== prevState.data || nextProps.loading !== prevState.refreshing) {
+      return { refreshing: nextProps.loading, data: nextProps.notifications }
     }
-    this.setState({ data, refreshing: false })
+    return null
+  }
+
+  refreshNotifications = () => {
+    this.props.getNotifications()
   }
 
   componentDidMount() {
@@ -90,14 +100,15 @@ class Notifications extends React.Component {
 
   handleOnPressItem = (item) => {
     switch (item.pushnotification.act) {
-      case 'W':
-        NavigationService.navigate('Profile', { id: item.pushnotification.ref_userid })
-        break
       case 'M':
         NavigationService.navigate('Message', {
           id: item.pushnotification.ref_userid,
           firstName: item.pushnotification.firstname,
         })
+        break
+      default:
+        // case 'W':
+        NavigationService.navigate('Profile', { id: item.pushnotification.ref_userid })
         break
     }
   }
@@ -110,12 +121,12 @@ class Notifications extends React.Component {
     const { data, refreshing } = this.state
     return !refreshing && data.length === 0 ? (
       <View style={styles.container}>
-        <Text>You've no notifications!</Text>
+        <Text>{"You've no notifications!"}</Text>
       </View>
     ) : (
       <FlatList
         data={data}
-        keyExtractor={(item, index) => item.pushnotification.id}
+        keyExtractor={(item, index) => item.id}
         renderItem={this.renderItem}
         onRefresh={this.refreshNotifications}
         refreshing={refreshing}
@@ -127,11 +138,19 @@ class Notifications extends React.Component {
 Notifications.propTypes = {
   user: PropTypes.object,
   navigation: PropTypes.object,
+  getNotifications: PropTypes.func.isRequired,
+  notifications: PropTypes.array,
+  loading: PropTypes.bool.isRequired,
 }
 
-const mapStateToProps = (state) => ({})
+const mapStateToProps = (state) => ({
+  notifications: state.notifications.notifications,
+  loading: state.notifications.loading,
+})
 
-const mapDispatchToProps = (dispatch) => ({})
+const mapDispatchToProps = (dispatch) => ({
+  getNotifications: () => dispatch(NotificationsActions.getNotifications()),
+})
 
 export default connect(
   mapStateToProps,

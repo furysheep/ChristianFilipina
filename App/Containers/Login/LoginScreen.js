@@ -108,6 +108,8 @@ class LoginScreen extends React.Component {
           actions: [navigateAction],
         })
       )
+
+      // nextProps.getNotifications()
     }
 
     return Object.keys(update).length ? update : null

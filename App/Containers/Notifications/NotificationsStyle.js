@@ -8,6 +8,16 @@ export default StyleSheet.create({
     flex: 1,
     ...Helpers.center,
   },
+  badge: {
+    position: 'absolute',
+    bottom: 6,
+    right: 6,
+  },
+  badgeSize: {
+    width: 12,
+    height: 12,
+    borderRadius: 6,
+  },
   itemContainer: {
     ...Helpers.row,
     paddingHorizontal: Metrics.baseMargin,
@@ -23,8 +33,17 @@ export default StyleSheet.create({
     ...Helpers.fillColMain,
   },
   nameText: {
+    fontWeight: 'bold',
+    ...Fonts.style.medium,
+    marginBottom: Metrics.smallMargin,
+  },
+  cityText: {
     color: Colors.altText,
     ...Fonts.style.medium,
     marginBottom: Metrics.smallMargin,
+  },
+  row: {
+    ...Helpers.row,
+    ...Helpers.mainSpaceBetween,
   },
 })

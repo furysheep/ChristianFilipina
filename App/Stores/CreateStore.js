@@ -2,6 +2,7 @@ import { applyMiddleware, compose, createStore } from 'redux'
 import createSagaMiddleware from 'redux-saga'
 import { persistReducer, persistStore } from 'redux-persist'
 import AsyncStorage from '@react-native-community/async-storage'
+import logger from 'redux-logger'
 
 /**
  * This import defaults to localStorage for web and AsyncStorage for react-native.
@@ -32,6 +33,7 @@ export default (rootReducer, rootSaga) => {
   // Connect the sagas to the redux store
   const sagaMiddleware = createSagaMiddleware()
   middleware.push(sagaMiddleware)
+  // middleware.push(logger)
 
   enhancers.push(applyMiddleware(...middleware))
 

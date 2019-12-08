@@ -33,6 +33,7 @@ import SearchFilter from 'App/Containers/SearchFilter/SearchFilter'
 import VideoChat from 'App/Containers/VideoChat/VideoChat'
 import DrawerLabel from 'App/Navigators/DrawerLabel'
 import MessageIcon from 'App/Navigators/MessageIcon'
+import NotificationsLabel from 'App/Navigators/NotificationsLabel'
 
 // class HomeScreen extends React.Component {
 //   render() {
@@ -425,8 +426,9 @@ const DrawerContainer = createDrawerNavigator(
           drawerIcon: ({ focused, tintColor }) => (
             <Image source={Images.messageMenuIcon} style={{ tintColor }} />
           ),
-          drawerLabel: ({ focused, tintColor }) =>
-            createDrawerLabel('My Notifications', 0, tintColor),
+          drawerLabel: ({ focused, tintColor }) => (
+            <NotificationsLabel text="My Notifications" tintColor={tintColor} />
+          ),
         },
         defaultNavigationOptions: defaultStackNavigationOptions,
       }

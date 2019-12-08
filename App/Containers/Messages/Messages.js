@@ -45,13 +45,18 @@ class SelectableItem extends React.Component {
 
     return (
       <TouchableOpacity onPress={this.handleOnPress} style={styles.itemContainer}>
-        <Avatar rounded source={{ uri: imageUrl }} size="large" />
+        <View>
+          <Avatar rounded source={{ uri: imageUrl }} size="large" />
+          {isOnline === 'yes' && (
+            <Badge status="success" containerStyle={styles.badge} badgeStyle={styles.badgeSize} />
+          )}
+        </View>
         <View style={styles.textSection}>
           <View style={styles.nameContainer}>
             <Text style={styles.nameText}>
               {firstname}, {age}
             </Text>
-            {isOnline === 'yes' && <Badge status="primary" />}
+
             <View style={{ flex: 1 }} />
             {(matchType === 'new' || matchType === 'old') && (
               <View style={styles.newMatchContainer}>

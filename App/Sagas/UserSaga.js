@@ -2,6 +2,7 @@ import { put, call, delay, select } from 'redux-saga/effects'
 import AsyncStorage from '@react-native-community/async-storage'
 import * as Keychain from 'react-native-keychain'
 import UserActions from 'App/Stores/User/Actions'
+import NotificationsActions from 'App/Stores/Notifications/Actions'
 import { userService } from 'App/Services/UserService'
 
 export function* loginUser({ email, password, signUp }) {
@@ -20,6 +21,10 @@ export function* loginUser({ email, password, signUp }) {
         const success = yield call(userService.updateUserDeviceToken, token)
         console.log('success', success)
       }
+
+      yield put(UserActions.getUnreadNotifications())
+      yield put(UserActions.getIncomingChat())
+      yield put(NotificationsActions.getNotifications())
     } else {
       yield put(
         UserActions.loginUserFailure('There was an error while fetching user informations.')

@@ -5,7 +5,6 @@ import { connect } from 'react-redux'
 import { PropTypes } from 'prop-types'
 import firebase from 'react-native-firebase'
 
-import UserActions from 'App/Stores/User/Actions'
 import styles from './MeetPeopleStyle'
 import { Images, Helpers } from 'App/Theme'
 import { ScrollView } from 'react-native-gesture-handler'
@@ -31,8 +30,7 @@ class MeetPeople extends React.Component {
       users.splice(0, 1, await userService.getUserData(users[0].id))
     }
     this.setState({ users, loading: false })
-    this.props.getUnreadNotifications()
-    this.props.getIncomingChat()
+    // this.props.getNotifications()
   }
 
   onNoAnswer = async () => {
@@ -200,10 +198,7 @@ MeetPeople.propTypes = {
 
 const mapStateToProps = (state) => ({ user: state.user.user })
 
-const mapDispatchToProps = (dispatch) => ({
-  getUnreadNotifications: () => dispatch(UserActions.getUnreadNotifications()),
-  getIncomingChat: () => dispatch(UserActions.getIncomingChat()),
-})
+const mapDispatchToProps = (dispatch) => ({})
 
 export default connect(
   mapStateToProps,

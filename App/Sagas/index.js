@@ -12,6 +12,8 @@ import {
   getSavedSearches,
   setSavedSearch,
 } from 'App/Sagas/SearchSaga'
+import { NotificationsTypes } from 'App/Stores/Notifications/Actions'
+import { getNotifications } from 'App/Sagas/NotificationsSaga'
 
 export default function* root() {
   yield all([
@@ -32,5 +34,7 @@ export default function* root() {
     takeLatest(SearchTypes.SAVE_SEARCH, saveSearch),
     takeLatest(SearchTypes.GET_SAVED_SEARCHES, getSavedSearches),
     takeLatest(SearchTypes.SET_SAVED_SEARCH, setSavedSearch),
+
+    takeLatest(NotificationsTypes.GET_NOTIFICATIONS, getNotifications),
   ])
 }
