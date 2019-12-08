@@ -1,6 +1,6 @@
 import React from 'react'
 import { View, TouchableOpacity, Alert } from 'react-native'
-import { Image, Text, Icon, Button } from 'react-native-elements'
+import { Image, Text, Icon, Button, Badge } from 'react-native-elements'
 import { connect } from 'react-redux'
 import { PropTypes } from 'prop-types'
 import Grid from 'react-native-infinite-scroll-grid'
@@ -125,7 +125,7 @@ class OnlineUsers extends React.Component {
 
   renderItem(info) {
     const {
-      item: { id, imageUrl, firstName, age, city, countryCode },
+      item: { id, imageUrl, firstName, age, city, countryCode, isOnline },
     } = info
     return (
       <TouchableOpacity
@@ -134,7 +134,10 @@ class OnlineUsers extends React.Component {
         onPress={this.goToProfile.bind(this, info)}
       >
         <View style={Helpers.row}>
-          <Image source={{ uri: imageUrl }} style={styles.profileSmallImage} />
+          <View>
+            <Image source={{ uri: imageUrl }} style={styles.profileSmallImage} />
+            {isOnline && <Badge status="success" containerStyle={styles.badge} />}
+          </View>
           <View style={styles.infoContainer}>
             <Text style={styles.nameText}>{`${firstName}, ${age}`}</Text>
             <Text>{`${city ? `${city}, ` : ''}${countryCode}`}</Text>

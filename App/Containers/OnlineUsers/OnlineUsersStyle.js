@@ -23,6 +23,12 @@ export default StyleSheet.create({
     aspectRatio: 1,
     width: 50,
     margin: 5,
+    borderRadius: 25,
+  },
+  badge: {
+    position: 'absolute',
+    bottom: 8,
+    right: 8,
   },
   infoContainer: {
     ...Helpers.colMain,
