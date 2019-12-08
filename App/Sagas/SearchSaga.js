@@ -14,7 +14,7 @@ export function* searchUser({ firstLoad }) {
     yield put(SearchActions.searchReset())
   }
 
-  yield put(SearchActions.loading())
+  yield put(SearchActions.searchLoading())
 
   try {
     const getSearchState = (state) => state.search

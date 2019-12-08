@@ -100,7 +100,7 @@ export const savedSearch = (state, { searchName }) => ({
  * @see https://github.com/infinitered/reduxsauce#createreducer
  */
 export const reducer = createReducer(INITIAL_STATE, {
-  [SearchTypes.LOADING]: loading,
+  [SearchTypes.SEARCH_LOADING]: loading,
   [SearchTypes.SEARCH_USER_SUCCESS]: searchUserSuccess,
   [SearchTypes.SEARCH_USER_FAILURE]: searchUserFailure,
   [SearchTypes.SEARCH_RESET]: searchReset,

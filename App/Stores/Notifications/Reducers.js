@@ -34,7 +34,7 @@ export const getNotificationsFailure = (state, { errorMessage }) => {
  * @see https://github.com/infinitered/reduxsauce#createreducer
  */
 export const reducer = createReducer(INITIAL_STATE, {
-  [NotificationsTypes.LOADING]: loading,
+  [NotificationsTypes.NOTIFICATIONS_LOADING]: loading,
   [NotificationsTypes.GET_NOTIFICATIONS_SUCCESS]: getNotificationsSuccess,
   [NotificationsTypes.GET_NOTIFICATIONS_FAILURE]: getNotificationsFailure,
 })

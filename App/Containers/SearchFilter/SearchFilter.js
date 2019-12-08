@@ -58,6 +58,8 @@ class SearchFilter extends React.Component {
 
   showPicker = (data, selectedValue, pickerTitleText, question) => {
     Picker.init({
+      pickerFontFamily: 'Arial',
+      pickerTextEllipsisLen: 20,
       pickerData: data,
       selectedValue: [selectedValue],
       onPickerConfirm: (data) => {

@@ -21,7 +21,7 @@ import { createActions } from 'reduxsauce'
 const { Types, Creators } = createActions({
   // Search
   getNotifications: null,
-  loading: null,
+  notificationsLoading: null,
   getNotificationsSuccess: ['notifications'],
   getNotificationsFailure: ['errorMessage'],
 })

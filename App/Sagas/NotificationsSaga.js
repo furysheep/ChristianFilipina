@@ -3,7 +3,7 @@ import NotificationsActions from 'App/Stores/Notifications/Actions'
 import { notificationService } from 'App/Services/NotificationService'
 
 export function* getNotifications() {
-  yield put(NotificationsActions.loading())
+  yield put(NotificationsActions.notificationsLoading())
 
   try {
     const notifications = yield call(notificationService.getRecentPushNotifications)

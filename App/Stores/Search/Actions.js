@@ -21,7 +21,7 @@ import { createActions } from 'reduxsauce'
 const { Types, Creators } = createActions({
   // Search
   searchUser: ['firstLoad'],
-  loading: null,
+  searchLoading: null,
   searchReset: null,
   searchUserSuccess: ['users', 'loadMoreUrl', 'totalRecords'],
   searchUserFailure: ['errorMessage'],
