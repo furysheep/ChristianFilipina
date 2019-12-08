@@ -35,7 +35,7 @@ class LoginScreen extends React.Component {
   async componentDidMount() {
     firebase.analytics().setCurrentScreen('Login', 'Login')
 
-    const enabled = await firebase.messaging().hasPermission()
+    let enabled = await firebase.messaging().hasPermission()
     if (enabled) {
       // user has permissions
       console.log('Push notifications enabled')
@@ -50,6 +50,7 @@ class LoginScreen extends React.Component {
       try {
         await firebase.messaging().requestPermission()
         // User has authorised
+        enabled = true
       } catch (error) {
         // User has rejected permissions
       }
@@ -108,8 +109,6 @@ class LoginScreen extends React.Component {
           actions: [navigateAction],
         })
       )
-
-      // nextProps.getNotifications()
     }
 
     return Object.keys(update).length ? update : null

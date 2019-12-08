@@ -554,10 +554,10 @@ async function sendBugReport(userId, text) {
       headers: { 'Content-Type': 'multipart/form-data' },
     })
       .then((res) => {
-        console.log(res)
+        res.status === 200 ? resolve(res.text()) : reject(res.text())
       })
       .catch((e) => {
-        console.log(e)
+        reject(e)
       })
 
     // ApiClient.post(Config.SEND_PROBLEM_REPORT_URL, form, {

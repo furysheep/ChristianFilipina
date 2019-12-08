@@ -8,7 +8,6 @@ export function* getNotifications() {
   try {
     const notifications = yield call(notificationService.getRecentPushNotifications)
     if (notifications) {
-      console.log('notifications', notifications)
       yield put(
         NotificationsActions.getNotificationsSuccess(
           notifications.map((notification) => notification.pushnotification)

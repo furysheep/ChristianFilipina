@@ -20,7 +20,7 @@ import RNIap, {
 import { Colors, Metrics, Fonts, Helpers } from 'App/Theme'
 import { userService } from 'App/Services/UserService'
 import UserActions from 'App/Stores/User/Actions'
-import { ChatService } from 'App/Services/ChatService'
+import NotificationsActions from 'App/Stores/Notifications/Actions'
 import { Config } from 'App/Config'
 
 const theme = {
@@ -108,6 +108,12 @@ class RootScreen extends Component {
       const result = await userService.updateUserDeviceToken(fcmToken)
       console.log('updateUserDeviceToken', result)
     })
+
+    this.removeNotificationListener = firebase.notifications().onNotification((notification) => {
+      // Process your notification as required
+      console.log(notification)
+      this.props.getNotifications()
+    })
   }
 
   componentWillUnmount() {
@@ -119,6 +125,8 @@ class RootScreen extends Component {
       this.purchaseErrorSubscription.remove()
       this.purchaseErrorSubscription = null
     }
+
+    this.removeNotificationListener()
 
     this.onTokenRefreshListener()
   }
@@ -197,6 +205,7 @@ RootScreen.propTypes = {
   incomingUser: PropTypes.object,
   updateUserLevel: PropTypes.func,
   setIncomingUserId: PropTypes.func,
+  getNotifications: PropTypes.func.isRequired,
 }
 
 const mapStateToProps = (state) => ({
@@ -208,6 +217,7 @@ const mapDispatchToProps = (dispatch) => ({
   startup: () => dispatch(StartupActions.startup()),
   updateUserLevel: (userLevel) => dispatch(UserActions.updateUserLevel(userLevel)),
   setIncomingUserId: (userId, user) => dispatch(UserActions.setIncomingUserId(userId, user)),
+  getNotifications: () => dispatch(NotificationsActions.getNotifications()),
 })
 
 export default connect(

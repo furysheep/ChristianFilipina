@@ -5,13 +5,15 @@ import ApplicationStyles from 'App/Theme/ApplicationStyles'
 export default StyleSheet.create({
   container: {
     ...ApplicationStyles.screen.container,
-    flex: 1,
+  },
+  noContainer: {
+    ...ApplicationStyles.screen.container,
     ...Helpers.center,
   },
   badge: {
     position: 'absolute',
-    bottom: 6,
-    right: 6,
+    bottom: 10,
+    right: 10,
   },
   badgeSize: {
     width: 12,

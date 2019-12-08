@@ -1,6 +1,6 @@
 import React from 'react'
-import { View, TouchableOpacity, FlatList } from 'react-native'
-import { Text, Icon, Avatar, Badge } from 'react-native-elements'
+import { SafeAreaView, View, TouchableOpacity, FlatList } from 'react-native'
+import { Text, Icon, Avatar, Badge, Button } from 'react-native-elements'
 import { connect } from 'react-redux'
 import { PropTypes } from 'prop-types'
 import firebase from 'react-native-firebase'
@@ -10,6 +10,8 @@ import styles from './NotificationsStyle'
 import NotificationsActions from 'App/Stores/Notifications/Actions'
 import NavigationService from 'App/Services/NavigationService'
 import { Config } from 'App/Config'
+import { Colors } from 'App/Theme'
+import { notificationService } from 'App/Services/NotificationService'
 
 class SelectableItem extends React.Component {
   handleOnPress = () => {
@@ -99,18 +101,23 @@ class Notifications extends React.Component {
   }
 
   handleOnPressItem = (item) => {
-    switch (item.pushnotification.act) {
+    switch (item.act) {
       case 'M':
         NavigationService.navigate('Message', {
-          id: item.pushnotification.ref_userid,
-          firstName: item.pushnotification.firstname,
+          id: item.ref_userid,
+          firstName: item.firstname,
         })
         break
       default:
         // case 'W':
-        NavigationService.navigate('Profile', { id: item.pushnotification.ref_userid })
+        NavigationService.navigate('Profile', { id: item.ref_userid })
         break
     }
+  }
+
+  markAll = async () => {
+    await notificationService.updateOnServerPushNotificationsAllRead()
+    this.refreshNotifications()
   }
 
   renderItem = ({ item }) => {
@@ -120,17 +127,28 @@ class Notifications extends React.Component {
   render() {
     const { data, refreshing } = this.state
     return !refreshing && data.length === 0 ? (
-      <View style={styles.container}>
+      <View style={styles.noContainer}>
         <Text>{"You've no notifications!"}</Text>
       </View>
     ) : (
-      <FlatList
-        data={data}
-        keyExtractor={(item, index) => item.id}
-        renderItem={this.renderItem}
-        onRefresh={this.refreshNotifications}
-        refreshing={refreshing}
-      />
+      <SafeAreaView style={styles.container}>
+        <View style={styles.container}>
+          <FlatList
+            data={data}
+            keyExtractor={(item, index) => item.id}
+            renderItem={this.renderItem}
+            onRefresh={this.refreshNotifications}
+            refreshing={refreshing}
+          />
+        </View>
+        {!refreshing && (
+          <Button
+            buttonStyle={{ backgroundColor: Colors.destructive }}
+            title="Mark All as Read"
+            onPress={this.markAll}
+          />
+        )}
+      </SafeAreaView>
     )
   }
 }

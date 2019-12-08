@@ -14,7 +14,6 @@ const DrawerTextStyle = (tintColor) => ({
 class NotificationsLabel extends Component {
   render() {
     const { tintColor, text, notifications } = this.props
-    console.log(notifications)
     const badge = notifications ? notifications.length : 0
     return (
       <View style={Helpers.row}>

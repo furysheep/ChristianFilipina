@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, Alert } from 'react-native'
+import { View, Alert, Keyboard } from 'react-native'
 import { Input, Text, Button } from 'react-native-elements'
 import { connect } from 'react-redux'
 import { PropTypes } from 'prop-types'
@@ -20,12 +20,14 @@ class SendBugReport extends React.Component {
 
   onSend = async () => {
     const { text } = this.state
+    Keyboard.dismiss()
     const {
       user: { id },
     } = this.props
     try {
       this.setState({ sendDisabled: true })
-      await userService.sendBugReport(id, text)
+      const response = await userService.sendBugReport(id, text)
+      console.log(response)
       Alert.alert('Contact Us', 'We received your request. Will review it as soon as possible!')
     } catch (e) {
       console.log(e)
