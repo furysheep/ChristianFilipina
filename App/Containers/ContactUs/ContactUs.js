@@ -58,7 +58,7 @@ class ContactUs extends React.Component {
         <Text>1-800-578-1469 (toll-free from USA - and usually Canada)</Text>
         <Text>415-991-6998 from inside or outside USA/Canada</Text>
         <Text>604-670-5477 in Canada</Text>
-        <Text>2-8011-4102 or 2-8880-5162 in Australia</Text>
+        <Text>2-8880-5162 in Australia</Text>
         <Text>9-887-5076 in New Zealand</Text>
         <Text>1344-231492 in United Kingdom</Text>
         <Text style={styles.header}>MAILING ADDRESS</Text>

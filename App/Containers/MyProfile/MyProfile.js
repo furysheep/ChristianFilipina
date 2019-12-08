@@ -125,7 +125,6 @@ class MyProfile extends React.Component {
   }
 
   saveProfile = async () => {
-    this.setState({ loading: true })
     const {
       firstName,
       lastName,
@@ -153,6 +152,7 @@ class MyProfile extends React.Component {
       return
     }
 
+    this.setState({ loading: true })
     try {
       if (
         !(await userService.updateUserProfileData(
