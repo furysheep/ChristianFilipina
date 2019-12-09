@@ -15,6 +15,20 @@ import { Colors, Images } from 'App/Theme'
 class SelectableItem extends React.Component {
   handleOnPress = () => {
     const { onPressItem, item } = this.props
+    if (item.status !== 'active' && item.status !== 'approval') {
+      Alert.alert(
+        `Sorry, the profile for User ${item.userid} is suspended`,
+        null,
+        [
+          {
+            text: 'OK',
+            onPress: () => {},
+          },
+        ],
+        { cancellable: false }
+      )
+      return
+    }
     onPressItem(item)
   }
 

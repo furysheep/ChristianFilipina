@@ -64,6 +64,22 @@ class Profile extends React.Component {
       })),
     })
 
+    if (data.status !== 'active' && data.status !== 'approval') {
+      Alert.alert(
+        `Sorry, the profile for User ${id} is suspended`,
+        null,
+        [
+          {
+            text: 'OK',
+            onPress: () => {
+              this.props.navigation.goBack()
+            },
+          },
+        ],
+        { cancellable: false }
+      )
+    }
+
     if (data.isBlocked) {
       Alert.alert(
         'You have blocked this user',

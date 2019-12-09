@@ -112,5 +112,8 @@ export function buildUserObject(obj) {
   user.researchUrl = obj.research_url ? obj.research_url[0] : null
   user.testimonialsUrl = obj.testimonials_url ? obj.testimonials_url[0] : null
 
+  // active, approval, suspended, rejected
+  user.status = obj.status ? obj.status[0] : null
+
   return user
 }
