@@ -125,6 +125,7 @@ class OnlineUsers extends React.Component {
 
   renderItem(info) {
     const {
+      isCustomSearch,
       item: { id, imageUrl, firstName, age, city, countryCode, isOnline },
     } = info
     return (
@@ -136,7 +137,9 @@ class OnlineUsers extends React.Component {
         <View style={Helpers.row}>
           <View>
             <Image source={{ uri: imageUrl }} style={styles.profileSmallImage} />
-            {isOnline && <Badge status="success" containerStyle={styles.badge} />}
+            {(isOnline || !isCustomSearch) && (
+              <Badge status="success" containerStyle={styles.badge} />
+            )}
           </View>
           <View style={styles.infoContainer}>
             <Text style={styles.nameText}>{`${firstName}, ${age}`}</Text>
@@ -198,7 +201,15 @@ class OnlineUsers extends React.Component {
   }
 
   render() {
-    const { users, isCustomSearch, dialogCurrentValue, dialogVisible, searchName } = this.state
+    const {
+      users,
+      isCustomSearch,
+      dialogCurrentValue,
+      dialogVisible,
+      searchName,
+      refreshing,
+      loadingMore,
+    } = this.state
     return (
       <View style={styles.container}>
         <Dialog.Container visible={dialogVisible}>
@@ -222,17 +233,17 @@ class OnlineUsers extends React.Component {
             onPress={this.showDialog}
           />
         )}
-        {users.length ? (
+        {refreshing || users.length ? (
           <Grid
             style={styles.grid}
             numColumns={2}
             data={users}
             keyExtractor={(item) => item.id.toString()}
-            renderItem={(info) => this.renderItem(info)}
+            renderItem={(info) => this.renderItem({ ...info, isCustomSearch })}
             onRefresh={() => this.onRefresh()}
-            refreshing={this.state.refreshing}
+            refreshing={refreshing}
             onEndReached={this.onEndReached}
-            loadingMore={this.state.loadingMore}
+            loadingMore={loadingMore}
             marginExternal={4}
             marginInternal={4}
           />

@@ -182,6 +182,7 @@ class MeetPeople extends React.Component {
                 <View style={styles.footer}>
                   <Text>Member Since: {user.membersince}</Text>
                   <Text>Last Logged In: {user.lastLoggedIn}</Text>
+                  <Text>User Id: {user.id}</Text>
                 </View>
               </View>
             </ScrollView>

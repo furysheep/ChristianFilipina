@@ -293,6 +293,7 @@ class Profile extends React.Component {
                 <View style={styles.footer}>
                   <Text>Member Since: {data.membersince}</Text>
                   <Text>Last Logged In: {data.lastLoggedIn}</Text>
+                  <Text>User Id: {data.id}</Text>
                 </View>
               </SafeAreaView>
             </ScrollView>
