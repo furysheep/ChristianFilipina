@@ -477,6 +477,25 @@ function setSpeedDatingAnswer(id, interested) {
   })
 }
 
+function resetMessagesNotification() {
+  const form = new FormData()
+  form.append('operation', 'read_messages_notification')
+  return new Promise((resolve, reject) => {
+    ApiClient.post(Config.NOTIFICATIONS_REQUEST_URL, form)
+      .then((response) => {
+        if (in200s(response.status)) {
+          resolve(response.data.success)
+        } else {
+          reject(new Error('Unknown reason'))
+        }
+      })
+      .catch((e) => {
+        console.log(e)
+        reject(e)
+      })
+  })
+}
+
 function resetUnreadViews() {
   const form = new FormData()
   form.append('operation', 'read_view_notification')
@@ -744,6 +763,7 @@ export const userService = {
   getWinks,
   loadUsers,
   setSpeedDatingAnswer,
+  resetMessagesNotification,
   resetUnreadViews,
   resetUnreadWinks,
   sendContactUsMessage,

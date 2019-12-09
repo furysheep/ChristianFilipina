@@ -11,6 +11,7 @@ import styles from './MessagesStyle'
 import NavigationService from 'App/Services/NavigationService'
 import { ChatService } from 'App/Services/ChatService'
 import { Colors, Images } from 'App/Theme'
+import { userService } from 'App/Services/UserService'
 
 class SelectableItem extends React.Component {
   handleOnPress = () => {
@@ -145,6 +146,8 @@ class Messages extends React.Component {
     })
 
     this.onRefresh()
+
+    userService.resetMessagesNotification()
   }
 
   onEdit = () => {
