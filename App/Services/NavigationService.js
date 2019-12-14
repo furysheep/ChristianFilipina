@@ -15,6 +15,10 @@ function setTopLevelNavigator(navigatorRef) {
   navigator = navigatorRef
 }
 
+function getNavigator() {
+  return navigator
+}
+
 /**
  * Call this function when you want to navigate to a specific route.
  *
@@ -55,6 +59,7 @@ function navigateAndReset(routeName, params) {
 }
 
 export default {
+  getNavigator,
   navigate,
   navigateAndReset,
   setTopLevelNavigator,

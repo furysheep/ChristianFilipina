@@ -90,6 +90,7 @@ class VideoChat extends Component {
       audioEnabled: true,
       videoEnabled: true,
       terminateEnabled: false,
+      muted: false,
 
       callerModal: false,
       endCallEnabled: false,
@@ -641,6 +642,17 @@ class VideoChat extends Component {
     this.props.navigation.setParams({ terminateEnabled: true })
   }
 
+  _switchMute = () => {
+    if (this.myMediaStream) {
+      this.myMediaStream.getTracks().forEach((t) => {
+        if (t.kind === 'audio') {
+          this.setState({ muted: t.enabled })
+          t.enabled = !t._enabled
+        }
+      })
+    }
+  }
+
   _switchVideoType = () => {
     if (this.streamConstraints.video) {
       this.myMediaStream.getTracks().forEach((t) => {
@@ -788,6 +800,7 @@ class VideoChat extends Component {
       endCallEnabled,
       terminateEnabled,
       remoteUserId,
+      muted,
     } = this.state
     return (
       <View style={styles.container}>
@@ -867,17 +880,27 @@ class VideoChat extends Component {
               zOrder={1}
             />
             <View style={styles.bottomButtons}>
+              {this.streamConstraints && this.streamConstraints.video && (
+                <Button
+                  buttonStyle={styles.reverseCamButton}
+                  onPress={this._switchVideoType}
+                  icon={<Icon type="ionicon" name="ios-reverse-camera" color="white" />}
+                  disabled={!terminateEnabled}
+                />
+              )}
               <Button
                 buttonStyle={styles.hangupButton}
                 onPress={this.terminateCall}
                 disabled={!terminateEnabled}
                 icon={<Icon name="call-end" color="white" />}
               />
-              {this.streamConstraints && this.streamConstraints.video && (
+              {this.streamConstraints && this.streamConstraints.audio && (
                 <Button
-                  buttonStyle={styles.reverseCamButton}
-                  onPress={this._switchVideoType}
-                  icon={<Icon type="ionicon" name="ios-reverse-camera" color="white" />}
+                  buttonStyle={styles.muteButton}
+                  onPress={this._switchMute}
+                  icon={
+                    <Icon type="ionicon" name={muted ? 'ios-mic-off' : 'ios-mic'} color="white" />
+                  }
                   disabled={!terminateEnabled}
                 />
               )}

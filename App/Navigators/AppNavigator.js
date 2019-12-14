@@ -241,7 +241,6 @@ const MeetScreen = createBottomTabNavigator(
 
 const DrawerContainer = createDrawerNavigator(
   {
-    Meet: MeetScreen,
     OnlineUsers: createStackNavigator(
       {
         OnlineUsers: {
@@ -280,6 +279,13 @@ const DrawerContainer = createDrawerNavigator(
         defaultNavigationOptions: defaultStackNavigationOptions,
       }
     ),
+    SearchFilter: {
+      screen: SearchFilter,
+      navigationOptions: ({ navigation }) => ({
+        title: 'Search All Profiles', // Title to appear in status bar
+        drawerIcon: ({ focused, tintColor }) => <Icon name="search" />,
+      }),
+    },
     MyProfile: createStackNavigator(
       {
         MyProfile: {
@@ -539,12 +545,13 @@ const DrawerContainer = createDrawerNavigator(
         defaultNavigationOptions: defaultStackNavigationOptions,
       }
     ),
+    Meet: MeetScreen,
   },
   {
     unmountInactiveRoutes: true,
     drawerLockMode: 'locked-closed',
     overlayColor: '#0007',
-    initialRouteName: 'Meet',
+    initialRouteName: 'OnlineUsers',
     contentComponent: DrawerMenu,
     contentOptions: {
       activeTintColor: Colors.destructive,

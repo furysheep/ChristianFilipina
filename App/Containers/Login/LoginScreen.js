@@ -99,7 +99,8 @@ class LoginScreen extends React.Component {
         params: {},
 
         action: NavigationActions.navigate({
-          routeName: nextProps.firstLogin ? 'MyProfile' : 'Meet',
+          routeName: nextProps.firstLogin ? 'MyProfile' : 'OnlineUsers',
+          params: { openDrawer: true },
         }),
       })
 

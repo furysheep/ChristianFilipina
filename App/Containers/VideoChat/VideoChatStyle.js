@@ -53,8 +53,16 @@ export default StyleSheet.create({
     borderRadius: 5,
     justifyContent: 'center',
   },
-  reverseCamButton: {
+  muteButton: {
     marginLeft: Metrics.baseMargin,
+    width: 40,
+    height: 40,
+    backgroundColor: Colors.primary,
+    borderRadius: 5,
+    justifyContent: 'center',
+  },
+  reverseCamButton: {
+    marginRight: Metrics.baseMargin,
     width: 40,
     height: 40,
     backgroundColor: Colors.primary,

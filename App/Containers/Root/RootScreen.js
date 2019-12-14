@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import NavigationService from 'App/Services/NavigationService'
 import AppNavigator from 'App/Navigators/AppNavigator'
-import { View, Platform } from 'react-native'
+import { View, Platform, BackHandler } from 'react-native'
 import AsyncStorage from '@react-native-community/async-storage'
 import styles from './RootScreenStyle'
 import { connect } from 'react-redux'
@@ -114,6 +114,8 @@ class RootScreen extends Component {
       console.log(notification)
       this.props.getNotifications()
     })
+
+    BackHandler.addEventListener('hardwareBackPress', this.onBackPress)
   }
 
   componentWillUnmount() {
@@ -129,6 +131,17 @@ class RootScreen extends Component {
     this.removeNotificationListener()
 
     this.onTokenRefreshListener()
+
+    BackHandler.removeEventListener('hardwareBackPress', this.onBackPress)
+  }
+
+  onBackPress = () => {
+    // const route = NavigationService.getNavigator().state.nav.routes[0]
+    // if (route.routeName === 'DrawerContainer' && route.index === 0) {
+    //   return true
+    // }
+    // console.log(JSON.stringify(NavigationService.getNavigator().state.nav.routes[0].routeName))
+    return false
   }
 
   confirmDialog = async (id, firstName) => {

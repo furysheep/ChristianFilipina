@@ -43,6 +43,11 @@ class OnlineUsers extends React.Component {
       isCustomSearch: props.isCustomSearch,
       dialogCurrentValue: '',
     }
+
+    const { params } = props.navigation.state
+    if (params && params.openDrawer) {
+      props.navigation.openDrawer()
+    }
   }
 
   static getDerivedStateFromProps(nextProps, prevState) {

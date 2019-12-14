@@ -11,7 +11,6 @@ import NavigationService from 'App/Services/NavigationService'
 
 const CustomDrawerContentComponent = (props) => {
   const { user, logout } = props
-
   return (
     <ImageBackground source={Images.background} style={{ flex: 1 }}>
       <ScrollView style={styles.scrollView}>
@@ -54,8 +53,8 @@ const styles = StyleSheet.create({
   logout: {
     alignSelf: 'center',
     backgroundColor: Colors.destructive,
-    marginTop: 20,
     marginBottom: 20,
+    marginTop: 20,
     width: '50%',
   },
   profile: {

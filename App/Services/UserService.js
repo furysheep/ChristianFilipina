@@ -34,7 +34,6 @@ function loginUser(email, password) {
             if (err) {
               reject(err)
             } else {
-              console.log(result)
               const { loginresults } = result
               if (loginresults.errid !== undefined) {
                 reject(new Error(loginresults.description[0]))
