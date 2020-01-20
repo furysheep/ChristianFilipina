@@ -6210,10 +6210,10 @@ react-native-modal@^9.0.0:
   dependencies:
     prop-types "^15.5.10"
 
-react-native-picker-select@^6.3.2:
-  version "6.3.2"
-  resolved "https://registry.yarnpkg.com/react-native-picker-select/-/react-native-picker-select-6.3.2.tgz#5fad902e77e23f4217eea7e93ef513a4dcf641d7"
-  integrity sha512-f7DNP9M4UHOtsXizpbd1jWgzV38Yn9WEPu+rY2o8to4rr+CHXl/V6W2G1qXkDPMIzUa9oClYsK8PylVRSoH8iQ==
+react-native-picker-select@^6.3.4:
+  version "6.3.4"
+  resolved "https://registry.yarnpkg.com/react-native-picker-select/-/react-native-picker-select-6.3.4.tgz#7b58d1601cb815f12786024f6a15003fab0d3b2f"
+  integrity sha512-lAoKeTpMQFqJYEWUbPzIP5tjVWCG1NnYKAeVQfWEXU3yKmgisvOJ92hY4mo0gnCedUB9Br2rqpQTAzYwqHFHjQ==
   dependencies:
     lodash.isequal "^4.5.0"
 
