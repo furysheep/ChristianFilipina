@@ -353,6 +353,7 @@ class VideoChat extends Component {
 
     // start calling tone
     InCallManager.start({ media: isVideo ? 'video' : 'audio', ringback: '_DEFAULT_' })
+    InCallManager.setForceSpeakerphoneOn(isVideo)
 
     this.setState({ endCallEnabled: false })
 
@@ -730,6 +731,7 @@ class VideoChat extends Component {
     this.disableCallBtns()
 
     InCallManager.stopRingtone()
+    InCallManager.setForceSpeakerphoneOn(video)
     InCallManager.start({ media: video ? 'video' : 'audio' })
   }
 

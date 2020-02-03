@@ -176,6 +176,8 @@ class MyProfile extends React.Component {
       }
       if (!(await userService.doQuestionsSave(profileData))) {
         throw new Error()
+      } else {
+        Alert.alert('Your profile has been updated successfully.')
       }
     } catch {
       Alert.alert('Error updating user data')

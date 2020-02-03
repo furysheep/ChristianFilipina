@@ -221,7 +221,7 @@ function updateUserProfileData(
   form.append('lookageend', lookageend)
   form.append('age_pref_strict', agePrefStrict ? 'yes' : 'no')
   const dateComponents = birthday.split('-')
-  form.append('birthday_month', dateComponents[1])
+  form.append('birthday_month', dateComponents[1] - 1)
   form.append('birthday_day', dateComponents[2])
   form.append('birthday_year', dateComponents[0])
   form.append('timezone', timezone)
