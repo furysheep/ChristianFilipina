@@ -10,12 +10,6 @@ import { PropTypes } from 'prop-types'
 import { ThemeProvider, Button, Text, Image } from 'react-native-elements'
 import firebase from 'react-native-firebase'
 import Modal from 'react-native-modal'
-import RNIap, {
-  purchaseErrorListener,
-  purchaseUpdatedListener,
-  type ProductPurchase,
-  type PurchaseError,
-} from 'react-native-iap'
 
 import { Colors, Metrics, Fonts, Helpers } from 'App/Theme'
 import { userService } from 'App/Services/UserService'
@@ -66,40 +60,6 @@ class RootScreen extends Component {
 
   componentDidMount() {
     this.props.startup()
-    this.purchaseUpdateSubscription = purchaseUpdatedListener((purchase) => {
-      // console.log('purchaseUpdatedListener', purchase)
-      const receipt = purchase.transactionReceipt
-      if (receipt) {
-        const isAndroid = Platform.OS === 'android'
-        userService
-          .mobileUpgrade(
-            purchase.productId,
-            isAndroid ? purchase.signatureAndroid : '',
-            purchase.transactionId,
-            purchase.transactionDate,
-            isAndroid ? purchase.transactionReceipt : '',
-            isAndroid ? '' : purchase.transactionReceipt
-          )
-          .then((userLevel) => {
-            console.log('updateUserLevel', userLevel)
-            this.props.updateUserLevel(userLevel)
-          })
-          .catch((e) => console.log(e))
-        if (Platform.OS === 'ios') {
-          console.log('finish transaction')
-          RNIap.finishTransactionIOS(purchase.transactionId)
-        } else if (Platform.OS === 'android') {
-          // If consumable (can be purchased again)
-          // RNIap.consumePurchaseAndroid(purchase.purchaseToken)
-          // If not consumable
-          RNIap.acknowledgePurchaseAndroid(purchase.purchaseToken)
-        }
-      }
-    })
-
-    this.purchaseErrorSubscription = purchaseErrorListener((error) => {
-      console.warn('purchaseErrorListener', error)
-    })
 
     this.onTokenRefreshListener = firebase.messaging().onTokenRefresh(async (fcmToken) => {
       // Process your token as required
@@ -119,15 +79,6 @@ class RootScreen extends Component {
   }
 
   componentWillUnmount() {
-    if (this.purchaseUpdateSubscription) {
-      this.purchaseUpdateSubscription.remove()
-      this.purchaseUpdateSubscription = null
-    }
-    if (this.purchaseErrorSubscription) {
-      this.purchaseErrorSubscription.remove()
-      this.purchaseErrorSubscription = null
-    }
-
     this.removeNotificationListener()
 
     this.onTokenRefreshListener()
@@ -216,7 +167,6 @@ class RootScreen extends Component {
 RootScreen.propTypes = {
   incomingUserId: PropTypes.number,
   incomingUser: PropTypes.object,
-  updateUserLevel: PropTypes.func,
   setIncomingUserId: PropTypes.func,
   getNotifications: PropTypes.func.isRequired,
 }
@@ -228,7 +178,6 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
   startup: () => dispatch(StartupActions.startup()),
-  updateUserLevel: (userLevel) => dispatch(UserActions.updateUserLevel(userLevel)),
   setIncomingUserId: (userId, user) => dispatch(UserActions.setIncomingUserId(userId, user)),
   getNotifications: () => dispatch(NotificationsActions.getNotifications()),
 })

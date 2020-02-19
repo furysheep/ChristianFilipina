@@ -2,6 +2,7 @@ import { put, call, select } from 'redux-saga/effects'
 import SearchActions from 'App/Stores/Search/Actions'
 import { searchService } from 'App/Services/SearchService'
 import { Config } from 'App/Config'
+import { stat } from 'react-native-fs'
 
 export function* setCustomSearch({ isCustomSearch }) {
   yield put(SearchActions.customSearch(isCustomSearch))
@@ -95,6 +96,8 @@ export function* searchQuestions() {
   try {
     const getQuestions = (state) => state.search.questions
     const stateQuestions = yield select(getQuestions)
+    const user = yield select((state) => state.user)
+    console.log(user)
     if (stateQuestions.length === 0) {
       const questions = yield call(searchService.searchQuestions)
       const questionValues = {}
@@ -103,6 +106,9 @@ export function* searchQuestions() {
           questionValues[question.question_name_for_search[0]] = 1
         if (question.default_value) {
           questionValues[question.question_name_for_search[0]] = question.default_value[0]
+        }
+        if (question.question_name_for_search[0] === 'srchlookgender') {
+          // questionValues[question.question_name_for_search[0]] = ismale ? 'M' : 'F'
         }
       })
       yield put(SearchActions.searchQuestionsSuccess(questions, questionValues))

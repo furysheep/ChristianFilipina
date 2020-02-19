@@ -4,11 +4,19 @@ import { Text } from 'react-native-elements'
 import { connect } from 'react-redux'
 import { PropTypes } from 'prop-types'
 import Spinner from 'react-native-loading-spinner-overlay'
-import * as RNIap from 'react-native-iap'
 import styles from './SubscriptionStyle'
 import { Images } from 'App/Theme'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 import firebase from 'react-native-firebase'
+import RNIap, {
+  purchaseErrorListener,
+  purchaseUpdatedListener,
+  type ProductPurchase,
+  type PurchaseError,
+} from 'react-native-iap'
+
+import UserActions from 'App/Stores/User/Actions'
+import { userService } from 'App/Services/UserService'
 
 class Subscription extends React.Component {
   constructor() {
@@ -37,7 +45,56 @@ class Subscription extends React.Component {
       console.warn(err) // standardized err.code and err.message available
     }
     this.setState({ loading: false })
+
+    this.purchaseUpdateSubscription = purchaseUpdatedListener((purchase) => {
+      // console.log('purchaseUpdatedListener', purchase)
+      const receipt = purchase.transactionReceipt
+      if (receipt) {
+        const isAndroid = Platform.OS === 'android'
+        userService
+          .mobileUpgrade(
+            purchase.productId,
+            isAndroid ? purchase.signatureAndroid : '',
+            purchase.transactionId,
+            purchase.transactionDate,
+            isAndroid ? purchase.transactionReceipt : '',
+            isAndroid ? '' : purchase.transactionReceipt
+          )
+          .then((userLevel) => {
+            console.log('updateUserLevel', userLevel)
+            this.props.updateUserLevel(userLevel)
+            Alert.alert(null, 'Your purchase was successful')
+          })
+          .catch((e) => console.log(e))
+          .finally(() => {})
+        if (Platform.OS === 'ios') {
+          console.log('finish transaction')
+          RNIap.finishTransactionIOS(purchase.transactionId)
+        } else if (Platform.OS === 'android') {
+          // If consumable (can be purchased again)
+          // RNIap.consumePurchaseAndroid(purchase.purchaseToken)
+          // If not consumable
+          RNIap.acknowledgePurchaseAndroid(purchase.purchaseToken)
+        }
+      }
+    })
+
+    this.purchaseErrorSubscription = purchaseErrorListener((error) => {
+      console.warn('purchaseErrorListener', error)
+    })
   }
+
+  componentWillUnmount() {
+    if (this.purchaseUpdateSubscription) {
+      this.purchaseUpdateSubscription.remove()
+      this.purchaseUpdateSubscription = null
+    }
+    if (this.purchaseErrorSubscription) {
+      this.purchaseErrorSubscription.remove()
+      this.purchaseErrorSubscription = null
+    }
+  }
+
   render() {
     const { products, loading } = this.state
     return (
@@ -49,14 +106,12 @@ class Subscription extends React.Component {
               style={styles.productContainer}
               key={index}
               onPress={async () => {
-                this.setState({ loading: true })
                 try {
                   await RNIap.requestSubscription(product.productId)
                 } catch (err) {
                   console.warn(err.code, err.message)
-                  setTimeout(() => Alert.alert(err.message), 500)
+                  setTimeout(() => Alert.alert(null, err.message), 500)
                 }
-                this.setState({ loading: false })
               }}
             >
               <Text style={styles.productTitle}>{product.title}</Text>
@@ -105,11 +160,14 @@ class Subscription extends React.Component {
 
 Subscription.propTypes = {
   user: PropTypes.object,
+  updateUserLevel: PropTypes.func,
 }
 
 const mapStateToProps = (state) => ({})
 
-const mapDispatchToProps = (dispatch) => ({})
+const mapDispatchToProps = (dispatch) => ({
+  updateUserLevel: (userLevel) => dispatch(UserActions.updateUserLevel(userLevel)),
+})
 
 export default connect(
   mapStateToProps,

@@ -128,7 +128,7 @@ class Notifications extends React.Component {
     const { data, refreshing } = this.state
     return !refreshing && data.length === 0 ? (
       <View style={styles.noContainer}>
-        <Text>{"You've no notifications!"}</Text>
+        <Text>You have no notifications!</Text>
       </View>
     ) : (
       <SafeAreaView style={styles.container}>
