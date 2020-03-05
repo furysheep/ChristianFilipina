@@ -110,7 +110,7 @@ class VideoChat extends Component {
     // console.log(configuration)
     socket.onmessage = (e) => {
       const data = JSON.parse(e.data)
-      console.log(data)
+      console.log('data', JSON.stringify(data))
       if (data.room === this.state.roomID) {
         // above check is not necessary since all messages coming to this user are for the user's current room
         // but just to be on the safe side
@@ -127,7 +127,7 @@ class VideoChat extends Component {
             // minimise chat pane if it is maximised to prevent it from covering the page on small screens
 
             if (data.servers !== undefined) {
-              this.servers = data.servers
+              this.servers = data.servers.iceServers
             }
 
             break
@@ -363,7 +363,7 @@ class VideoChat extends Component {
 
     // first fetch the turn credentials from server, then send the request to the user
     try {
-      this.servers = await ChatService.getTurnCredentials()
+      this.servers = [await ChatService.getTurnCredentials()]
     } catch (e) {
       console.log(e)
       // if turn.php API returns error, then use only STUN
@@ -375,7 +375,7 @@ class VideoChat extends Component {
         action: 'initCall',
         msg: callType === 'Video' ? `Video call from ${firstName}` : `Audio call from ${firstName}`,
         room: this.state.roomID,
-        servers: this.servers,
+        servers: { iceServers: this.servers },
       })
     )
     this.setState({ endCallEnabled: true })
@@ -925,6 +925,9 @@ class VideoChat extends Component {
                     right: {
                       color: 'white',
                     },
+                    left: {
+                      color: 'white',
+                    },
                   }}
                   wrapperStyle={{
                     left: {
@@ -937,9 +940,9 @@ class VideoChat extends Component {
             renderTime={(props) => (
               <Time
                 {...props}
-                textStyle={{
+                timeTextStyle={{
                   left: {
-                    color: 'black',
+                    color: 'white',
                   },
                 }}
               />

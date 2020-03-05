@@ -108,7 +108,8 @@ export function* searchQuestions() {
           questionValues[question.question_name_for_search[0]] = question.default_value[0]
         }
         if (question.question_name_for_search[0] === 'srchlookgender') {
-          // questionValues[question.question_name_for_search[0]] = ismale ? 'M' : 'F'
+          console.log(user.user.gender)
+          questionValues[question.question_name_for_search[0]] = user.user.gender
         }
       })
       yield put(SearchActions.searchQuestionsSuccess(questions, questionValues))

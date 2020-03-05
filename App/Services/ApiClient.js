@@ -115,5 +115,7 @@ export function buildUserObject(obj) {
   // active, approval, suspended, rejected
   user.status = obj.status ? obj.status[0] : null
 
+  // newly added
+  user.gender = obj.gender ? obj.gender[0] : null
   return user
 }
