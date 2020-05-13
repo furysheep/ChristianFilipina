@@ -3,13 +3,19 @@ import Fonts from 'App/Theme/Fonts'
 import ApplicationStyles from 'App/Theme/ApplicationStyles'
 
 export default StyleSheet.create({
+  scrollView: {
+    flexGrow: 1,
+  },
   container: {
     ...ApplicationStyles.screen.container,
     justifyContent: 'center',
+    paddingVertical: 30,
   },
   bgTop: {
+    backgroundColor: 'rgba(255, 255, 255, 0.1)',
     width: '100%',
   },
+  nospace: { margin: 0, padding: 0 },
   title: {
     ...Fonts.style.h2,
     textAlign: 'center',

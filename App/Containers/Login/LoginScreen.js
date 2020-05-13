@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, Image, ImageBackground, Linking, Alert } from 'react-native'
+import { View, Image, ImageBackground, Linking, Alert, ScrollView } from 'react-native'
 import AsyncStorage from '@react-native-community/async-storage'
 import { Input, CheckBox, Button, Text } from 'react-native-elements'
 import Spinner from 'react-native-loading-spinner-overlay'
@@ -155,118 +155,128 @@ class LoginScreen extends React.Component {
     const { userErrorMessage } = this.props
 
     return (
-      <ImageBackground source={Images.background} style={Style.container}>
-        <Spinner visible={userIsLoading} />
-        <OverlayPopup
-          isVisible={this.state.isForgotVisible}
-          title={'FORGOT PASSWORD/LOGIN?'}
-          onClose={() => this.setState({ isForgotVisible: false })}
-        >
-          <Text>
-            Please provide the e-mail address used with your profile to have your username and
-            password sent to you.
-          </Text>
-          <Input
-            placeholder="Your email address"
-            leftIcon={<Image source={Images.emailIcon} />}
-            containerStyle={{ marginVertical: 20 }}
-            inputContainerStyle={{ backgroundColor: 'white' }}
-            autoCompleteType="email"
-            keyboardType="email-address"
-            textContentType="emailAddress"
-            autoCapitalize="none"
-            errorStyle={{ color: Colors.error }}
-            errorMessage={errorMsg}
-            value={forgotEmail}
-            onChangeText={(forgotEmail) => this.setState({ forgotEmail })}
-          />
-          <Text>
-            After receipt of the new password you should change it immediately after login, for
-            security. If you do not receive the email, check your spam/bulk box. If you still do not
-            see the email,{' '}
-            <Text
-              style={{ color: Colors.primary }}
-              onPress={() => {
-                Linking.openURL('mailto:info@christianfilipina.com')
-              }}
-            >
-              Contact Us
+      <ScrollView contentContainerStyle={Style.scrollView} bounces={false}>
+        <ImageBackground source={Images.background} style={Style.container}>
+          <Spinner visible={userIsLoading} />
+          <OverlayPopup
+            isVisible={this.state.isForgotVisible}
+            title={'FORGOT PASSWORD/LOGIN?'}
+            onClose={() => this.setState({ isForgotVisible: false })}
+          >
+            <Text>
+              Please provide the e-mail address used with your profile to have your username and
+              password sent to you.
             </Text>
-          </Text>
-          <Button title="NEXT" containerStyle={{ marginTop: 10 }} onPress={this.onForgotPassword} />
-        </OverlayPopup>
-        <Image source={Images.bgTop} style={Style.bgTop} />
-        <View style={{ padding: 30 }}>
-          <Input
-            placeholder="Email"
-            leftIcon={<Image source={Images.emailIcon} />}
-            inputContainerStyle={{}}
-            autoCompleteType="email"
-            keyboardType="email-address"
-            textContentType="emailAddress"
-            autoCapitalize="none"
-            value={email}
-            onChangeText={(email) => this.setState({ email })}
-          />
-          <Input
-            placeholder="Password"
-            leftIcon={<Image source={Images.passwordIcon} />}
-            secureTextEntry
-            autoCompleteType="password"
-            textContentType="password"
-            autoCapitalize="none"
-            value={password}
-            onChangeText={(password) => this.setState({ password })}
-            errorStyle={{ color: Colors.error }}
-            errorMessage={userErrorMessage}
-          />
-          <View style={{ flexDirection: 'row' }}>
-            <CheckBox
-              title="Remember me"
-              checked={this.state.rememberPassword}
-              textStyle={{ color: 'white' }}
-              checkedColor="white"
-              onPress={() => this.setState({ rememberPassword: !this.state.rememberPassword })}
+            <Input
+              placeholder="Your email address"
+              leftIcon={<Image source={Images.emailIcon} />}
+              containerStyle={{ marginVertical: 20 }}
+              inputContainerStyle={{ backgroundColor: 'white' }}
+              autoCompleteType="email"
+              keyboardType="email-address"
+              textContentType="emailAddress"
+              autoCapitalize="none"
+              errorStyle={{ color: Colors.error }}
+              errorMessage={errorMsg}
+              value={forgotEmail}
+              onChangeText={(forgotEmail) => this.setState({ forgotEmail })}
             />
-          </View>
-          <View style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
+            <Text>
+              After receipt of the new password you should change it immediately after login, for
+              security. If you do not receive the email, check your spam/bulk box. If you still do
+              not see the email,{' '}
+              <Text
+                style={{ color: Colors.primary }}
+                onPress={() => {
+                  Linking.openURL('mailto:info@christianfilipina.com')
+                }}
+              >
+                Contact Us
+              </Text>
+            </Text>
             <Button
-              title="Forgot password"
+              title="NEXT"
+              containerStyle={{ marginTop: 10 }}
+              onPress={this.onForgotPassword}
+            />
+          </OverlayPopup>
+          <Image resizeMode="contain" source={Images.bgTop} style={Style.bgTop} />
+          <View style={{ padding: 30, paddingVertical: 10 }}>
+            <Input
+              placeholder="Email"
+              leftIcon={<Image source={Images.emailIcon} />}
+              autoCompleteType="email"
+              keyboardType="email-address"
+              textContentType="emailAddress"
+              autoCapitalize="none"
+              value={email}
+              onChangeText={(email) => this.setState({ email })}
+            />
+            <Input
+              placeholder="Password"
+              leftIcon={<Image source={Images.passwordIcon} />}
+              secureTextEntry
+              autoCompleteType="password"
+              textContentType="password"
+              autoCapitalize="none"
+              value={password}
+              onChangeText={(password) => this.setState({ password })}
+              errorStyle={{ color: Colors.error }}
+              errorMessage={userErrorMessage}
+            />
+            <View style={{ flexDirection: 'row' }}>
+              <CheckBox
+                title="Remember me"
+                checked={this.state.rememberPassword}
+                textStyle={{ color: 'white' }}
+                checkedColor="white"
+                onPress={() => this.setState({ rememberPassword: !this.state.rememberPassword })}
+                containerStyle={Style.nospace}
+              />
+            </View>
+            <View style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
+              <Button
+                title="Forgot password"
+                type="clear"
+                titleStyle={{ color: 'white' }}
+                onPress={() => this.setState({ isForgotVisible: true })}
+              />
+            </View>
+            <Button
+              title="LOGIN"
+              buttonStyle={{ backgroundColor: '#e60072' }}
+              onPress={this.login}
+            />
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <Button
+                title="Privacy Policy"
+                type="clear"
+                titleStyle={{ color: 'white' }}
+                containerStyle={{ flex: 1 }}
+                onPress={() => NavigationService.navigate('PrivacyPolicy')}
+              />
+              <View style={{ height: '80%', width: 1, backgroundColor: 'white' }} />
+              <Button
+                title="Terms of Service"
+                type="clear"
+                titleStyle={{ color: 'white' }}
+                containerStyle={{ flex: 1 }}
+                onPress={() => NavigationService.navigate('TermsOfService')}
+              />
+            </View>
+            <Button
+              title="Contact Us"
               type="clear"
               titleStyle={{ color: 'white' }}
-              onPress={() => this.setState({ isForgotVisible: true })}
+              onPress={() => NavigationService.navigate('ContactUs')}
             />
+            <Text style={{ alignSelf: 'center', marginTop: 10, marginBottom: 10, color: 'white' }}>
+              Don't have an account?
+            </Text>
+            <Button title="SIGN UP" onPress={this.signUp} />
           </View>
-          <Button title="LOGIN" buttonStyle={{ backgroundColor: '#e60072' }} onPress={this.login} />
-          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-            <Button
-              title="Privacy Policy"
-              type="clear"
-              titleStyle={{ color: 'white' }}
-              containerStyle={{ flex: 1 }}
-              onPress={() => NavigationService.navigate('PrivacyPolicy')}
-            />
-            <View style={{ height: '80%', width: 1, backgroundColor: 'white' }} />
-            <Button
-              title="Terms of Service"
-              type="clear"
-              titleStyle={{ color: 'white' }}
-              containerStyle={{ flex: 1 }}
-              onPress={() => NavigationService.navigate('TermsOfService')}
-            />
-          </View>
-          <Button
-            title="Contact Us"
-            type="clear"
-            titleStyle={{ color: 'white' }}
-            onPress={() => NavigationService.navigate('ContactUs')}
-          />
-          <Text style={{ alignSelf: 'center', marginTop: 20, marginBottom: 10, color: 'white' }}>
-            Don't have an account?
-          </Text>
-          <Button title="SIGN UP" onPress={this.signUp} />
-        </View>
-      </ImageBackground>
+        </ImageBackground>
+      </ScrollView>
     )
   }
 }

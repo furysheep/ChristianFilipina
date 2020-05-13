@@ -738,6 +738,7 @@ function updateUserDeviceToken(deviceId) {
     ApiClient.post(Config.UPDATE_USER_DEVICE_TOKEN_URL, form)
       .then((response) => {
         if (in200s(response.status)) {
+          console.log(response.data)
           resolve(response.data.success)
         } else {
           reject(new Error('Unknown reason'))

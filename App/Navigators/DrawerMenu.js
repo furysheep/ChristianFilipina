@@ -10,7 +10,7 @@ import { Config } from 'App/Config'
 import NavigationService from 'App/Services/NavigationService'
 
 const CustomDrawerContentComponent = (props) => {
-  const { user, logout } = props
+  const { user, logout, navigation } = props
   return (
     <ImageBackground source={Images.background} style={{ flex: 1 }}>
       <ScrollView style={styles.scrollView}>
@@ -27,7 +27,17 @@ const CustomDrawerContentComponent = (props) => {
               <Text style={styles.profileName}>{user.firstName}</Text>
             </View>
           )}
-          <DrawerItems {...props} />
+          <DrawerItems
+            {...props}
+            onItemPress={(info) => {
+              const { routeName } = info.route
+              if (routeName !== 'SearchFilter') {
+                navigation.navigate(info.route.routeName)
+              } else {
+                navigation.push('SearchFilter')
+              }
+            }}
+          />
           <Button
             title="Log out"
             buttonStyle={styles.logout}

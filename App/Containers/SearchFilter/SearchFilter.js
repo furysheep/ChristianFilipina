@@ -129,7 +129,7 @@ class SearchFilter extends React.Component {
   loadSavedSearch = (searchName) => {
     firebase.analytics().setCurrentScreen('SavedSearches', 'SavedSearches')
     this.props.setSavedSearch(searchName)
-    this.props.navigation.goBack()
+    this.props.navigation.navigate('OnlineUsers')
   }
 
   render() {
@@ -334,7 +334,7 @@ class SearchFilter extends React.Component {
                   const screen = basic ? 'BasicUserSearch' : 'AdvancedUserSearch'
                   firebase.analytics().setCurrentScreen(screen, screen)
                   this.props.setCustomSearch(true)
-                  this.props.navigation.goBack()
+                  this.props.navigation.navigate('OnlineUsers')
                 }}
               />
             </View>

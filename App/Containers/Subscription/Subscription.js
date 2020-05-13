@@ -110,7 +110,7 @@ class Subscription extends React.Component {
                   await RNIap.requestSubscription(product.productId)
                 } catch (err) {
                   console.warn(err.code, err.message)
-                  setTimeout(() => Alert.alert(null, err.message), 500)
+                  // setTimeout(() => Alert.alert(null, err.message), 500)
                 }
               }}
             >

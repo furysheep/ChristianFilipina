@@ -107,6 +107,7 @@
 		DFBBF0A222FC98E2006E7772 /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = usr/lib/libsqlite3.tbd; sourceTree = SDKROOT; };
 		DFD8E3062317D9820097BDF9 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		DFD8E3582317E6730097BDF9 /* libFirebaseCore.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libFirebaseCore.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		DFF281FA246A251F0041FB15 /* ChristianFilipina-tvOSTests copy-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "ChristianFilipina-tvOSTests copy-Info.plist"; path = "/Volumes/WORK/Work/ChristianFilipina/ios/ChristianFilipina-tvOSTests copy-Info.plist"; sourceTree = "<absolute>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		ED2971642150620600B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = Platforms/AppleTVOS.platform/Developer/SDKs/AppleTVOS12.0.sdk/System/Library/Frameworks/JavaScriptCore.framework; sourceTree = DEVELOPER_DIR; };
 		F31149504C2FDF10AD888FE4 /* Pods-ChristianFilipina.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ChristianFilipina.release.xcconfig"; path = "Pods/Target Support Files/Pods-ChristianFilipina/Pods-ChristianFilipina.release.xcconfig"; sourceTree = "<group>"; };
@@ -252,6 +253,7 @@
 				83CBBA001A601CBA00E9B192 /* Products */,
 				2D16E6871FA4F8E400B85C8A /* Frameworks */,
 				2015F6E51F7CE1E0B0DCEA25 /* Pods */,
+				DFF281FA246A251F0041FB15 /* ChristianFilipina-tvOSTests copy-Info.plist */,
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
@@ -365,7 +367,7 @@
 						TestTargetID = 13B07F861A680F5B00A75B9A;
 					};
 					13B07F861A680F5B00A75B9A = {
-						DevelopmentTeam = 78H2Q98LRU;
+						DevelopmentTeam = W868Q7CJL7;
 						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
 							com.apple.BackgroundModes = {
@@ -747,9 +749,9 @@
 				CODE_SIGN_ENTITLEMENTS = ChristianFilipina/ChristianFilipina.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 3;
 				DEAD_CODE_STRIPPING = NO;
-				DEVELOPMENT_TEAM = 78H2Q98LRU;
+				DEVELOPMENT_TEAM = W868Q7CJL7;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -771,14 +773,16 @@
 					"$(inherited)",
 					"$(SRCROOT)/../node_modules/react-native-webrtc/ios/**",
 				);
+				MARKETING_VERSION = 26;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.christianfilipina.ChristianFilipinaiOSClient1;
+				PRODUCT_BUNDLE_IDENTIFIER = com.christianfilipina.ChristianFilipinaiOSClient;
 				PRODUCT_NAME = ChristianFilipina;
 				PROVISIONING_PROFILE_SPECIFIER = "";
+				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Debug;
@@ -791,8 +795,8 @@
 				CODE_SIGN_ENTITLEMENTS = ChristianFilipina/ChristianFilipina.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = "";
+				CURRENT_PROJECT_VERSION = 3;
+				DEVELOPMENT_TEAM = W868Q7CJL7;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -814,6 +818,7 @@
 					"$(inherited)",
 					"$(SRCROOT)/../node_modules/react-native-webrtc/ios/**",
 				);
+				MARKETING_VERSION = 26;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -822,6 +827,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.christianfilipina.ChristianFilipinaiOSClient;
 				PRODUCT_NAME = ChristianFilipina;
 				PROVISIONING_PROFILE_SPECIFIER = "";
+				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Release;
