@@ -28,6 +28,15 @@ export default StyleSheet.create({
     overflow: 'hidden',
     marginBottom: Metrics.baseMargin,
   },
+  restoreButton: {
+    marginTop: Metrics.largeMargin,
+    alignSelf: 'center',
+  },
+  restore: {
+    ...Fonts.style.medium,
+    fontWeight: 'bold',
+    color: Colors.destructive,
+  },
   productTitle: {
     backgroundColor: Colors.destructive,
     color: 'white',

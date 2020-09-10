@@ -38,6 +38,7 @@ function loginUser(email, password) {
               if (loginresults.errid !== undefined) {
                 reject(new Error(loginresults.description[0]))
               } else {
+                console.log('loginresults', loginresults)
                 resolve(buildUserObject(loginresults))
               }
             }

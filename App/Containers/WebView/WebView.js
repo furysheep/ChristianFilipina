@@ -1,5 +1,5 @@
 import React from 'react'
-import { TouchableOpacity } from 'react-native'
+import { TouchableOpacity, Platform } from 'react-native'
 import { Icon } from 'react-native-elements'
 import { connect } from 'react-redux'
 import { PropTypes } from 'prop-types'
@@ -54,11 +54,11 @@ class WebView extends React.Component {
         break
       case 'PrivacyPolicy':
         firebase.analytics().setCurrentScreen('PrivacyPolicy', 'PrivacyPolicy')
-        url = Config.PRIVACY_POLICY_URL
+        url = 'privacy'
         break
       case 'TermsOfService':
         firebase.analytics().setCurrentScreen('TermsOfService', 'TermsOfService')
-        url = Config.TERMS_OF_SERVICE_URL
+        url = 'terms'
         break
     }
     this.setState({ url })
@@ -66,8 +66,21 @@ class WebView extends React.Component {
 
   render() {
     const { url } = this.state
-    console.log(url)
-    return <RNWebView ref={(ref) => (this.webView = ref)} source={{ uri: url }} />
+    return (
+      <RNWebView
+        originWhitelist={['*']}
+        ref={(ref) => (this.webView = ref)}
+        source={
+          url === 'terms' || url === 'privacy'
+            ? Platform.OS === 'ios'
+              ? url === 'terms'
+                ? require('../../Assets/terms.html')
+                : require('../../Assets/privacy.html')
+              : { uri: `file:///android_asset/${url}.html` }
+            : { uri: url }
+        }
+      />
+    )
   }
 }
 

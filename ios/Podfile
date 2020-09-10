@@ -55,14 +55,3 @@ target 'ChristianFilipina' do
   use_native_modules!
 
 end
-
-target 'ChristianFilipina-tvOSTests' do
-    inherit! :search_paths
-    # Pods for testing
-    
-end
-
-target 'ChristianFilipinaTests' do
-    inherit! :search_paths
-    # Pods for testing
-end

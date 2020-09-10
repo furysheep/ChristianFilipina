@@ -10,8 +10,8 @@ export default axios.create({
   timeout: 30000,
 })
 
-class User {
-  //1,5,7,8 level user has ability to start text/video chat
+export class User {
+  // 1,5,7,8 level user has ability to start text/video chat
 
   canUserStartChat = () => {
     const { userLevel } = this
@@ -45,7 +45,37 @@ User.FEATURED_PLATINUM = '10'
 User.FEATURED_UNLIMITED = '11'
 User.FEATURED_GOLD = '16'
 
+export const getSubscriptionLevel = (level) => {
+  switch (level) {
+    case User.FREE:
+      return 'Free'
+    case User.SILVER:
+      return 'Silver'
+    case User.GOLD:
+      return 'Gold'
+    case User.PLATINUM:
+      return 'Platinum'
+    case User.UNLIMITED_LIFETIME:
+      return 'Unlimited Lifetime'
+    case User.BRONZE:
+      return 'Bronze'
+    case User.DIAMOND:
+      return 'Diamond'
+    case User.FEATURED_SILVER:
+      return 'Featured Silver'
+    case User.FEATURED_PLATINUM:
+      return 'Featured Platinum'
+    case User.FEATURED_UNLIMITED:
+      return 'Featured Unlimited'
+    case User.FEATURED_GOLD:
+      return 'Featured Gold'
+    default:
+      return 'None'
+  }
+}
+
 export function buildUserObject(obj) {
+  console.log('obj', obj)
   const user = new User()
   // userdata api
   user.about = obj.about ? obj.about[0].replace(/<\s*\/?br\s*[\/]?>/gi, '\n') : null
@@ -117,5 +147,8 @@ export function buildUserObject(obj) {
 
   // newly added
   user.gender = obj.gender ? obj.gender[0] : null
+
+  // membership expiry
+  user.levelend = obj.levelend ? obj.levelend[0] : null
   return user
 }
