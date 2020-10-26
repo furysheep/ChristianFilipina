@@ -37,11 +37,12 @@ export const loginUserFailure = (state, { errorMessage }) => {
 
 export const updateUserLevel = (state, { userLevel }) => {
   if (state.user) {
-    const user = state.user
-    user.userLevel = userLevel
     return {
       ...state,
-      user,
+      user: {
+        ...state.user,
+        userLevel,
+      },
     }
   }
   return state

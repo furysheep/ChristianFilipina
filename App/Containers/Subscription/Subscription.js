@@ -44,6 +44,14 @@ class Subscription extends React.Component {
     firebase.analytics().setCurrentScreen('Subscriptions', 'Subscriptions')
 
     try {
+      await RNIap.initConnection()
+      try {
+        await RNIap.flushFailedPurchasesCachedAsPendingAndroid()
+      } catch {
+        // exception can happen here if:
+        // - there are pending purchases that are still pending (we can't consume a pending purchase)
+        // in any case, you might not want to do anything special with the error
+      }
       const products = await RNIap.getSubscriptions(this.items)
       console.log('products', products)
       this.setState({ products })
@@ -53,7 +61,7 @@ class Subscription extends React.Component {
     this.setState({ loading: false })
 
     this.purchaseUpdateSubscription = purchaseUpdatedListener((purchase) => {
-      // console.log('purchaseUpdatedListener', purchase)
+      console.log('purchaseUpdatedListener', purchase)
       const receipt = purchase.transactionReceipt
       if (receipt) {
         const isAndroid = Platform.OS === 'android'
@@ -68,20 +76,18 @@ class Subscription extends React.Component {
           )
           .then((userLevel) => {
             console.log('updateUserLevel', userLevel)
-            this.props.updateUserLevel(userLevel)
-            Alert.alert(null, 'Your purchase was successful')
+            if (userLevel) {
+              this.props.updateUserLevel(userLevel)
+              Alert.alert(null, 'Your purchase was successful')
+            } else {
+              this.showAlert('Something went wrong. Please try again.')
+            }
           })
           .catch((e) => console.log(e))
-          .finally(() => {})
-        if (Platform.OS === 'ios') {
-          console.log('finish transaction')
-          RNIap.finishTransactionIOS(purchase.transactionId)
-        } else if (Platform.OS === 'android') {
-          // If consumable (can be purchased again)
-          // RNIap.consumePurchaseAndroid(purchase.purchaseToken)
-          // If not consumable
-          RNIap.acknowledgePurchaseAndroid(purchase.purchaseToken)
-        }
+          .finally(() => {
+            console.log('finish transaction')
+            RNIap.finishTransaction(purchase, false)
+          })
       }
     })
 
@@ -122,6 +128,7 @@ class Subscription extends React.Component {
           <View>
             <Text style={styles.productPrice}>{price}</Text>
             <Text style={styles.productDesc}>{description}</Text>
+            {onPress && <Text style={styles.upgradeNow}>Upgrade Now</Text>}
           </View>
         </TouchableOpacity>
       )
@@ -137,6 +144,7 @@ class Subscription extends React.Component {
                   key={index}
                   onPress={async () => {
                     try {
+                      console.log('requestSubscription', product.productId)
                       await RNIap.requestSubscription(product.productId)
                     } catch (err) {
                       console.warn(err.code, err.message)
@@ -207,8 +215,12 @@ class Subscription extends React.Component {
                           isAndroid ? '' : receipt.transactionReceipt
                         )
                         .then((userLevel) => {
-                          this.props.updateUserLevel(userLevel)
-                          this.showAlert('You restored Gold membership.')
+                          if (userLevel) {
+                            this.props.updateUserLevel(userLevel)
+                            this.showAlert('You restored Gold membership.')
+                          } else {
+                            this.showAlert('Something went wrong. Please try again.')
+                          }
                         })
                         .catch((e) => {
                           this.showAlert(e.message)
@@ -234,7 +246,8 @@ class Subscription extends React.Component {
               description={`Expiration Date: ${moment.unix(user.levelend).format('MMMM DD, YYYY')}`}
             />
           )}
-          {user.userLevel === User.FREE || user.userLevel === User.GOLD ? (
+          {(user.userLevel === User.FREE || user.userLevel === User.GOLD) &&
+          user.upgraded_through === 'mobile' ? (
             <>
               <Text>
                 {`• Renewal: Subscription automatically renews every 3 months unless auto renew is turned off at least 24 hours before the end of the current period.\n• The account will be charged for renewal within 24 hours prior to the end of the current period.\n• To manage your subscription or turn off auto-renewal`}
@@ -295,7 +308,7 @@ USA # 415-991-6998 from inside or outside USA/Canada
 1344-231492 in United Kingdom`}
               </Text>
               <Text>
-                {`• Our team mmebers will guide you through the upgrade process if you prefer. We are available 24 hours a day.`}
+                {`• Our team members will guide you through the upgrade process if you prefer. We are available 24 hours a day.`}
               </Text>
               <TouchableOpacity
                 onPress={this.callSupport}

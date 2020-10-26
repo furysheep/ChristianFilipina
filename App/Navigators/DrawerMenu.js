@@ -7,10 +7,11 @@ import { PropTypes } from 'prop-types'
 import UserActions from 'App/Stores/User/Actions'
 import { Images, Colors, Fonts, Helpers } from 'App/Theme'
 import { Config } from 'App/Config'
+import SearchActions from 'App/Stores/Search/Actions'
 import NavigationService from 'App/Services/NavigationService'
 
 const CustomDrawerContentComponent = (props) => {
-  const { user, logout, navigation } = props
+  const { user, logout, navigation, setCustomSearch } = props
   return (
     <ImageBackground source={Images.background} style={{ flex: 1 }}>
       <ScrollView style={styles.scrollView}>
@@ -36,6 +37,7 @@ const CustomDrawerContentComponent = (props) => {
               } else {
                 navigation.push('SearchFilter')
               }
+              setCustomSearch(false)
             }}
           />
           <Button
@@ -88,6 +90,7 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
   logout: () => dispatch(UserActions.logout()),
+  setCustomSearch: (isCustomSearch) => dispatch(SearchActions.setCustomSearch(isCustomSearch)),
 })
 
 export default connect(

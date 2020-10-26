@@ -420,7 +420,7 @@
 				CODE_SIGN_ENTITLEMENTS = ChristianFilipina/ChristianFilipina.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 6;
+				CURRENT_PROJECT_VERSION = 7;
 				DEAD_CODE_STRIPPING = NO;
 				DEVELOPMENT_TEAM = W868Q7CJL7;
 				ENABLE_BITCODE = NO;
@@ -466,7 +466,7 @@
 				CODE_SIGN_ENTITLEMENTS = ChristianFilipina/ChristianFilipina.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 6;
+				CURRENT_PROJECT_VERSION = 7;
 				DEVELOPMENT_TEAM = W868Q7CJL7;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (

@@ -52,4 +52,10 @@ export default StyleSheet.create({
     textAlign: 'center',
     padding: Metrics.smallMargin,
   },
+  upgradeNow: {
+    fontWeight: 'bold',
+    textAlign: 'center',
+    padding: Metrics.smallMargin,
+    fontSize: Fonts.size.medium,
+  },
 })

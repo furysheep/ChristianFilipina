@@ -150,5 +150,8 @@ export function buildUserObject(obj) {
 
   // membership expiry
   user.levelend = obj.levelend ? obj.levelend[0] : null
+
+  // upgraded via
+  user.upgraded_through = obj.upgraded_through ? obj.upgraded_through[0] : null
   return user
 }
