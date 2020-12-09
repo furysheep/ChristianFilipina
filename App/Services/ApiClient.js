@@ -75,7 +75,6 @@ export const getSubscriptionLevel = (level) => {
 }
 
 export function buildUserObject(obj) {
-  console.log('obj', obj)
   const user = new User()
   // userdata api
   user.about = obj.about ? obj.about[0].replace(/<\s*\/?br\s*[\/]?>/gi, '\n') : null

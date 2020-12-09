@@ -625,7 +625,7 @@ function mobileUpgrade(
         console.log(response)
         try {
           if (in200s(response.status)) {
-            resolve(response.data.user_level)
+            resolve(String(response.data.user_level))
             return
           }
         } catch {}

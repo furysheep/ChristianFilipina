@@ -305,15 +305,18 @@ function sendInboxMessage(userId, message, messageId) {
       .then((response) => {
         if (in200s(response.status)) {
           parseString(response.data, (err, result) => {
+            console.log('chat result', result)
             if (err) {
               reject(err)
-            } else {
+            } else if (result.response.success[0] === '1') {
               resolve(result.response.message_id[0])
+            } else {
+              reject(result.response.description[0])
               // resolve(result.response.success[0] === '1')
             }
           })
         } else {
-          reject(new Error('Unknown reason'))
+          reject(new Error('Message could not be sent, please try again later'))
         }
       })
       .catch((e) => {

@@ -40,10 +40,10 @@ export function* logout() {
     yield put(UserActions.userLoading())
     yield Keychain.resetGenericPassword()
     yield call(userService.logout)
-    yield put(UserActions.loginUserSuccess(null))
-    yield put({ type: 'RESET' })
   } catch (e) {
     console.log(e)
+  } finally {
+    yield put({ type: 'RESET' })
   }
 }
 

@@ -33,7 +33,7 @@ export default (rootReducer, rootSaga) => {
   // Connect the sagas to the redux store
   const sagaMiddleware = createSagaMiddleware()
   middleware.push(sagaMiddleware)
-  middleware.push(logger)
+  // middleware.push(logger)
 
   enhancers.push(applyMiddleware(...middleware))
 

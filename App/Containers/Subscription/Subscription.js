@@ -53,7 +53,6 @@ class Subscription extends React.Component {
         // in any case, you might not want to do anything special with the error
       }
       const products = await RNIap.getSubscriptions(this.items)
-      console.log('products', products)
       this.setState({ products })
     } catch (err) {
       console.warn(err) // standardized err.code and err.message available
@@ -246,8 +245,8 @@ class Subscription extends React.Component {
               description={`Expiration Date: ${moment.unix(user.levelend).format('MMMM DD, YYYY')}`}
             />
           )}
-          {(user.userLevel === User.FREE || user.userLevel === User.GOLD) &&
-          user.upgraded_through === 'mobile' ? (
+          {user.userLevel === User.FREE ||
+          (user.userLevel === User.GOLD && user.upgraded_through === 'mobile') ? (
             <>
               <Text>
                 {`• Renewal: Subscription automatically renews every 3 months unless auto renew is turned off at least 24 hours before the end of the current period.\n• The account will be charged for renewal within 24 hours prior to the end of the current period.\n• To manage your subscription or turn off auto-renewal`}
